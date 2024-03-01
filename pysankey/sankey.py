@@ -86,13 +86,27 @@ def sankey(data, colorDict=None,
     plt.rc('font', family='sans')    
     
     N = int(len(data.columns)/2) # number of labels
+    
+    # sizes
     Wsum = np.empty(N-1)
     for ii in range(N-1):
       Wsum[ii] = sum(data[2*ii+1])
-
     plotHeight = max(Wsum)
     subplotWidth = plotHeight/aspect
     plotWidth = subplotWidth*(N-1) + 2*subplotWidth*labelWidth
+
+    # labels
+    labelRec = data[range(0,2*N,2)].to_records(index=False)
+    flattened = [item for sublist in labelRec for item in sublist]
+    flatcat = pd.Series(flattened).unique()
+    
+    # If no colorDict given, make one
+    if colorDict is None:
+      colorDict = {}
+      cmap = plt.cm.get_cmap(colormap)
+      colorPalette = cmap(np.linspace(0,1,len(flatcat)))
+      for i, label in enumerate(flatcat):
+        colorDict[label] = colorPalette[i]
 
     for ii in range(N-1):
       _sankey(ii,N-1,data, 
@@ -110,7 +124,6 @@ def sankey(data, colorDict=None,
            plotWidth=plotWidth,
            subplotWidth=subplotWidth,
            plotHeight=plotHeight,
-           colormap=colormap,
            sorting=sorting)
     
     # frame on bottom edge; might delete
@@ -143,7 +156,6 @@ def _sankey(ii,N,data,
            subplotWidth=0,
            labelDict={},
            labelWidth=0,
-           colormap="viridis",
            sorting=0):         
     
     labelind = 2*ii
@@ -208,19 +220,12 @@ def _sankey(ii,N,data,
     # Identify all labels that appear 'left' or 'right'
     allLabels = pd.Series(np.r_[dataFrame.left.unique(), dataFrame.right.unique()]).unique()
     
-    # If no colorDict given, make one
-    if colorDict is None:
-        colorDict = {}
-        cmap = plt.cm.get_cmap(colormap)
-        colorPalette = cmap(np.linspace(0,1,len(allLabels)))
-        for i, label in enumerate(allLabels):
-            colorDict[label] = colorPalette[i]
-    else:
-        missing = [label for label in allLabels if label not in colorDict.keys()]
-        if missing:
-            msg = "The colorDict parameter is missing values for the following labels : "
-            msg += '{}'.format(', '.join(missing))
-            raise ValueError(msg)
+    # check colours
+    missing = [label for label in allLabels if label not in colorDict.keys()]
+    if missing:
+      msg = "The colorDict parameter is missing values for the following labels : "
+      msg += '{}'.format(', '.join(missing))
+      raise ValueError(msg)
 
     # Determine widths of individual strips
     ns_l = defaultdict()
