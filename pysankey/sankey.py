@@ -23,7 +23,6 @@ matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
-import seaborn as sns
 
 
 class PySankeyException(Exception):
@@ -39,7 +38,7 @@ class LabelMismatch(PySankeyException):
 
 
 def check_data_matches_labels(labels, data, side):
-    if len(labels > 0):
+    if len(labels) > 0:
         if isinstance(data, list):
             data = set(data)
         if isinstance(data, pd.Series):
@@ -55,9 +54,10 @@ def check_data_matches_labels(labels, data, side):
             raise LabelMismatch('{0} labels and data do not match.{1}'.format(side, msg))
 
 
-def sankey(left, right, leftWeight=None, rightWeight=None, colorDict=None,
-           leftLabels=None, rightLabels=None, aspect=4, rightColor=False,
-           fontsize=14, figureName=None, closePlot=False):
+def sankey(data, colorDict=None,
+           aspect=4, rightColor=False,
+           labelOrder=None,
+           fontsize=14, figureName=None, closePlot=False, titles=None, labelDict={},labelWidth=0,colormap="viridis",sorting=0):
     '''
     Make Sankey Diagram showing flow from left-->right
 
@@ -80,55 +80,112 @@ def sankey(left, right, leftWeight=None, rightWeight=None, colorDict=None,
     Ouput:
         None
     '''
-    if leftWeight is None:
-        leftWeight = []
-    if rightWeight is None:
-        rightWeight = []
-    if leftLabels is None:
-        leftLabels = []
-    if rightLabels is None:
-        rightLabels = []
+ 
+    plt.figure()
+    plt.rc('text', usetex=False)
+    plt.rc('font', family='sans')    
+    
+    N = int(len(data.columns)/2) # number of columns
+
+    for ii in range(N-1):
+      _sankey(ii,N-1,data, 
+           titles=titles,
+           labelOrder=labelOrder, 
+           colorDict=colorDict,
+           aspect=aspect, rightColor=rightColor,
+           fontsize=fontsize, figureName=figureName, closePlot=closePlot, labelDict=labelDict,labelWidth=labelWidth,colormap=colormap,sorting=sorting)
+    
+    plt.gca().axis('off')
+    plt.gcf().set_size_inches(6, 6)
+    
+    if figureName != None:
+        plt.savefig("{}.png".format(figureName), bbox_inches='tight', dpi=150)
+    
+    if closePlot:
+        plt.close()
+
+
+
+def _sankey(ii,N,data, 
+           colorDict=None,
+           labelOrder=None,
+           aspect=4, 
+           rightColor=False,
+           fontsize=14, 
+           figureName=None, 
+           closePlot=False, 
+           titles=None, labelDict={},
+           labelWidth=0,
+           colormap="viridis",
+           sorting=0):         
+    
+    labelind = 2*ii
+    weightind = 2*ii+1
+    
+    left  = list(data[labelind])
+    right = list(data[labelind+2])
+    leftWeight  = list(data[weightind])
+    rightWeight = list(data[weightind+2])
+    
     # Check weights
     if len(leftWeight) == 0:
         leftWeight = np.ones(len(left))
-
     if len(rightWeight) == 0:
         rightWeight = leftWeight
-
-    plt.figure()
-    plt.rc('text', usetex=False)
-    plt.rc('font', family='serif')
 
     # Create Dataframe
     if isinstance(left, pd.Series):
         left = left.reset_index(drop=True)
     if isinstance(right, pd.Series):
         right = right.reset_index(drop=True)
-    dataFrame = pd.DataFrame({'left': left, 'right': right, 'leftWeight': leftWeight,
-                              'rightWeight': rightWeight}, index=range(len(left)))
+    dataFrame = pd.DataFrame({
+      'left': left, 
+      'right': right, 
+      'leftWeight': leftWeight,
+      'rightWeight': rightWeight}, index=range(len(left)))
 
     if len(dataFrame[(dataFrame.left.isnull()) | (dataFrame.right.isnull())]):
         raise NullsInFrame('Sankey graph does not support null values.')
 
+    # label order / sorting
+    if labelOrder is not None:
+      leftLabels  = list(labelOrder[ii])
+      rightLabels = list(labelOrder[ii+1])
+    else:
+      leftLabels = None
+      rightLabels = None
+    
+    wgt = {}
+    for dd in [0,2]:
+      lbl = data[labelind+dd].unique()
+      wgt[dd] = {}
+      for uniq in lbl:
+        ind = (data[labelind+dd] == uniq)
+        wgt[dd][uniq] = data[weightind+dd][ind].sum()
+      wgt[dd] = dict(sorted(
+        wgt[dd].items(),
+        key=lambda item: sorting*item[1]
+      ))
+    
+    if leftLabels == None:
+      leftLabels  = list(wgt[0].keys())
+    if rightLabels == None:
+      rightLabels = list(wgt[2].keys())
+    
+    # check labels
+    check_data_matches_labels(
+      leftLabels, dataFrame['left'], 'left')
+    check_data_matches_labels(
+      rightLabels, dataFrame['right'], 'right')
+      
     # Identify all labels that appear 'left' or 'right'
     allLabels = pd.Series(np.r_[dataFrame.left.unique(), dataFrame.right.unique()]).unique()
-
-    # Identify left labels
-    if len(leftLabels) == 0:
-        leftLabels = pd.Series(dataFrame.left.unique()).unique()
-    else:
-        check_data_matches_labels(leftLabels, dataFrame['left'], 'left')
-
-    # Identify right labels
-    if len(rightLabels) == 0:
-        rightLabels = pd.Series(dataFrame.right.unique()).unique()
-    else:
-        check_data_matches_labels(leftLabels, dataFrame['right'], 'right')
+    
     # If no colorDict given, make one
     if colorDict is None:
         colorDict = {}
-        palette = "hls"
-        colorPalette = sns.color_palette(palette, len(allLabels))
+        cmap = plt.cm.get_cmap(colormap)
+        colorPalette = cmap(np.linspace(0,1,len(allLabels)))
         for i, label in enumerate(allLabels):
             colorDict[label] = colorPalette[i]
     else:
@@ -145,8 +202,10 @@ def sankey(left, right, leftWeight=None, rightWeight=None, colorDict=None,
         leftDict = {}
         rightDict = {}
         for rightLabel in rightLabels:
-            leftDict[rightLabel] = dataFrame[(dataFrame.left == leftLabel) & (dataFrame.right == rightLabel)].leftWeight.sum()
-            rightDict[rightLabel] = dataFrame[(dataFrame.left == leftLabel) & (dataFrame.right == rightLabel)].rightWeight.sum()
+            leftind = (dataFrame.left == leftLabel) & (dataFrame.right == rightLabel)
+            rightind = (dataFrame.left == leftLabel) & (dataFrame.right == rightLabel)
+            leftDict[rightLabel] = dataFrame[leftind].leftWeight.sum()
+            rightDict[rightLabel] = dataFrame[rightind].rightWeight.sum()
         ns_l[leftLabel] = leftDict
         ns_r[leftLabel] = rightDict
 
@@ -161,7 +220,7 @@ def sankey(left, right, leftWeight=None, rightWeight=None, colorDict=None,
         else:
             myD['bottom'] = leftWidths[leftLabels[i - 1]]['top'] + 0.02 * dataFrame.leftWeight.sum()
             myD['top'] = myD['bottom'] + myD['left']
-            topEdge = myD['top']
+            topEdgeLeft = myD['top']
         leftWidths[leftLabel] = myD
 
     # Determine positions of right label patches and total widths
@@ -175,42 +234,66 @@ def sankey(left, right, leftWeight=None, rightWeight=None, colorDict=None,
         else:
             myD['bottom'] = rightWidths[rightLabels[i - 1]]['top'] + 0.02 * dataFrame.rightWeight.sum()
             myD['top'] = myD['bottom'] + myD['right']
-            topEdge = myD['top']
+            topEdgeRight = myD['top']
         rightWidths[rightLabel] = myD
 
-    # Total vertical extent of diagram
+    topEdge = max(topEdgeLeft,topEdgeRight)
+    # Total horizontal extent of diagram
     xMax = topEdge / aspect
+    xLeft = labelWidth*xMax + ii*xMax
+    xRight = (1-labelWidth)*xMax + ii*xMax
 
     # Draw vertical bars on left and right of each  label's section & print label
     for leftLabel in leftLabels:
         plt.fill_between(
-            [-0.02 * xMax, 0],
+            xLeft+[-0.02 * xMax, 0],
             2 * [leftWidths[leftLabel]['bottom']],
             2 * [leftWidths[leftLabel]['bottom'] + leftWidths[leftLabel]['left']],
             color=colorDict[leftLabel],
             alpha=0.99
         )
-        plt.text(
-            -0.05 * xMax,
+        if ii == 0: # first time
+          plt.text(
+            xLeft - 0.05 * xMax,
             leftWidths[leftLabel]['bottom'] + 0.5 * leftWidths[leftLabel]['left'],
-            leftLabel,
+            labelDict.get(leftLabel,leftLabel),
             {'ha': 'right', 'va': 'center'},
             fontsize=fontsize
-        )
+          )
     for rightLabel in rightLabels:
         plt.fill_between(
-            [xMax, 1.02 * xMax], 2 * [rightWidths[rightLabel]['bottom']],
+            xRight+[0, 0.02 * xMax], 2 * [rightWidths[rightLabel]['bottom']],
             2 * [rightWidths[rightLabel]['bottom'] + rightWidths[rightLabel]['right']],
             color=colorDict[rightLabel],
             alpha=0.99
         )
-        plt.text(
-            1.05 * xMax,
+        if ii == N-1: # last time
+          plt.text(
+            xRight + 0.05 * xMax,
             rightWidths[rightLabel]['bottom'] + 0.5 * rightWidths[rightLabel]['right'],
-            rightLabel,
+            labelDict.get(rightLabel,rightLabel),
             {'ha': 'left', 'va': 'center'},
             fontsize=fontsize
+          )
+    
+    # "titles"
+    if titles is not None:
+      if ii == 0:
+        plt.text(
+          -xMax*0.01 + xLeft, 
+          1.05*(leftWidths[leftLabel]['bottom'] + leftWidths[leftLabel]['left']),
+          titles[ii],
+          {'ha': 'center', 'va': 'center'},
+          fontsize = fontsize,
         )
+      
+      plt.text(
+        xRight + xMax*0.01, 
+        1.05*(rightWidths[rightLabel]['bottom'] + rightWidths[rightLabel]['right']),
+        titles[ii+1],
+        {'ha': 'center', 'va': 'center'},
+        fontsize = fontsize,
+      )
 
     # Plot strips
     for leftLabel in leftLabels:
@@ -232,12 +315,12 @@ def sankey(left, right, leftWeight=None, rightWeight=None, colorDict=None,
                 leftWidths[leftLabel]['bottom'] += ns_l[leftLabel][rightLabel]
                 rightWidths[rightLabel]['bottom'] += ns_r[leftLabel][rightLabel]
                 plt.fill_between(
-                    np.linspace(0, xMax, len(ys_d)), ys_d, ys_u, alpha=0.65,
+                    np.linspace(xLeft, xRight, len(ys_d)), ys_d, ys_u, alpha=0.65,
                     color=colorDict[labelColor]
                 )
-    plt.gca().axis('off')
-    plt.gcf().set_size_inches(6, 6)
-    if figureName != None:
-        plt.savefig("{}.png".format(figureName), bbox_inches='tight', dpi=150)
-    if closePlot:
-        plt.close()
+    
+    
+    # frame on bottom edge; might delete
+    plt.plot([xLeft,xRight],-0.05*topEdge+[0,0])
+    
+
