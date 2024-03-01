@@ -3,17 +3,6 @@ import pysankey as sky
 import matplotlib.pyplot as plt
 import pandas as pd
 
-colorDict =  {
-   'a':'#f71b1b',
-   'b':'#1b7ef7',
-  'ab':'#8821aa',
-  'ba':'#6016aa',
-  'cd':'#c1e849',
-   'c':'#f3f71b',
-   'd':'#12e23f',
-   'e':'#f78c1b',
- }
-
 data = pd.DataFrame([
   ("a",1.0,"ab",2.0),
   ("a",1.0,"ba",0.8),
@@ -27,7 +16,7 @@ data = pd.DataFrame([
 sky.sankey(
   data,
   sorting = -1,
-  colorDict = colorDict,
+  colormap = "jet",
 )
   
 #plt.gcf().set_size_inches(6,6)
@@ -35,6 +24,16 @@ sky.sankey(
 
 plt.show()
 
+colorDict =  {
+   'a':'#f71b1b',
+   'b':'#1b7ef7',
+  'ab':'#8821aa',
+  'ba':'#6016aa',
+  'cd':'#c1e849',
+   'c':'#f3f71b',
+   'd':'#12e23f',
+   'e':'#f78c1b',
+ }
 
 data = pd.DataFrame([
   ("a",1.0,"ab",2.0,"a",1.0),
