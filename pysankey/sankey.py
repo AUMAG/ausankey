@@ -85,15 +85,37 @@ def sankey(data, colorDict=None,
     plt.rc('text', usetex=False)
     plt.rc('font', family='sans')    
     
-    N = int(len(data.columns)/2) # number of columns
+    N = int(len(data.columns)/2) # number of labels
+    Wsum = np.empty(N-1)
+    for ii in range(N-1):
+      Wsum[ii] = sum(data[2*ii+1])
+
+    plotHeight = max(Wsum)
+    subplotWidth = plotHeight/aspect
+    plotWidth = subplotWidth*(N-1) + 2*subplotWidth*labelWidth
 
     for ii in range(N-1):
       _sankey(ii,N-1,data, 
+           Wsum=Wsum,
            titles=titles,
            labelOrder=labelOrder, 
            colorDict=colorDict,
-           aspect=aspect, rightColor=rightColor,
-           fontsize=fontsize, figureName=figureName, closePlot=closePlot, labelDict=labelDict,labelWidth=labelWidth,colormap=colormap,sorting=sorting)
+           aspect=aspect, 
+           rightColor=rightColor,
+           fontsize=fontsize, 
+           figureName=figureName, 
+           closePlot=closePlot, 
+           labelDict=labelDict,
+           labelWidth=labelWidth,
+           plotWidth=plotWidth,
+           subplotWidth=subplotWidth,
+           plotHeight=plotHeight,
+           colormap=colormap,
+           sorting=sorting)
+    
+    # frame on bottom edge; might delete
+    plt.plot([0,plotWidth],-0.1*max(Wsum)+[0,0])
+    
     
     plt.gca().axis('off')
     plt.gcf().set_size_inches(6, 6)
@@ -107,6 +129,7 @@ def sankey(data, colorDict=None,
 
 
 def _sankey(ii,N,data, 
+           Wsum=None,
            colorDict=None,
            labelOrder=None,
            aspect=4, 
@@ -114,7 +137,11 @@ def _sankey(ii,N,data,
            fontsize=14, 
            figureName=None, 
            closePlot=False, 
-           titles=None, labelDict={},
+           titles=None, 
+           plotWidth=0,
+           plotHeight=0,
+           subplotWidth=0,
+           labelDict={},
            labelWidth=0,
            colormap="viridis",
            sorting=0):         
@@ -220,7 +247,6 @@ def _sankey(ii,N,data,
         else:
             myD['bottom'] = leftWidths[leftLabels[i - 1]]['top'] + 0.02 * dataFrame.leftWeight.sum()
             myD['top'] = myD['bottom'] + myD['left']
-            topEdgeLeft = myD['top']
         leftWidths[leftLabel] = myD
 
     # Determine positions of right label patches and total widths
@@ -234,14 +260,12 @@ def _sankey(ii,N,data,
         else:
             myD['bottom'] = rightWidths[rightLabels[i - 1]]['top'] + 0.02 * dataFrame.rightWeight.sum()
             myD['top'] = myD['bottom'] + myD['right']
-            topEdgeRight = myD['top']
         rightWidths[rightLabel] = myD
 
-    topEdge = max(topEdgeLeft,topEdgeRight)
-    # Total horizontal extent of diagram
-    xMax = topEdge / aspect
+    # horizontal extents of diagram
+    xMax = subplotWidth
     xLeft = labelWidth*xMax + ii*xMax
-    xRight = (1-labelWidth)*xMax + ii*xMax
+    xRight = labelWidth*xMax + (ii+1)*xMax
 
     # Draw vertical bars on left and right of each  label's section & print label
     for leftLabel in leftLabels:
@@ -321,6 +345,6 @@ def _sankey(ii,N,data,
     
     
     # frame on bottom edge; might delete
-    plt.plot([xLeft,xRight],-0.05*topEdge+[0,0])
+    plt.plot([xLeft,xRight],-0.05*plotHeight+[0,0])
     
 
