@@ -10,8 +10,8 @@ require= [x.strip() for x in require]
 setuptools.setup(
     name="pySankey",
     version="1.0.0",
-    author="anazalea",
-    author_email="anneyagolob@gmail.com",
+    author="wspr after anazalea et al.",
+    author_email="wspr81@gmail.com",
     description="Make simple, pretty Sankey Diagrams",
     long_description=long_description,
     license='GNU General Public License v3.0',
