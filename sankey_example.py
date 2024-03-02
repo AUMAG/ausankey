@@ -59,7 +59,7 @@ sky.sankey(
 )
 
 #plt.gcf().set_size_inches(6,6)
-plt.savefig('fruits.pdf',bbox_inches='tight')
+#plt.savefig('fruits.pdf',bbox_inches='tight')
 
 plt.show()
 

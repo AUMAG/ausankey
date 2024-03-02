@@ -58,7 +58,6 @@ def sankey(
            data, 
            colorDict=None,
            aspect=4, 
-           rightColor=False,
            labelOrder=None,
            fontsize=14, 
            figureName=None, 
@@ -127,7 +126,6 @@ def sankey(
            labelOrder=labelOrder, 
            colorDict=colorDict,
            aspect=aspect, 
-           rightColor=rightColor,
            fontsize=fontsize, 
            figureName=figureName, 
            closePlot=closePlot, 
@@ -184,7 +182,6 @@ def _sankey(ii,N,data,
            colorDict=None,
            labelOrder=None,
            aspect=4, 
-           rightColor=False,
            fontsize=14, 
            figureName=None, 
            closePlot=False, 
@@ -373,9 +370,6 @@ def _sankey(ii,N,data,
     # Plot strips
     for leftLabel in leftLabels:
         for rightLabel in rightLabels:
-            labelColor = leftLabel
-            if rightColor:
-                labelColor = rightLabel
             
             if len(dataFrame[(dataFrame.left == leftLabel) & (dataFrame.right == rightLabel)]) > 0:
                 Ndiv = 10
@@ -394,12 +388,8 @@ def _sankey(ii,N,data,
                 rightWidths[rightLabel]['bottom'] += ns_r[leftLabel][rightLabel]
                 
                 xx = np.linspace(xLeft, xRight, len(ys_d))
-                #plt.fill_between(
-                #    xx, ys_d, ys_u,
-                #    color=colorDict[labelColor],
-                #    alpha=0.65,
-                #)
                 cc = combineColours(colorDict[leftLabel],colorDict[rightLabel],len(ys_d))
+                
                 for jj in range(len(ys_d)-1):
                   plt.fill_between(
                     xx[[jj,jj+1]], 
