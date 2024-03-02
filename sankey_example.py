@@ -17,6 +17,7 @@ sky.sankey(
   data,
   sorting = -1,
   colormap = "jet",
+  aspect=0.5
 )
   
 #plt.gcf().set_size_inches(6,6)

@@ -101,7 +101,7 @@ def sankey(
       Wsum[ii] = sum(data[2*ii+1])
     plotHeight = max(Wsum)
     subplotWidth = plotHeight/aspect
-    plotWidth = subplotWidth*(N-1) + 2*subplotWidth*labelWidth * N*barWidth*subplotWidth
+    plotWidth = (N-1)*subplotWidth + 2*subplotWidth*labelWidth + N*subplotWidth*barWidth
 
     # labels
     labelRec = data[range(0,2*N,2)].to_records(index=False)
