@@ -101,7 +101,7 @@ def sankey(
       Wsum[ii] = sum(data[2*ii+1])
     plotHeight = max(Wsum)
     subplotWidth = plotHeight/aspect
-    plotWidth = round(subplotWidth*(N-1) + 2*subplotWidth*labelWidth)
+    plotWidth = subplotWidth*(N-1) + 2*subplotWidth*labelWidth * N*barWidth*subplotWidth
 
     # labels
     labelRec = data[range(0,2*N,2)].to_records(index=False)
@@ -136,8 +136,9 @@ def sankey(
            sorting=sorting)
     
     # frame on bottom edge; might delete
-    plt.plot([0,plotWidth],-0.1*max(Wsum)+[0,0])
-    
+    plt.plot(
+      [0,plotWidth],-0.1*plotHeight+[0,0],
+      color=[0,0,0,1])
     
     plt.gca().axis('off')
     plt.gcf().set_size_inches(6, 6)
@@ -147,6 +148,8 @@ def sankey(
     
     if closePlot:
         plt.close()
+
+
 
 def combineColours(c1,c2,N):
   if len(c1) != 4:
@@ -299,7 +302,7 @@ def _sankey(ii,N,data,
 
     # horizontal extents of diagram
     xMax = subplotWidth
-    xLeft = labelWidth*xMax + ii*xMax
+    xLeft = barWidth*xMax + labelWidth*xMax + ii*xMax
     xRight = labelWidth*xMax + (ii+1)*xMax
 
     # Draw vertical bars on left and right of each  label's section & print label
@@ -402,7 +405,7 @@ def _sankey(ii,N,data,
      
     
     
-    # frame on bottom edge; might delete
-    plt.plot([xLeft,xRight],-0.05*plotHeight+[0,0])
+    # frame on bottom edge; for testing, to delete
+    plt.plot([xLeft,xRight],-0.05*plotHeight+[0,0],color=[0,0,0,0.5])
     
 
