@@ -54,22 +54,27 @@ def check_data_matches_labels(labels, data, side):
             raise LabelMismatch('{0} labels and data do not match.{1}'.format(side, msg))
 
 
-def sankey(data, colorDict=None,
-           aspect=4, rightColor=False,
+def sankey(
+           data, 
+           colorDict=None,
+           aspect=4, 
+           rightColor=False,
            labelOrder=None,
-           fontsize=14, figureName=None, closePlot=False, titles=None, labelDict={},labelWidth=0,colormap="viridis",sorting=0):
+           fontsize=14, 
+           figureName=None, 
+           closePlot=False, 
+           titles=None, 
+           labelDict={},
+           labelWidth=0,
+           barWidth=0.02,
+           colormap="viridis",
+           sorting=0,
+          ):
     '''
     Make Sankey Diagram showing flow from left-->right
 
     Inputs:
-        left = NumPy array of object labels on the left of the diagram
-        right = NumPy array of corresponding labels on the right of the diagram
-            len(right) == len(left)
-        leftWeight = NumPy array of weights for each strip starting from the
-            left of the diagram, if not specified 1 is assigned
-        rightWeight = NumPy array of weights for each strip starting from the
-            right of the diagram, if not specified the corresponding leftWeight
-            is assigned
+        data = pandas dataframe of labels and weights in alternating columns
         colorDict = Dictionary of colors to use for each label
             {'label':'color'}
         leftLabels = order of the left labels in the diagram
@@ -81,9 +86,12 @@ def sankey(data, colorDict=None,
         None
     '''
  
-    plt.figure()
+
+    plt.figure(dpi=600)
     plt.rc('text', usetex=False)
     plt.rc('font', family='sans')    
+
+
     
     N = int(len(data.columns)/2) # number of labels
     
@@ -93,7 +101,7 @@ def sankey(data, colorDict=None,
       Wsum[ii] = sum(data[2*ii+1])
     plotHeight = max(Wsum)
     subplotWidth = plotHeight/aspect
-    plotWidth = subplotWidth*(N-1) + 2*subplotWidth*labelWidth
+    plotWidth = round(subplotWidth*(N-1) + 2*subplotWidth*labelWidth)
 
     # labels
     labelRec = data[range(0,2*N,2)].to_records(index=False)
@@ -121,6 +129,7 @@ def sankey(data, colorDict=None,
            closePlot=closePlot, 
            labelDict=labelDict,
            labelWidth=labelWidth,
+           barWidth=barWidth,
            plotWidth=plotWidth,
            subplotWidth=subplotWidth,
            plotHeight=plotHeight,
@@ -139,6 +148,26 @@ def sankey(data, colorDict=None,
     if closePlot:
         plt.close()
 
+def combineColours(c1,c2,N):
+  if len(c1) != 4:
+    r1 = int(c1[1:3], 16)/255
+    g1 = int(c1[3:5], 16)/255
+    b1 = int(c1[5:7], 16)/255
+    c1 = [r1,g1,b1,1]
+    
+  if len(c2) != 4:
+    r2 = int(c2[1:3], 16)/255
+    g2 = int(c2[3:5], 16)/255
+    b2 = int(c2[5:7], 16)/255
+    c2 = [r2,g2,b2,1]
+
+  rr = np.linspace(c1[0],c2[0],N)
+  gg = np.linspace(c1[1],c2[1],N)
+  bb = np.linspace(c1[2],c2[2],N)
+  aa = np.linspace(c1[3],c2[3],N)
+  
+  return np.array([rr,gg,bb,aa])
+
 
 
 def _sankey(ii,N,data, 
@@ -156,6 +185,7 @@ def _sankey(ii,N,data,
            subplotWidth=0,
            labelDict={},
            labelWidth=0,
+           barWidth=0,
            sorting=0):         
     
     labelind = 2*ii
@@ -250,7 +280,7 @@ def _sankey(ii,N,data,
             myD['bottom'] = 0
             myD['top'] = myD['left']
         else:
-            myD['bottom'] = leftWidths[leftLabels[i - 1]]['top'] + 0.02 * dataFrame.leftWeight.sum()
+            myD['bottom'] = leftWidths[leftLabels[i - 1]]['top'] + barWidth * dataFrame.leftWeight.sum()
             myD['top'] = myD['bottom'] + myD['left']
         leftWidths[leftLabel] = myD
 
@@ -263,7 +293,7 @@ def _sankey(ii,N,data,
             myD['bottom'] = 0
             myD['top'] = myD['right']
         else:
-            myD['bottom'] = rightWidths[rightLabels[i - 1]]['top'] + 0.02 * dataFrame.rightWeight.sum()
+            myD['bottom'] = rightWidths[rightLabels[i - 1]]['top'] + barWidth * dataFrame.rightWeight.sum()
             myD['top'] = myD['bottom'] + myD['right']
         rightWidths[rightLabel] = myD
 
@@ -274,31 +304,35 @@ def _sankey(ii,N,data,
 
     # Draw vertical bars on left and right of each  label's section & print label
     for leftLabel in leftLabels:
+      if ii == 0: # first time
         plt.fill_between(
-            xLeft+[-0.02 * xMax, 0],
+            xLeft+[-barWidth * xMax, 0],
             2 * [leftWidths[leftLabel]['bottom']],
             2 * [leftWidths[leftLabel]['bottom'] + leftWidths[leftLabel]['left']],
             color=colorDict[leftLabel],
-            alpha=0.99
+            alpha=0.99,
+            lw=0,
+            snap=True,
         )
-        if ii == 0: # first time
-          plt.text(
-            xLeft - 0.05 * xMax,
+        plt.text(
+            xLeft - 1.5*barWidth*xMax,
             leftWidths[leftLabel]['bottom'] + 0.5 * leftWidths[leftLabel]['left'],
             labelDict.get(leftLabel,leftLabel),
             {'ha': 'right', 'va': 'center'},
             fontsize=fontsize
-          )
+        )
     for rightLabel in rightLabels:
         plt.fill_between(
-            xRight+[0, 0.02 * xMax], 2 * [rightWidths[rightLabel]['bottom']],
+            xRight+[0, barWidth * xMax], 2 * [rightWidths[rightLabel]['bottom']],
             2 * [rightWidths[rightLabel]['bottom'] + rightWidths[rightLabel]['right']],
             color=colorDict[rightLabel],
-            alpha=0.99
+            alpha=0.99,
+            lw=0,
+            snap=True,
         )
         if ii == N-1: # last time
           plt.text(
-            xRight + 0.05 * xMax,
+            xRight + 1.5*barWidth * xMax,
             rightWidths[rightLabel]['bottom'] + 0.5 * rightWidths[rightLabel]['right'],
             labelDict.get(rightLabel,rightLabel),
             {'ha': 'left', 'va': 'center'},
@@ -309,7 +343,7 @@ def _sankey(ii,N,data,
     if titles is not None:
       if ii == 0:
         plt.text(
-          -xMax*0.01 + xLeft, 
+          -xMax*barWidth/2 + xLeft, 
           1.05*(leftWidths[leftLabel]['bottom'] + leftWidths[leftLabel]['left']),
           titles[ii],
           {'ha': 'center', 'va': 'center'},
@@ -317,7 +351,7 @@ def _sankey(ii,N,data,
         )
       
       plt.text(
-        xRight + xMax*0.01, 
+        xRight + xMax*barWidth/2, 
         1.05*(rightWidths[rightLabel]['bottom'] + rightWidths[rightLabel]['right']),
         titles[ii+1],
         {'ha': 'center', 'va': 'center'},
@@ -330,23 +364,42 @@ def _sankey(ii,N,data,
             labelColor = leftLabel
             if rightColor:
                 labelColor = rightLabel
+            
             if len(dataFrame[(dataFrame.left == leftLabel) & (dataFrame.right == rightLabel)]) > 0:
+                Ndiv = 10
+                Narr = 25
                 # Create array of y values for each strip, half at left value,
                 # half at right, convolve
-                ys_d = np.array(50 * [leftWidths[leftLabel]['bottom']] + 50 * [rightWidths[rightLabel]['bottom']])
-                ys_d = np.convolve(ys_d, 0.05 * np.ones(20), mode='valid')
-                ys_d = np.convolve(ys_d, 0.05 * np.ones(20), mode='valid')
-                ys_u = np.array(50 * [leftWidths[leftLabel]['bottom'] + ns_l[leftLabel][rightLabel]] + 50 * [rightWidths[rightLabel]['bottom'] + ns_r[leftLabel][rightLabel]])
-                ys_u = np.convolve(ys_u, 0.05 * np.ones(20), mode='valid')
-                ys_u = np.convolve(ys_u, 0.05 * np.ones(20), mode='valid')
+                ys_d = np.array(Narr * [leftWidths[leftLabel]['bottom']] + Narr * [rightWidths[rightLabel]['bottom']])
+                ys_d = np.convolve(ys_d, 1/Ndiv * np.ones(Ndiv), mode='valid')
+                ys_d = np.convolve(ys_d, 1/Ndiv * np.ones(Ndiv), mode='valid')
+                ys_u = np.array(Narr * [leftWidths[leftLabel]['bottom'] + ns_l[leftLabel][rightLabel]] + Narr * [rightWidths[rightLabel]['bottom'] + ns_r[leftLabel][rightLabel]])
+                ys_u = np.convolve(ys_u, 1/Ndiv * np.ones(Ndiv), mode='valid')
+                ys_u = np.convolve(ys_u, 1/Ndiv * np.ones(Ndiv), mode='valid')
 
                 # Update bottom edges at each label so next strip starts at the right place
                 leftWidths[leftLabel]['bottom'] += ns_l[leftLabel][rightLabel]
                 rightWidths[rightLabel]['bottom'] += ns_r[leftLabel][rightLabel]
-                plt.fill_between(
-                    np.linspace(xLeft, xRight, len(ys_d)), ys_d, ys_u, alpha=0.65,
-                    color=colorDict[labelColor]
-                )
+                
+                xx = np.linspace(xLeft, xRight, len(ys_d))
+                #plt.fill_between(
+                #    xx, ys_d, ys_u,
+                #    color=colorDict[labelColor],
+                #    alpha=0.65,
+                #)
+                cc = combineColours(colorDict[leftLabel],colorDict[rightLabel],len(ys_d))
+                for jj in range(len(ys_d)-1):
+                  plt.fill_between(
+                    xx[[jj,jj+1]], 
+                    ys_d[[jj,jj+1]], 
+                    ys_u[[jj,jj+1]],
+                    color=cc[:,jj],
+                    alpha=0.65,
+                    lw=0,
+                    edgecolor="none",
+                    snap=True,
+                  )
+     
     
     
     # frame on bottom edge; might delete
