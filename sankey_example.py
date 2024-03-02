@@ -49,10 +49,14 @@ sky.sankey(
   data,
   sorting = -1,
   colorDict = colorDict,
-  labelWidth = 0.2
+  labelWidth = 0.2,
+  barWidth = 0.05,
+  titles = ["Line 1","Line 2","Line 3"]
 )
-  
+
 #plt.gcf().set_size_inches(6,6)
-# plt.savefig('fruits.png',bbox_inches='tight',dpi=150)
+#plt.savefig('fruits.pdf',bbox_inches='tight')
 
 plt.show()
+
+
