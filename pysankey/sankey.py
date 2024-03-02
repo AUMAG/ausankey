@@ -64,9 +64,12 @@ def sankey(
            figureName=None, 
            closePlot=False, 
            titles=None, 
+           titleGap=0.05,
            labelDict={},
            labelWidth=0,
            barWidth=0.02,
+           barGap=0.05,
+           alpha=0.65,
            colormap="viridis",
            sorting=0,
           ):
@@ -120,6 +123,7 @@ def sankey(
       _sankey(ii,N-1,data, 
            Wsum=Wsum,
            titles=titles,
+           titleGap=titleGap,
            labelOrder=labelOrder, 
            colorDict=colorDict,
            aspect=aspect, 
@@ -130,9 +134,11 @@ def sankey(
            labelDict=labelDict,
            labelWidth=labelWidth,
            barWidth=barWidth,
+           barGap=barGap,
            plotWidth=plotWidth,
            subplotWidth=subplotWidth,
            plotHeight=plotHeight,
+           alpha=alpha,
            sorting=sorting)
     
     # frame on bottom edge; might delete
@@ -183,12 +189,15 @@ def _sankey(ii,N,data,
            figureName=None, 
            closePlot=False, 
            titles=None, 
+           titleGap=0,
            plotWidth=0,
            plotHeight=0,
            subplotWidth=0,
            labelDict={},
            labelWidth=0,
            barWidth=0,
+           barGap=0,
+           alpha=0,
            sorting=0):         
     
     labelind = 2*ii
@@ -283,7 +292,7 @@ def _sankey(ii,N,data,
             myD['bottom'] = 0
             myD['top'] = myD['left']
         else:
-            myD['bottom'] = leftWidths[leftLabels[i - 1]]['top'] + barWidth * dataFrame.leftWeight.sum()
+            myD['bottom'] = leftWidths[leftLabels[i - 1]]['top'] + barGap*plotHeight
             myD['top'] = myD['bottom'] + myD['left']
         leftWidths[leftLabel] = myD
 
@@ -296,7 +305,7 @@ def _sankey(ii,N,data,
             myD['bottom'] = 0
             myD['top'] = myD['right']
         else:
-            myD['bottom'] = rightWidths[rightLabels[i - 1]]['top'] + barWidth * dataFrame.rightWeight.sum()
+            myD['bottom'] = rightWidths[rightLabels[i - 1]]['top'] + barGap*plotHeight
             myD['top'] = myD['bottom'] + myD['right']
         rightWidths[rightLabel] = myD
 
@@ -313,7 +322,7 @@ def _sankey(ii,N,data,
             2 * [leftWidths[leftLabel]['bottom']],
             2 * [leftWidths[leftLabel]['bottom'] + leftWidths[leftLabel]['left']],
             color=colorDict[leftLabel],
-            alpha=0.99,
+            alpha=1,
             lw=0,
             snap=True,
         )
@@ -329,7 +338,7 @@ def _sankey(ii,N,data,
             xRight+[0, barWidth * xMax], 2 * [rightWidths[rightLabel]['bottom']],
             2 * [rightWidths[rightLabel]['bottom'] + rightWidths[rightLabel]['right']],
             color=colorDict[rightLabel],
-            alpha=0.99,
+            alpha=1,
             lw=0,
             snap=True,
         )
@@ -347,7 +356,7 @@ def _sankey(ii,N,data,
       if ii == 0:
         plt.text(
           -xMax*barWidth/2 + xLeft, 
-          1.05*(leftWidths[leftLabel]['bottom'] + leftWidths[leftLabel]['left']),
+          titleGap*plotHeight +(leftWidths[leftLabel]['bottom'] + leftWidths[leftLabel]['left']),
           titles[ii],
           {'ha': 'center', 'va': 'center'},
           fontsize = fontsize,
@@ -355,7 +364,7 @@ def _sankey(ii,N,data,
       
       plt.text(
         xRight + xMax*barWidth/2, 
-        1.05*(rightWidths[rightLabel]['bottom'] + rightWidths[rightLabel]['right']),
+        titleGap*plotHeight +(rightWidths[rightLabel]['bottom'] + rightWidths[rightLabel]['right']),
         titles[ii+1],
         {'ha': 'center', 'va': 'center'},
         fontsize = fontsize,
@@ -397,7 +406,7 @@ def _sankey(ii,N,data,
                     ys_d[[jj,jj+1]], 
                     ys_u[[jj,jj+1]],
                     color=cc[:,jj],
-                    alpha=0.65,
+                    alpha=alpha,
                     lw=0,
                     edgecolor="none",
                     snap=True,

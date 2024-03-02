@@ -52,11 +52,14 @@ sky.sankey(
   colorDict = colorDict,
   labelWidth = 0.2,
   barWidth = 0.05,
-  titles = ["Line 1","Line 2","Line 3"]
+  barGap = 0.02,
+  alpha=0.3,
+  titles = ["Line 1","Line 2","Line 3"],
+  titleGap = 0.02,
 )
 
 #plt.gcf().set_size_inches(6,6)
-#plt.savefig('fruits.pdf',bbox_inches='tight')
+plt.savefig('fruits.pdf',bbox_inches='tight')
 
 plt.show()
 
