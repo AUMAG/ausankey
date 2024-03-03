@@ -64,6 +64,7 @@ def sankey(
            closePlot=False, 
            titles=None, 
            titleGap=0.05,
+           titleTop=True,
            labelDict={},
            labelWidth=0,
            barWidth=0.02,
@@ -123,6 +124,7 @@ def sankey(
            Wsum=Wsum,
            titles=titles,
            titleGap=titleGap,
+           titleTop=titleTop,
            labelOrder=labelOrder, 
            colorDict=colorDict,
            aspect=aspect, 
@@ -145,7 +147,7 @@ def sankey(
       color=[0,0,0,1])
     
     plt.gca().axis('off')
-    plt.gcf().set_size_inches(6, 6)
+    #plt.gcf().set_size_inches(6, 6)
     
     if figureName != None:
         plt.savefig("{}.png".format(figureName), bbox_inches='tight', dpi=150)
@@ -187,6 +189,7 @@ def _sankey(ii,N,data,
            closePlot=False, 
            titles=None, 
            titleGap=0,
+           titleTop=True,
            plotWidth=0,
            plotHeight=0,
            subplotWidth=0,
@@ -350,20 +353,32 @@ def _sankey(ii,N,data,
     
     # "titles"
     if titles is not None:
+
       if ii == 0:
-        plt.text(
-          -xMax*barWidth/2 + xLeft, 
-          titleGap*plotHeight +(leftWidths[leftLabel]['bottom'] + leftWidths[leftLabel]['left']),
-          titles[ii],
-          {'ha': 'center', 'va': 'bottom'},
+          
+        xt = -xMax*barWidth/2 + xLeft
+        if titleTop:
+          yt = titleGap*plotHeight +(leftWidths[leftLabel]['bottom'] + leftWidths[leftLabel]['left'])
+          va = 'bottom'
+        else:
+          yt = -titleGap*plotHeight
+          va = 'top'
+        
+        plt.text(xt, yt, titles[ii],
+          {'ha': 'center', 'va': va},
           fontsize = fontsize,
         )
       
-      plt.text(
-        xRight + xMax*barWidth/2, 
-        titleGap*plotHeight +(rightWidths[rightLabel]['bottom'] + rightWidths[rightLabel]['right']),
-        titles[ii+1],
-        {'ha': 'center', 'va': 'bottom'},
+      xt = xRight + xMax*barWidth/2
+      if titleTop:
+        yt = titleGap*plotHeight +(rightWidths[rightLabel]['bottom'] + rightWidths[rightLabel]['right'])
+        va = 'bottom'
+      else:
+        yt = -titleGap*plotHeight
+        va = 'top'
+                  
+      plt.text(xt, yt, titles[ii+1],
+        {'ha': 'center', 'va': va},
         fontsize = fontsize,
       )
 
@@ -401,10 +416,4 @@ def _sankey(ii,N,data,
                     edgecolor="none",
                     snap=True,
                   )
-     
-    
-    
-    # frame on bottom edge; for testing, to delete
-    plt.plot([xLeft,xRight],-0.05*plotHeight+[0,0],color=[0,0,0,0.5])
-    
 
