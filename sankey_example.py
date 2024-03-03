@@ -57,6 +57,7 @@ sky.sankey(
   titles = ["Line 1","Line 2","Line 3"],
   titleGap = 0.025,
   titleTop = False,
+  axis = False,
 )
 
 #plt.gcf().set_size_inches(6,6)

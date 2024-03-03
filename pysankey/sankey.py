@@ -72,6 +72,7 @@ def sankey(
            alpha=0.65,
            colormap="viridis",
            sorting=0,
+           axis=False,
           ):
     '''
     Make Sankey Diagram showing flow from left-->right
@@ -139,12 +140,18 @@ def sankey(
            subplotWidth=subplotWidth,
            plotHeight=plotHeight,
            alpha=alpha,
+           axis=axis,
            sorting=sorting)
     
-    # frame on bottom edge; might delete
+    # axis on bottom edge
+    if axis:
+        col = [0,0,0,1]
+    else:
+        col = [1,1,1,0]
     plt.plot(
-      [0,plotWidth],-0.1*plotHeight+[0,0],
-      color=[0,0,0,1])
+          [0,plotWidth],
+          -titleGap*plotHeight+[0,0],
+          color=col)
     
     plt.gca().axis('off')
     #plt.gcf().set_size_inches(6, 6)
@@ -198,6 +205,7 @@ def _sankey(ii,N,data,
            barWidth=0,
            barGap=0,
            alpha=0,
+           axis=1,
            sorting=0):         
     
     labelind = 2*ii
@@ -354,6 +362,11 @@ def _sankey(ii,N,data,
     # "titles"
     if titles is not None:
 
+      if axis:
+          yscale = 2
+      else:
+          yscale = 1
+          
       if ii == 0:
           
         xt = -xMax*barWidth/2 + xLeft
@@ -361,7 +374,7 @@ def _sankey(ii,N,data,
           yt = titleGap*plotHeight +(leftWidths[leftLabel]['bottom'] + leftWidths[leftLabel]['left'])
           va = 'bottom'
         else:
-          yt = -titleGap*plotHeight
+          yt = -yscale*titleGap*plotHeight
           va = 'top'
         
         plt.text(xt, yt, titles[ii],
@@ -374,7 +387,7 @@ def _sankey(ii,N,data,
         yt = titleGap*plotHeight +(rightWidths[rightLabel]['bottom'] + rightWidths[rightLabel]['right'])
         va = 'bottom'
       else:
-        yt = -titleGap*plotHeight
+        yt = -yscale*titleGap*plotHeight
         va = 'top'
                   
       plt.text(xt, yt, titles[ii+1],
