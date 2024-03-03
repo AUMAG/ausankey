@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 """
 Produces simple Sankey Diagrams with matplotlib.
-@author: Anneya Golob & marcomanz & pierre-sassoulas & jorwoods
+@author: wspr after Anneya Golob & marcomanz & pierre-sassoulas & jorwoods
                       .-.
                  .--.(   ).--.
       <-.  .-.-.(.->          )_  .--.
@@ -36,22 +36,6 @@ class NullsInFrame(PySankeyException):
 class LabelMismatch(PySankeyException):
     pass
 
-
-def check_data_matches_labels(labels, data, side):
-    if len(labels) > 0:
-        if isinstance(data, list):
-            data = set(data)
-        if isinstance(data, pd.Series):
-            data = set(data.unique().tolist())
-        if isinstance(labels, list):
-            labels = set(labels)
-        if labels != data:
-            msg = "\n"
-            if len(labels) <= 20:
-                msg = "Labels: " + ",".join(labels) + "\n"
-            if len(data) < 20:
-                msg += "Data: " + ",".join(data)
-            raise LabelMismatch('{0} labels and data do not match.{1}'.format(side, msg))
 
 
 def sankey(
@@ -91,7 +75,7 @@ def sankey(
     '''
  
 
-    plt.figure(dpi=600)
+    plt.figure(dpi=300)
     plt.rc('text', usetex=False)
     plt.rc('font', family='sans')    
 
@@ -103,6 +87,7 @@ def sankey(
     Wsum = np.empty(N-1)
     for ii in range(N-1):
       Wsum[ii] = sum(data[2*ii+1])
+    
     plotHeight = max(Wsum)
     subplotWidth = plotHeight/aspect
     plotWidth = (N-1)*subplotWidth + 2*subplotWidth*labelWidth + N*subplotWidth*barWidth
@@ -120,6 +105,7 @@ def sankey(
       for i, label in enumerate(flatcat):
         colorDict[label] = colorPalette[i]
 
+    # draw each segment of the graph
     for ii in range(N-1):
       _sankey(ii,N-1,data, 
            Wsum=Wsum,
@@ -153,6 +139,7 @@ def sankey(
           -titleGap*plotHeight+[0,0],
           color=col)
     
+    # complete plot
     plt.gca().axis('off')
     #plt.gcf().set_size_inches(6, 6)
     
@@ -161,29 +148,6 @@ def sankey(
     
     if closePlot:
         plt.close()
-
-
-
-def combineColours(c1,c2,N):
-  if len(c1) != 4:
-    r1 = int(c1[1:3], 16)/255
-    g1 = int(c1[3:5], 16)/255
-    b1 = int(c1[5:7], 16)/255
-    c1 = [r1,g1,b1,1]
-    
-  if len(c2) != 4:
-    r2 = int(c2[1:3], 16)/255
-    g2 = int(c2[3:5], 16)/255
-    b2 = int(c2[5:7], 16)/255
-    c2 = [r2,g2,b2,1]
-
-  rr = np.linspace(c1[0],c2[0],N)
-  gg = np.linspace(c1[1],c2[1],N)
-  bb = np.linspace(c1[2],c2[2],N)
-  aa = np.linspace(c1[3],c2[3],N)
-  
-  return np.array([rr,gg,bb,aa])
-
 
 
 def _sankey(ii,N,data, 
@@ -429,4 +393,44 @@ def _sankey(ii,N,data,
                     edgecolor="none",
                     snap=True,
                   )
+
+def check_data_matches_labels(labels, data, side):
+    if len(labels) > 0:
+        if isinstance(data, list):
+            data = set(data)
+        if isinstance(data, pd.Series):
+            data = set(data.unique().tolist())
+        if isinstance(labels, list):
+            labels = set(labels)
+        if labels != data:
+            msg = "\n"
+            if len(labels) <= 20:
+                msg = "Labels: " + ",".join(labels) + "\n"
+            if len(data) < 20:
+                msg += "Data: " + ",".join(data)
+            raise LabelMismatch('{0} labels and data do not match.{1}'.format(side, msg))
+
+
+def combineColours(c1,c2,N):
+  if len(c1) != 4:
+    r1 = int(c1[1:3], 16)/255
+    g1 = int(c1[3:5], 16)/255
+    b1 = int(c1[5:7], 16)/255
+    c1 = [r1,g1,b1,1]
+    
+  if len(c2) != 4:
+    r2 = int(c2[1:3], 16)/255
+    g2 = int(c2[3:5], 16)/255
+    b2 = int(c2[5:7], 16)/255
+    c2 = [r2,g2,b2,1]
+
+  rr = np.linspace(c1[0],c2[0],N)
+  gg = np.linspace(c1[1],c2[1],N)
+  bb = np.linspace(c1[2],c2[2],N)
+  aa = np.linspace(c1[3],c2[3],N)
+  
+  return np.array([rr,gg,bb,aa])
+ 
+
+
 
