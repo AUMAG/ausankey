@@ -355,7 +355,7 @@ def _sankey(ii,N,data,
           -xMax*barWidth/2 + xLeft, 
           titleGap*plotHeight +(leftWidths[leftLabel]['bottom'] + leftWidths[leftLabel]['left']),
           titles[ii],
-          {'ha': 'center', 'va': 'center'},
+          {'ha': 'center', 'va': 'bottom'},
           fontsize = fontsize,
         )
       
@@ -363,7 +363,7 @@ def _sankey(ii,N,data,
         xRight + xMax*barWidth/2, 
         titleGap*plotHeight +(rightWidths[rightLabel]['bottom'] + rightWidths[rightLabel]['right']),
         titles[ii+1],
-        {'ha': 'center', 'va': 'center'},
+        {'ha': 'center', 'va': 'bottom'},
         fontsize = fontsize,
       )
 
