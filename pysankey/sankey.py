@@ -57,6 +57,7 @@ def sankey(
            colormap="viridis",
            sorting=0,
            axis=False,
+           valign="bottom", # "top","center"
           ):
     '''
     Make Sankey Diagram showing flow from left-->right
@@ -85,10 +86,14 @@ def sankey(
     
     # sizes
     Wsum = np.empty(N-1)
+    Nunq = np.empty(N-1)
+    Lhgt = np.empty(N-1)
     for ii in range(N-1):
       Wsum[ii] = sum(data[2*ii+1])
+      Nunq[ii] = len(pd.Series(data[2*ii]).unique())
+      Lhgt[ii] = Wsum[ii] + Nunq[ii]*barGap*max(Wsum)
     
-    plotHeight = max(Wsum)
+    plotHeight = max(Lhgt)
     subplotWidth = plotHeight/aspect
     plotWidth = (N-1)*subplotWidth + 2*subplotWidth*labelWidth + N*subplotWidth*barWidth
 
@@ -127,6 +132,7 @@ def sankey(
            plotHeight=plotHeight,
            alpha=alpha,
            axis=axis,
+           valign=valign,
            sorting=sorting)
     
     # axis on bottom edge
@@ -170,6 +176,7 @@ def _sankey(ii,N,data,
            barGap=0,
            alpha=0,
            axis=1,
+           valign=None,
            sorting=0):         
     
     labelind = 2*ii
