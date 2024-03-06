@@ -44,8 +44,6 @@ def sankey(
            aspect=4, 
            labelOrder=None,
            fontsize=14, 
-           figureName=None, 
-           closePlot=False, 
            titles=None, 
            titleGap=0.05,
            titleTop=True,
@@ -122,8 +120,6 @@ def sankey(
            colorDict=colorDict,
            aspect=aspect, 
            fontsize=fontsize, 
-           figureName=figureName, 
-           closePlot=closePlot, 
            labelDict=labelDict,
            labelWidth=labelWidth,
            barWidth=barWidth,
@@ -139,23 +135,18 @@ def sankey(
     
     # axis on bottom edge
     if axis:
-        col = [0,0,0,1]
+      col = [0,0,0,1]
     else:
-        col = [1,1,1,0]
+      col = [1,1,1,0]
+    
     plt.plot(
-          [0,plotWidth],
-          -titleGap*plotHeight+[0,0],
-          color=col)
+        [0,plotWidth],
+        -titleGap*plotHeight+[0,0],
+        color=col)
     
     # complete plot
     plt.gca().axis('off')
-    #plt.gcf().set_size_inches(6, 6)
-    
-    if figureName != None:
-        plt.savefig("{}.png".format(figureName), bbox_inches='tight', dpi=150)
-    
-    if closePlot:
-        plt.close()
+
 
 
 def _sankey(ii,N,data, 
