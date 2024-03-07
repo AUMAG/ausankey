@@ -16,7 +16,6 @@ Produces simple Sankey Diagrams with matplotlib.
                 '  |   '   |
 """
 
-from collections import defaultdict
 
 import matplotlib.pyplot as plt
 import numpy as np
@@ -236,8 +235,8 @@ def _sankey(ii,N,data,
     raise ValueError(msg)
 
   # Determine widths of individual strips
-  ns_l = defaultdict()
-  ns_r = defaultdict()
+  ns_l = {}
+  ns_r = {}
   for leftLabel in leftLabels:
     leftDict = {}
     rightDict = {}
@@ -251,7 +250,7 @@ def _sankey(ii,N,data,
     ns_r[leftLabel] = rightDict
 
   # Determine positions of left label patches and total widths
-  leftWidths = defaultdict()
+  leftWidths = {}
   for i, leftLabel in enumerate(leftLabels):
     myD = {}
     myD['left'] = leftWeight[left == leftLabel].sum()
@@ -264,7 +263,7 @@ def _sankey(ii,N,data,
     leftWidths[leftLabel] = myD
 
   # Determine positions of right label patches and total widths
-  rightWidths = defaultdict()
+  rightWidths = {}
   for i, rightLabel in enumerate(rightLabels):
     myD = {}
     myD['right'] =  rightWeight[right == rightLabel].sum()
