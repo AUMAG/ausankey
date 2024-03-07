@@ -1,4 +1,4 @@
-# -*- coding: utf-8 -*-
+
 """
 Produces simple Sankey Diagrams with matplotlib.
 @author: wspr after Anneya Golob & marcomanz & pierre-sassoulas & jorwoods
@@ -18,25 +18,18 @@ Produces simple Sankey Diagrams with matplotlib.
 
 from collections import defaultdict
 
-import matplotlib
-matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 
-
 class PySankeyException(Exception):
     pass
-
 
 class NullsInFrame(PySankeyException):
     pass
 
-
 class LabelMismatch(PySankeyException):
     pass
-
-
 
 def sankey(
            data, 
@@ -74,10 +67,6 @@ def sankey(
       None
   '''
 
-  if ax is None:
-    ax = plt.gca()
-
-  
   N = int(len(data.columns)/2) # number of labels
   
   # sizes
@@ -120,6 +109,9 @@ def sankey(
       colorDict[label] = colorPalette[i]
 
   # draw each segment of the graph
+  if ax is None:
+    ax = plt.gca()
+    
   for ii in range(N-1):
 
     _sankey(ii,N-1,data, 
