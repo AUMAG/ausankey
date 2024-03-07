@@ -58,108 +58,108 @@ def sankey(
            valign="bottom", # "top","center"
            ax=None,
           ):
-    '''
-    Make Sankey Diagram showing flow from left-->right
+  '''
+  Make Sankey Diagram showing flow from left-->right
 
-    Inputs:
-        data = pandas dataframe of labels and weights in alternating columns
-        colorDict = Dictionary of colors to use for each label
-            {'label':'color'}
-        leftLabels = order of the left labels in the diagram
-        rightLabels = order of the right labels in the diagram
-        aspect = vertical extent of the diagram in units of horizontal extent
-        rightColor = If true, each strip in the diagram will be be colored
-                    according to its left label
-    Ouput:
-        None
-    '''
+  Inputs:
+      data = pandas dataframe of labels and weights in alternating columns
+      colorDict = Dictionary of colors to use for each label
+          {'label':'color'}
+      leftLabels = order of the left labels in the diagram
+      rightLabels = order of the right labels in the diagram
+      aspect = vertical extent of the diagram in units of horizontal extent
+      rightColor = If true, each strip in the diagram will be be colored
+                  according to its left label
+  Ouput:
+      None
+  '''
 
-    if ax is None:
-      ax = plt.gca()
+  if ax is None:
+    ax = plt.gca()
 
-    
-    N = int(len(data.columns)/2) # number of labels
-    
-    # sizes
-    Wsum = np.empty(N-1)
-    Nunq = np.empty(N-1)
-    Lhgt = np.empty(N-1)
-    for ii in range(N-1):
-      Wsum[ii] = sum(data[2*ii+1])
-      Nunq[ii] = len(pd.Series(data[2*ii]).unique())
-      Lhgt[ii] = Wsum[ii] + Nunq[ii]*barGap*max(Wsum)
-    
-    # overall dimensions
-    plotHeight = max(Lhgt)
-    subplotWidth = plotHeight/aspect
-    plotWidth = (N-1)*subplotWidth + 2*subplotWidth*labelWidth + N*subplotWidth*barWidth
-        
-    # offsets for alignment
-    voffset = np.empty(N-1)
-    for ii in range(N-1):
-      match valign:
-        case "top":
-          voffset[ii] =  -(plotHeight - Lhgt[1]) + (plotHeight - Lhgt[ii])
-        case "bottom":
-          voffset[ii] = 0
-        case "center":
-          voffset[ii] = -(plotHeight - Lhgt[1])/2 + (plotHeight - Lhgt[ii])/2
+  
+  N = int(len(data.columns)/2) # number of labels
+  
+  # sizes
+  Wsum = np.empty(N-1)
+  Nunq = np.empty(N-1)
+  Lhgt = np.empty(N-1)
+  for ii in range(N-1):
+    Wsum[ii] = sum(data[2*ii+1])
+    Nunq[ii] = len(pd.Series(data[2*ii]).unique())
+    Lhgt[ii] = Wsum[ii] + Nunq[ii]*barGap*max(Wsum)
+  
+  # overall dimensions
+  plotHeight = max(Lhgt)
+  subplotWidth = plotHeight/aspect
+  plotWidth = (N-1)*subplotWidth + 2*subplotWidth*labelWidth + N*subplotWidth*barWidth
+      
+  # offsets for alignment
+  voffset = np.empty(N-1)
+  for ii in range(N-1):
+    match valign:
+      case "top":
+        voffset[ii] =  -(plotHeight - Lhgt[1]) + (plotHeight - Lhgt[ii])
+      case "bottom":
+        voffset[ii] = 0
+      case "center":
+        voffset[ii] = -(plotHeight - Lhgt[1])/2 + (plotHeight - Lhgt[ii])/2
 
 
-    # labels
-    labelRec = data[range(0,2*N,2)].to_records(index=False)
-    flattened = [item for sublist in labelRec for item in sublist]
-    flatcat = pd.Series(flattened).unique()
-    
-    # If no colorDict given, make one
-    if colorDict is None:
-      colorDict = {}
-      cmap = plt.cm.get_cmap(colormap)
-      colorPalette = cmap(np.linspace(0,1,len(flatcat)))
-      for i, label in enumerate(flatcat):
-        colorDict[label] = colorPalette[i]
+  # labels
+  labelRec = data[range(0,2*N,2)].to_records(index=False)
+  flattened = [item for sublist in labelRec for item in sublist]
+  flatcat = pd.Series(flattened).unique()
+  
+  # If no colorDict given, make one
+  if colorDict is None:
+    colorDict = {}
+    cmap = plt.cm.get_cmap(colormap)
+    colorPalette = cmap(np.linspace(0,1,len(flatcat)))
+    for i, label in enumerate(flatcat):
+      colorDict[label] = colorPalette[i]
 
-    # draw each segment of the graph
-    for ii in range(N-1):
+  # draw each segment of the graph
+  for ii in range(N-1):
 
-      _sankey(ii,N-1,data, 
-           Wsum=Wsum,
-           titles=titles,
-           titleGap=titleGap,
-           titleTop=titleTop,
-           labelOrder=labelOrder, 
-           colorDict=colorDict,
-           aspect=aspect, 
-           fontsize=fontsize, 
-           labelDict=labelDict,
-           labelWidth=labelWidth,
-           barWidth=barWidth,
-           barGap=barGap,
-           plotWidth=plotWidth,
-           subplotWidth=subplotWidth,
-           plotHeight=plotHeight,
-           alpha=alpha,
-           axis=axis,
-           valign=valign,
-           Lhgt=Lhgt,
-           voffset=voffset,
-           sorting=sorting,
-           ax=ax
-           )
-    
-    # axis on bottom edge
-    if axis:
-      col = [0,0,0,1]
-    else:
-      col = [1,1,1,0]
-    
-    ax.plot(
-        [0,plotWidth],
-        -titleGap*plotHeight+[0,0],
-        color=col)
-    
-    # complete plot
-    ax.axis('off')
+    _sankey(ii,N-1,data, 
+         Wsum=Wsum,
+         titles=titles,
+         titleGap=titleGap,
+         titleTop=titleTop,
+         labelOrder=labelOrder, 
+         colorDict=colorDict,
+         aspect=aspect, 
+         fontsize=fontsize, 
+         labelDict=labelDict,
+         labelWidth=labelWidth,
+         barWidth=barWidth,
+         barGap=barGap,
+         plotWidth=plotWidth,
+         subplotWidth=subplotWidth,
+         plotHeight=plotHeight,
+         alpha=alpha,
+         axis=axis,
+         valign=valign,
+         Lhgt=Lhgt,
+         voffset=voffset,
+         sorting=sorting,
+         ax=ax
+         )
+  
+  # axis on bottom edge
+  if axis:
+    col = [0,0,0,1]
+  else:
+    col = [1,1,1,0]
+  
+  ax.plot(
+      [0,plotWidth],
+      -titleGap*plotHeight+[0,0],
+      color=col)
+  
+  # complete plot
+  ax.axis('off')
 
 
 
