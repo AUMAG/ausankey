@@ -185,30 +185,12 @@ def _sankey(ii,N,data,
   labelind = 2*ii
   weightind = 2*ii+1
   
-  left  = list(data[labelind])
-  right = list(data[labelind+2])
-  leftWeight  = list(data[weightind])
-  rightWeight = list(data[weightind+2])
-  
-  # Check weights
-  if len(leftWeight) == 0:
-    leftWeight = np.ones(len(left))
-  if len(rightWeight) == 0:
-    rightWeight = leftWeight
+  left        = pd.Series(data[labelind])
+  right       = pd.Series(data[labelind+2])
+  leftWeight  = pd.Series(data[weightind])
+  rightWeight = pd.Series(data[weightind+2])
 
-  # Create Dataframe
-  if isinstance(left, pd.Series):
-    left = left.reset_index(drop=True)
-  if isinstance(right, pd.Series):
-    right = right.reset_index(drop=True)
-  
-  dataFrame = pd.DataFrame({
-    'left': left, 
-    'right': right, 
-    'leftWeight': leftWeight,
-    'rightWeight': rightWeight}, index=range(len(left)))
-
-  if len(dataFrame[(dataFrame.left.isnull()) | (dataFrame.right.isnull())]):
+  if any(leftWeight.isnull()) | any(rightWeight.isnull()):
       raise NullsInFrame('Sankey graph does not support null values.')
 
   # label order / sorting
@@ -219,6 +201,7 @@ def _sankey(ii,N,data,
     leftLabels = None
     rightLabels = None
   
+  # sorting by label weight
   wgt = {}
   for dd in [0,2]:
     lbl = data[labelind+dd].unique()
@@ -229,6 +212,7 @@ def _sankey(ii,N,data,
     wgt[dd] = dict(sorted(
       wgt[dd].items(),
       key=lambda item: sorting*item[1]
+      # sorting = 0,1,-1 affects this
     ))
   
   if leftLabels == None:
@@ -238,14 +222,13 @@ def _sankey(ii,N,data,
   
   # check labels
   check_data_matches_labels(
-    leftLabels, dataFrame['left'], 'left')
+    leftLabels, left, 'left')
   check_data_matches_labels(
-    rightLabels, dataFrame['right'], 'right')
-    
-  # Identify all labels that appear 'left' or 'right'
-  allLabels = pd.Series(np.r_[dataFrame.left.unique(), dataFrame.right.unique()]).unique()
-  
+    rightLabels, right, 'right')
+
   # check colours
+  allLabels = pd.Series(np.r_[left.unique(), right.unique()]).unique()
+
   missing = [label for label in allLabels if label not in colorDict.keys()]
   if missing:
     msg = "The colorDict parameter is missing values for the following labels : "
@@ -259,10 +242,11 @@ def _sankey(ii,N,data,
     leftDict = {}
     rightDict = {}
     for rightLabel in rightLabels:
-        leftind = (dataFrame.left == leftLabel) & (dataFrame.right == rightLabel)
-        rightind = (dataFrame.left == leftLabel) & (dataFrame.right == rightLabel)
-        leftDict[rightLabel] = dataFrame[leftind].leftWeight.sum()
-        rightDict[rightLabel] = dataFrame[rightind].rightWeight.sum()
+      leftind = (left == leftLabel) & (right == rightLabel)
+      rightind = (left == leftLabel) & (right == rightLabel)
+      leftDict[rightLabel] = leftWeight[leftind].sum()
+      rightDict[rightLabel] = rightWeight[rightind].sum()
+    
     ns_l[leftLabel] = leftDict
     ns_r[leftLabel] = rightDict
 
@@ -270,7 +254,7 @@ def _sankey(ii,N,data,
   leftWidths = defaultdict()
   for i, leftLabel in enumerate(leftLabels):
     myD = {}
-    myD['left'] = dataFrame[dataFrame.left == leftLabel].leftWeight.sum()
+    myD['left'] = leftWeight[left == leftLabel].sum()
     if i == 0:
         myD['bottom'] = 0
         myD['top'] = myD['left']
@@ -283,7 +267,7 @@ def _sankey(ii,N,data,
   rightWidths = defaultdict()
   for i, rightLabel in enumerate(rightLabels):
     myD = {}
-    myD['right'] =  dataFrame[dataFrame.right == rightLabel].rightWeight.sum()
+    myD['right'] =  rightWeight[right == rightLabel].sum()
     if i == 0:
         myD['bottom'] = 0
         myD['top'] = myD['right']
@@ -375,7 +359,7 @@ def _sankey(ii,N,data,
   for leftLabel in leftLabels:
       for rightLabel in rightLabels:
           
-        if len(dataFrame[(dataFrame.left == leftLabel) & (dataFrame.right == rightLabel)]) > 0:
+        if len([(left == leftLabel) & (right == rightLabel)]) > 0:
             Ndiv = 10
             Narr = 25
             # Create array of y values for each strip, half at left value,
