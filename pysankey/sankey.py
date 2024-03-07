@@ -280,8 +280,8 @@ def _sankey(ii,N,data,
   xRight = labelWidth*xMax + (ii+1)*xMax
 
   # Draw bars and their labels
-  for leftLabel in leftLabels:
-    if ii == 0: # first time
+  if ii == 0: # first time
+    for leftLabel in leftLabels:
       ax.fill_between(
           xLeft+[-barWidth * xMax, 0],
           2*[leftWidths[leftLabel]['bottom']],
@@ -321,12 +321,12 @@ def _sankey(ii,N,data,
   if titles is not None:
 
     if axis:
-        yscale = 2
+      yscale = 2
     else:
-        yscale = 1
-        
+      yscale = 1
+    
+    # leftmost title
     if ii == 0:
-        
       xt = -xMax*barWidth/2 + xLeft
       if titleTop:
         yt = titleGap*plotHeight +(leftWidths[leftLabel]['bottom'] + leftWidths[leftLabel]['left'])
@@ -340,6 +340,7 @@ def _sankey(ii,N,data,
         fontsize = fontsize,
       )
     
+    # all other titles
     xt = xRight + xMax*barWidth/2
     if titleTop:
       yt = titleGap*plotHeight +(rightWidths[rightLabel]['bottom'] + rightWidths[rightLabel]['right'])
@@ -354,39 +355,41 @@ def _sankey(ii,N,data,
     )
 
   # Plot strips
+  Ndiv = 10
+  Narr = 25
   for leftLabel in leftLabels:
-      for rightLabel in rightLabels:
+    for rightLabel in rightLabels:
           
-        if len([(left == leftLabel) & (right == rightLabel)]) > 0:
-            Ndiv = 10
-            Narr = 25
-            # Create array of y values for each strip, half at left value,
-            # half at right, convolve
-            ys_d = np.array(Narr * [leftWidths[leftLabel]['bottom']] + Narr * [rightWidths[rightLabel]['bottom']])
-            ys_d = np.convolve(ys_d, 1/Ndiv * np.ones(Ndiv), mode='valid')
-            ys_d = np.convolve(ys_d, 1/Ndiv * np.ones(Ndiv), mode='valid')
-            ys_u = np.array(Narr * [leftWidths[leftLabel]['bottom'] + ns_l[leftLabel][rightLabel]] + Narr * [rightWidths[rightLabel]['bottom'] + ns_r[leftLabel][rightLabel]])
-            ys_u = np.convolve(ys_u, 1/Ndiv * np.ones(Ndiv), mode='valid')
-            ys_u = np.convolve(ys_u, 1/Ndiv * np.ones(Ndiv), mode='valid')
+      if len([(left == leftLabel) & (right == rightLabel)]) == 0:
+        continue
+				
+      # Create array of y values for each strip, half at left value,
+      # half at right, convolve
+      ys_d = np.array(Narr * [leftWidths[leftLabel]['bottom']] + Narr * [rightWidths[rightLabel]['bottom']])
+      ys_d = np.convolve(ys_d, 1/Ndiv * np.ones(Ndiv), mode='valid')
+      ys_d = np.convolve(ys_d, 1/Ndiv * np.ones(Ndiv), mode='valid')
+      ys_u = np.array(Narr * [leftWidths[leftLabel]['bottom'] + ns_l[leftLabel][rightLabel]] + Narr * [rightWidths[rightLabel]['bottom'] + ns_r[leftLabel][rightLabel]])
+      ys_u = np.convolve(ys_u, 1/Ndiv * np.ones(Ndiv), mode='valid')
+      ys_u = np.convolve(ys_u, 1/Ndiv * np.ones(Ndiv), mode='valid')
 
-            # Update bottom edges at each label so next strip starts at the right place
-            leftWidths[leftLabel]['bottom'] += ns_l[leftLabel][rightLabel]
-            rightWidths[rightLabel]['bottom'] += ns_r[leftLabel][rightLabel]
-            
-            xx = np.linspace(xLeft, xRight, len(ys_d))
-            cc = combineColours(colorDict[leftLabel],colorDict[rightLabel],len(ys_d))
-            
-            for jj in range(len(ys_d)-1):
-              ax.fill_between(
-                xx[[jj,jj+1]], 
-                ys_d[[jj,jj+1]], 
-                ys_u[[jj,jj+1]],
-                color=cc[:,jj],
-                alpha=alpha,
-                lw=0,
-                edgecolor="none",
-                snap=True,
-              )
+      # Update bottom edges at each label so next strip starts at the right place
+      leftWidths[leftLabel]['bottom'] += ns_l[leftLabel][rightLabel]
+      rightWidths[rightLabel]['bottom'] += ns_r[leftLabel][rightLabel]
+      
+      xx = np.linspace(xLeft, xRight, len(ys_d))
+      cc = combineColours(colorDict[leftLabel],colorDict[rightLabel],len(ys_d))
+      
+      for jj in range(len(ys_d)-1):
+        ax.fill_between(
+          xx[[jj,jj+1]], 
+          ys_d[[jj,jj+1]], 
+          ys_u[[jj,jj+1]],
+          color=cc[:,jj],
+          alpha=alpha,
+          lw=0,
+          edgecolor="none",
+          snap=True,
+        )
 
 def check_data_matches_labels(labels, data, side):
   if len(labels) > 0:
