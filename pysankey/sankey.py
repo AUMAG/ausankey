@@ -193,14 +193,8 @@ def _sankey(ii,N,data,
       raise NullsInFrame('Sankey graph does not support null values.')
 
   # label order / sorting
-  if labelOrder is not None:
-    leftLabels  = list(labelOrder[ii])
-    rightLabels = list(labelOrder[ii+1])
-  else:
-    leftLabels = None
-    rightLabels = None
   
-  # sorting by label weight
+  # calc label weight then sort
   wgt = {}
   for dd in [0,2]:
     lbl = data[labelind+dd].unique()
@@ -213,10 +207,12 @@ def _sankey(ii,N,data,
       key=lambda item: sorting*item[1]
       # sorting = 0,1,-1 affects this
     ))
-  
-  if leftLabels == None:
+
+  if labelOrder is not None:
+    leftLabels  = list(labelOrder[ii])
+    rightLabels = list(labelOrder[ii+1])
+  else:
     leftLabels  = list(wgt[0].keys())
-  if rightLabels == None:
     rightLabels = list(wgt[2].keys())
   
   # check labels
@@ -234,20 +230,17 @@ def _sankey(ii,N,data,
     msg += '{}'.format(', '.join(missing))
     raise ValueError(msg)
 
-  # Determine widths of individual strips
-  ns_l = {}
-  ns_r = {}
+  # Determine sizes of individual strips
+  barSizeLeft = {}
+  barSizeRight = {}
   for leftLabel in leftLabels:
-    leftDict = {}
-    rightDict = {}
+    barSizeLeft[leftLabel] = {}
+    barSizeRight[leftLabel] = {}
     for rightLabel in rightLabels:
       ind = (left == leftLabel) & (right == rightLabel)
-      leftDict[rightLabel] = leftWeight[ind].sum()
-      rightDict[rightLabel] = rightWeight[ind].sum()
+      barSizeLeft[leftLabel][rightLabel] = leftWeight[ind].sum()
+      barSizeRight[leftLabel][rightLabel] = rightWeight[ind].sum()
     
-    ns_l[leftLabel] = leftDict
-    ns_r[leftLabel] = rightDict
-
   # Determine positions of left label patches and total widths
   leftWidths = {}
   for i, leftLabel in enumerate(leftLabels):
@@ -274,7 +267,7 @@ def _sankey(ii,N,data,
         myD['top'] = myD['bottom'] + myD['right']
     rightWidths[rightLabel] = myD
 
-  # horizontal extents of diagram
+  # horizontal extents of subdiagram
   xMax = subplotWidth
   xLeft = barWidth*xMax + labelWidth*xMax + ii*xMax
   xRight = labelWidth*xMax + (ii+1)*xMax
@@ -360,7 +353,8 @@ def _sankey(ii,N,data,
   for leftLabel in leftLabels:
     for rightLabel in rightLabels:
           
-      if len([(left == leftLabel) & (right == rightLabel)]) == 0:
+      if not(any(
+          (left == leftLabel) & (right == rightLabel) )):
         continue
 				
       # Create array of y values for each strip, half at left value,
@@ -368,13 +362,14 @@ def _sankey(ii,N,data,
       ys_d = np.array(Narr * [leftWidths[leftLabel]['bottom']] + Narr * [rightWidths[rightLabel]['bottom']])
       ys_d = np.convolve(ys_d, 1/Ndiv * np.ones(Ndiv), mode='valid')
       ys_d = np.convolve(ys_d, 1/Ndiv * np.ones(Ndiv), mode='valid')
-      ys_u = np.array(Narr * [leftWidths[leftLabel]['bottom'] + ns_l[leftLabel][rightLabel]] + Narr * [rightWidths[rightLabel]['bottom'] + ns_r[leftLabel][rightLabel]])
+
+      ys_u = np.array(Narr * [leftWidths[leftLabel]['bottom'] + barSizeLeft[leftLabel][rightLabel]] + Narr * [rightWidths[rightLabel]['bottom'] + barSizeRight[leftLabel][rightLabel]])
       ys_u = np.convolve(ys_u, 1/Ndiv * np.ones(Ndiv), mode='valid')
       ys_u = np.convolve(ys_u, 1/Ndiv * np.ones(Ndiv), mode='valid')
 
       # Update bottom edges at each label so next strip starts at the right place
-      leftWidths[leftLabel]['bottom'] += ns_l[leftLabel][rightLabel]
-      rightWidths[rightLabel]['bottom'] += ns_r[leftLabel][rightLabel]
+      leftWidths[leftLabel]['bottom'] += barSizeLeft[leftLabel][rightLabel]
+      rightWidths[rightLabel]['bottom'] += barSizeRight[leftLabel][rightLabel]
       
       xx = np.linspace(xLeft, xRight, len(ys_d))
       cc = combineColours(colorDict[leftLabel],colorDict[rightLabel],len(ys_d))
