@@ -72,8 +72,7 @@ def sankey(
     Ouput:
         None
     '''
- 
-
+      
     plt.figure(dpi=300)
     plt.rc('text', usetex=False)
     plt.rc('font', family='sans')    
@@ -91,9 +90,22 @@ def sankey(
       Nunq[ii] = len(pd.Series(data[2*ii]).unique())
       Lhgt[ii] = Wsum[ii] + Nunq[ii]*barGap*max(Wsum)
     
+    # overall dimensions
     plotHeight = max(Lhgt)
     subplotWidth = plotHeight/aspect
     plotWidth = (N-1)*subplotWidth + 2*subplotWidth*labelWidth + N*subplotWidth*barWidth
+        
+    # offsets for alignment
+    voffset = np.empty(N-1)
+    for ii in range(N-1):
+      match valign:
+        case "top":
+          voffset[ii] =  -(plotHeight - Lhgt[1]) + (plotHeight - Lhgt[ii])
+        case "bottom":
+          voffset[ii] = 0
+        case "center":
+          voffset[ii] = -(plotHeight - Lhgt[1])/2 + (plotHeight - Lhgt[ii])/2
+
 
     # labels
     labelRec = data[range(0,2*N,2)].to_records(index=False)
@@ -131,6 +143,7 @@ def sankey(
            axis=axis,
            valign=valign,
            Lhgt=Lhgt,
+           voffset=voffset,
            sorting=sorting)
     
     # axis on bottom edge
@@ -171,6 +184,7 @@ def _sankey(ii,N,data,
            axis=1,
            valign=None,
            Lhgt=0,
+           voffset=None,
            sorting=0):         
     
   labelind = 2*ii
@@ -180,14 +194,6 @@ def _sankey(ii,N,data,
   right = list(data[labelind+2])
   leftWeight  = list(data[weightind])
   rightWeight = list(data[weightind+2])
-  
-  match valign:
-    case "top":
-      voffset =  -(plotHeight - Lhgt[1]) + (plotHeight - Lhgt[ii])
-    case "bottom":
-      voffset = 0
-    case "center":
-      voffset = -(plotHeight - Lhgt[1])/2 + (plotHeight - Lhgt[ii])/2
   
   # Check weights
   if len(leftWeight) == 0:
@@ -296,7 +302,7 @@ def _sankey(ii,N,data,
   xLeft = barWidth*xMax + labelWidth*xMax + ii*xMax
   xRight = labelWidth*xMax + (ii+1)*xMax
 
-  # Draw vertical bars on left and right of each  label's section & print label
+  # Draw bars and their labels
   for leftLabel in leftLabels:
     if ii == 0: # first time
       plt.fill_between(
@@ -310,7 +316,7 @@ def _sankey(ii,N,data,
       )
       plt.text(
           xLeft - 1.5*barWidth*xMax,
-           leftWidths[leftLabel]['bottom'] + 0.5 * leftWidths[leftLabel]['left'],
+          leftWidths[leftLabel]['bottom'] + 0.5 * leftWidths[leftLabel]['left'],
           labelDict.get(leftLabel,leftLabel),
           {'ha': 'right', 'va': 'center'},
           fontsize=fontsize
