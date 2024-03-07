@@ -56,6 +56,7 @@ def sankey(
            sorting=0,
            axis=False,
            valign="bottom", # "top","center"
+           ax=None,
           ):
     '''
     Make Sankey Diagram showing flow from left-->right
@@ -72,11 +73,9 @@ def sankey(
     Ouput:
         None
     '''
-      
-    plt.figure(dpi=300)
-    plt.rc('text', usetex=False)
-    plt.rc('font', family='sans')    
 
+    if ax is None:
+      ax = plt.gca()
 
     
     N = int(len(data.columns)/2) # number of labels
@@ -144,7 +143,9 @@ def sankey(
            valign=valign,
            Lhgt=Lhgt,
            voffset=voffset,
-           sorting=sorting)
+           sorting=sorting,
+           ax=ax
+           )
     
     # axis on bottom edge
     if axis:
@@ -152,13 +153,13 @@ def sankey(
     else:
       col = [1,1,1,0]
     
-    plt.plot(
+    ax.plot(
         [0,plotWidth],
         -titleGap*plotHeight+[0,0],
         color=col)
     
     # complete plot
-    plt.gca().axis('off')
+    ax.axis('off')
 
 
 
@@ -185,7 +186,9 @@ def _sankey(ii,N,data,
            valign=None,
            Lhgt=0,
            voffset=None,
-           sorting=0):         
+           sorting=0,
+           ax=None,
+          ):         
     
   labelind = 2*ii
   weightind = 2*ii+1
@@ -305,7 +308,7 @@ def _sankey(ii,N,data,
   # Draw bars and their labels
   for leftLabel in leftLabels:
     if ii == 0: # first time
-      plt.fill_between(
+      ax.fill_between(
           xLeft+[-barWidth * xMax, 0],
           2*[leftWidths[leftLabel]['bottom']],
           2*[leftWidths[leftLabel]['bottom'] + leftWidths[leftLabel]['left']],
@@ -314,7 +317,7 @@ def _sankey(ii,N,data,
           lw=0,
           snap=True,
       )
-      plt.text(
+      ax.text(
           xLeft - 1.5*barWidth*xMax,
           leftWidths[leftLabel]['bottom'] + 0.5 * leftWidths[leftLabel]['left'],
           labelDict.get(leftLabel,leftLabel),
@@ -322,7 +325,7 @@ def _sankey(ii,N,data,
           fontsize=fontsize
       )
   for rightLabel in rightLabels:
-    plt.fill_between(
+    ax.fill_between(
       xRight+[0, barWidth * xMax], 
       2*[rightWidths[rightLabel]['bottom']],
       [rightWidths[rightLabel]['bottom'] + rightWidths[rightLabel]['right']],
@@ -332,7 +335,7 @@ def _sankey(ii,N,data,
       snap=True,
     )
     if ii == N-1: # last time
-      plt.text(
+      ax.text(
         xRight + 1.5*barWidth * xMax,
         rightWidths[rightLabel]['bottom'] + 0.5 * rightWidths[rightLabel]['right'],
         labelDict.get(rightLabel,rightLabel),
@@ -358,7 +361,7 @@ def _sankey(ii,N,data,
         yt = -yscale*titleGap*plotHeight
         va = 'top'
       
-      plt.text(xt, yt, titles[ii],
+      ax.text(xt, yt, titles[ii],
         {'ha': 'center', 'va': va},
         fontsize = fontsize,
       )
@@ -371,7 +374,7 @@ def _sankey(ii,N,data,
       yt = -yscale*titleGap*plotHeight
       va = 'top'
                 
-    plt.text(xt, yt, titles[ii+1],
+    ax.text(xt, yt, titles[ii+1],
       {'ha': 'center', 'va': va},
       fontsize = fontsize,
     )
@@ -400,7 +403,7 @@ def _sankey(ii,N,data,
             cc = combineColours(colorDict[leftLabel],colorDict[rightLabel],len(ys_d))
             
             for jj in range(len(ys_d)-1):
-              plt.fill_between(
+              ax.fill_between(
                 xx[[jj,jj+1]], 
                 ys_d[[jj,jj+1]], 
                 ys_u[[jj,jj+1]],
