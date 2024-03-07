@@ -241,10 +241,9 @@ def _sankey(ii,N,data,
     leftDict = {}
     rightDict = {}
     for rightLabel in rightLabels:
-      leftind = (left == leftLabel) & (right == rightLabel)
-      rightind = (left == leftLabel) & (right == rightLabel)
-      leftDict[rightLabel] = leftWeight[leftind].sum()
-      rightDict[rightLabel] = rightWeight[rightind].sum()
+      ind = (left == leftLabel) & (right == rightLabel)
+      leftDict[rightLabel] = leftWeight[ind].sum()
+      rightDict[rightLabel] = rightWeight[ind].sum()
     
     ns_l[leftLabel] = leftDict
     ns_r[leftLabel] = rightDict
