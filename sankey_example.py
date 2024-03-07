@@ -13,6 +13,7 @@ data = pd.DataFrame([
   ("e",1.0,"e",1.0),
 ])
 
+plt.figure()
 sky.sankey(
   data,
   sorting = -1,
@@ -46,6 +47,8 @@ data = pd.DataFrame([
   ("e",1.0,"e",1.0,"e",1.0),
 ])
 
+plt.figure()
+
 sky.sankey(
   data,
   sorting = -1,
@@ -58,6 +61,7 @@ sky.sankey(
   titleGap = 0.025,
   titleTop = False,
   axis = False,
+  valign = "top",
 )
 
 #plt.gcf().set_size_inches(6,6)
