@@ -283,10 +283,12 @@ def _sankey(ii,N,data,
   # Draw bars and their labels
   if ii == 0: # first time
     for leftLabel in leftLabels:
+      lbot = leftWidths[leftLabel]['bottom']
+      lll = leftWidths[leftLabel]['left']
       ax.fill_between(
           xLeft+[-barWidth * xMax, 0],
-          2*[leftWidths[leftLabel]['bottom']],
-          2*[leftWidths[leftLabel]['bottom'] + leftWidths[leftLabel]['left']],
+          2*[lbot],
+          2*[lbot + lll],
           color=colorDict[leftLabel],
           alpha=1,
           lw=0,
@@ -294,16 +296,18 @@ def _sankey(ii,N,data,
       )
       ax.text(
           xLeft - 1.5*barWidth*xMax,
-          leftWidths[leftLabel]['bottom'] + 0.5 * leftWidths[leftLabel]['left'],
+          lbot + 0.5*lll,
           labelDict.get(leftLabel,leftLabel),
           {'ha': 'right', 'va': 'center'},
           fontsize=fontsize
       )
   for rightLabel in rightLabels:
+    rbot = rightWidths[rightLabel]['bottom']
+    rrr = rightWidths[rightLabel]['right']
     ax.fill_between(
       xRight+[0, barWidth * xMax], 
-      2*[rightWidths[rightLabel]['bottom']],
-      [rightWidths[rightLabel]['bottom'] + rightWidths[rightLabel]['right']],
+      2*[rbot],
+      [rbot + rrr],
       color=colorDict[rightLabel],
       alpha=1,
       lw=0,
@@ -312,7 +316,7 @@ def _sankey(ii,N,data,
     if ii == N-1: # last time
       ax.text(
         xRight + 1.5*barWidth * xMax,
-        rightWidths[rightLabel]['bottom'] + 0.5 * rightWidths[rightLabel]['right'],
+        rbot + 0.5*rrr,
         labelDict.get(rightLabel,rightLabel),
         {'ha': 'left', 'va': 'center'},
         fontsize=fontsize
@@ -321,15 +325,12 @@ def _sankey(ii,N,data,
   # "titles"
   if titles is not None:
 
-    if axis:
-      yscale = 2
-    else:
-      yscale = 1
     
     # leftmost title
     if ii == 0:
       xt = -xMax*barWidth/2 + xLeft
-      if (titleSide == "top") | (titleSide == "both"):
+      if (  (titleSide == "top" ) 
+         or (titleSide == "both") ):
         yt = titleGap*plotHeight +(leftWidths[leftLabel]['top'])
         va = 'bottom'
         ax.text(xt, yt, titles[ii],
@@ -339,7 +340,7 @@ def _sankey(ii,N,data,
 
 
       if (titleSide == "bottom") | (titleSide == "both"):
-        yt = voffset[ii] - yscale*titleGap*plotHeight
+        yt = voffset[ii] - titleGap*plotHeight
         va = 'top'
       
         ax.text(xt, yt, titles[ii],
@@ -351,19 +352,17 @@ def _sankey(ii,N,data,
     xt = xRight + xMax*barWidth/2
     if (titleSide == "top") | (titleSide == "both"):
       yt = titleGap*plotHeight +(rightWidths[rightLabel]['top'])
-      va = 'bottom'
       
       ax.text(xt, yt, titles[ii+1],
-        {'ha': 'center', 'va': va},
+        {'ha': 'center', 'va': 'bottom'},
         fontsize = fontsize,
       )
 
     if (titleSide == "bottom") | (titleSide == "both"):
-      yt = voffset[ii+1] - yscale*titleGap*plotHeight
-      va = 'top'
+      yt = voffset[ii+1] - titleGap*plotHeight
                 
       ax.text(xt, yt, titles[ii+1],
-        {'ha': 'center', 'va': va},
+        {'ha': 'center', 'va': 'top'},
         fontsize = fontsize,
       )
 
@@ -376,20 +375,25 @@ def _sankey(ii,N,data,
       if not(any(
           (left == leftLabel) & (right == rightLabel) )):
         continue
-				
+	  
+      lbot = leftWidths[leftLabel]['bottom']
+      rbot = rightWidths[rightLabel]['bottom']
+      lbar = barSizeLeft[leftLabel][rightLabel]
+      rbar = barSizeRight[leftLabel][rightLabel]
+      
       # Create array of y values for each strip, half at left value,
       # half at right, convolve
-      ys_d = np.array(Narr * [leftWidths[leftLabel]['bottom']] + Narr * [rightWidths[rightLabel]['bottom']])
+      ys_d = np.array(Narr*[lbot] + Narr*[rbot])
       ys_d = np.convolve(ys_d, 1/Ndiv * np.ones(Ndiv), mode='valid')
       ys_d = np.convolve(ys_d, 1/Ndiv * np.ones(Ndiv), mode='valid')
 
-      ys_u = np.array(Narr * [leftWidths[leftLabel]['bottom'] + barSizeLeft[leftLabel][rightLabel]] + Narr * [rightWidths[rightLabel]['bottom'] + barSizeRight[leftLabel][rightLabel]])
+      ys_u = np.array(Narr * [lbot + lbar] + Narr * [rbot + rbar])
       ys_u = np.convolve(ys_u, 1/Ndiv * np.ones(Ndiv), mode='valid')
       ys_u = np.convolve(ys_u, 1/Ndiv * np.ones(Ndiv), mode='valid')
 
       # Update bottom edges at each label so next strip starts at the right place
-      leftWidths[leftLabel]['bottom'] += barSizeLeft[leftLabel][rightLabel]
-      rightWidths[rightLabel]['bottom'] += barSizeRight[leftLabel][rightLabel]
+      leftWidths[leftLabel]['bottom'] += lbar
+      rightWidths[rightLabel]['bottom'] += rbar
       
       xx = np.linspace(xLeft, xRight, len(ys_d))
       cc = combineColours(colorDict[leftLabel],colorDict[rightLabel],len(ys_d))
