@@ -38,7 +38,9 @@ def sankey(
            fontsize=14, 
            titles=None, 
            titleGap=0.05,
-           titleTop=True,
+           titleSide="top", # "bottom", "both"
+           frameSide="none",
+           frameGap=0.1,
            labelDict={},
            labelWidth=0,
            barWidth=0.02,
@@ -67,24 +69,24 @@ def sankey(
   '''
 
   N = int(len(data.columns)/2) # number of labels
-  
+
   # sizes
-  Wsum = np.empty(N-1)
-  Nunq = np.empty(N-1)
-  Lhgt = np.empty(N-1)
-  for ii in range(N-1):
+  Wsum = np.empty(N)
+  Nunq = np.empty(N)
+  Lhgt = np.empty(N)
+  for ii in range(N):
     Wsum[ii] = sum(data[2*ii+1])
     Nunq[ii] = len(pd.Series(data[2*ii]).unique())
-    Lhgt[ii] = Wsum[ii] + Nunq[ii]*barGap*max(Wsum)
-  
+    Lhgt[ii] = Wsum[ii] + (Nunq[ii]-1)*barGap*max(Wsum)
+
   # overall dimensions
   plotHeight = max(Lhgt)
   subplotWidth = plotHeight/aspect
   plotWidth = (N-1)*subplotWidth + 2*subplotWidth*labelWidth + N*subplotWidth*barWidth
       
   # offsets for alignment
-  voffset = np.empty(N-1)
-  for ii in range(N-1):
+  voffset = np.empty(N)
+  for ii in range(N):
     match valign:
       case "top":
         voffset[ii] =  -(plotHeight - Lhgt[1]) + (plotHeight - Lhgt[ii])
@@ -92,7 +94,6 @@ def sankey(
         voffset[ii] = 0
       case "center":
         voffset[ii] = -(plotHeight - Lhgt[1])/2 + (plotHeight - Lhgt[ii])/2
-
 
   # labels
   labelRec = data[range(0,2*N,2)].to_records(index=False)
@@ -117,7 +118,7 @@ def sankey(
          Wsum=Wsum,
          titles=titles,
          titleGap=titleGap,
-         titleTop=titleTop,
+         titleSide=titleSide,
          labelOrder=labelOrder, 
          colorDict=colorDict,
          aspect=aspect, 
@@ -130,7 +131,6 @@ def sankey(
          subplotWidth=subplotWidth,
          plotHeight=plotHeight,
          alpha=alpha,
-         axis=axis,
          valign=valign,
          Lhgt=Lhgt,
          voffset=voffset,
@@ -138,17 +138,27 @@ def sankey(
          ax=ax
          )
   
-  # axis on bottom edge
-  if axis:
+  # axis on too edge
+  if (frameSide == "top") | (frameSide == "both"):
     col = [0,0,0,1]
   else:
     col = [1,1,1,0]
   
   ax.plot(
-      [0,plotWidth],
-      -titleGap*plotHeight+[0,0],
+      [-subplotWidth*barWidth*N/2,plotWidth],
+      (plotHeight-voffset[1]) + (titleGap+frameGap)*plotHeight + [0,0],
       color=col)
+
+  if (frameSide == "bottom") | (frameSide == "both"):
+    col = [0,0,0,1]
+  else:
+    col = [1,1,1,0]
   
+  ax.plot(
+      [-subplotWidth*barWidth*N/2,plotWidth],
+      min(voffset) - (titleGap+frameGap)*plotHeight + [0,0],
+      color=col)
+
   # complete plot
   ax.axis('off')
 
@@ -164,7 +174,7 @@ def _sankey(ii,N,data,
            closePlot=False, 
            titles=None, 
            titleGap=0,
-           titleTop=True,
+           titleSide="",
            plotWidth=0,
            plotHeight=0,
            subplotWidth=0,
@@ -180,7 +190,7 @@ def _sankey(ii,N,data,
            sorting=0,
            ax=None,
           ):         
-    
+
   labelind = 2*ii
   weightind = 2*ii+1
   
@@ -247,11 +257,10 @@ def _sankey(ii,N,data,
     myD = {}
     myD['left'] = leftWeight[left == leftLabel].sum()
     if i == 0:
-        myD['bottom'] = 0
-        myD['top'] = myD['left']
+      myD['bottom'] = voffset[ii]
     else:
-        myD['bottom'] = leftWidths[leftLabels[i - 1]]['top'] + barGap*plotHeight
-        myD['top'] = myD['bottom'] + myD['left']
+      myD['bottom'] = leftWidths[leftLabels[i - 1]]['top'] + barGap*plotHeight
+    myD['top'] = myD['bottom'] + myD['left']
     leftWidths[leftLabel] = myD
 
   # Determine positions of right label patches and total widths
@@ -260,11 +269,10 @@ def _sankey(ii,N,data,
     myD = {}
     myD['right'] =  rightWeight[right == rightLabel].sum()
     if i == 0:
-        myD['bottom'] = 0
-        myD['top'] = myD['right']
+      myD['bottom'] = voffset[ii+1]
     else:
-        myD['bottom'] = rightWidths[rightLabels[i - 1]]['top'] + barGap*plotHeight
-        myD['top'] = myD['bottom'] + myD['right']
+      myD['bottom'] = rightWidths[rightLabels[i - 1]]['top'] + barGap*plotHeight
+    myD['top'] = myD['bottom'] + myD['right']
     rightWidths[rightLabel] = myD
 
   # horizontal extents of subdiagram
@@ -321,31 +329,43 @@ def _sankey(ii,N,data,
     # leftmost title
     if ii == 0:
       xt = -xMax*barWidth/2 + xLeft
-      if titleTop:
-        yt = titleGap*plotHeight +(leftWidths[leftLabel]['bottom'] + leftWidths[leftLabel]['left'])
+      if (titleSide == "top") | (titleSide == "both"):
+        yt = titleGap*plotHeight +(leftWidths[leftLabel]['top'])
         va = 'bottom'
-      else:
-        yt = -yscale*titleGap*plotHeight
+        ax.text(xt, yt, titles[ii],
+          {'ha': 'center', 'va': va},
+          fontsize = fontsize,
+        )
+
+
+      if (titleSide == "bottom") | (titleSide == "both"):
+        yt = voffset[ii] - yscale*titleGap*plotHeight
         va = 'top'
       
-      ax.text(xt, yt, titles[ii],
-        {'ha': 'center', 'va': va},
-        fontsize = fontsize,
-      )
+        ax.text(xt, yt, titles[ii],
+          {'ha': 'center', 'va': va},
+          fontsize = fontsize,
+        )
     
     # all other titles
     xt = xRight + xMax*barWidth/2
-    if titleTop:
-      yt = titleGap*plotHeight +(rightWidths[rightLabel]['bottom'] + rightWidths[rightLabel]['right'])
+    if (titleSide == "top") | (titleSide == "both"):
+      yt = titleGap*plotHeight +(rightWidths[rightLabel]['top'])
       va = 'bottom'
-    else:
-      yt = -yscale*titleGap*plotHeight
+      
+      ax.text(xt, yt, titles[ii+1],
+        {'ha': 'center', 'va': va},
+        fontsize = fontsize,
+      )
+
+    if (titleSide == "bottom") | (titleSide == "both"):
+      yt = voffset[ii+1] - yscale*titleGap*plotHeight
       va = 'top'
                 
-    ax.text(xt, yt, titles[ii+1],
-      {'ha': 'center', 'va': va},
-      fontsize = fontsize,
-    )
+      ax.text(xt, yt, titles[ii+1],
+        {'ha': 'center', 'va': va},
+        fontsize = fontsize,
+      )
 
   # Plot strips
   Ndiv = 10
@@ -423,6 +443,4 @@ def combineColours(c1,c2,N):
   
   return np.array([rr,gg,bb,aa])
  
-
-
 
