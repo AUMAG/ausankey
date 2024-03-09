@@ -81,9 +81,10 @@ def sankey(
   plotHeight = max(Lhgt)
   subplotWidth = plotHeight/aspect
   plotWidth = (
-    (N-1)*subplotWidth 
-    + 2*subplotWidth*labelWidth 
-    + N*subplotWidth*barWidth )
+      (N-1)*subplotWidth
+      + 2*subplotWidth*labelWidth
+      + N*subplotWidth*barWidth 
+    )
       
   # offsets for alignment
   voffset = np.empty(N)
@@ -275,7 +276,7 @@ def _sankey(ii, N, data,
     else:
       myD['bottom'] = (
         rightWidths[rightLabels[i-1]]['top']
-         + barGap*plotHeight )
+         + barGap*plotHeight)
     myD['top'] = myD['bottom'] + myD['right']
     rightWidths[rightLabel] = myD
 
@@ -285,7 +286,7 @@ def _sankey(ii, N, data,
   xRight = labelWidth*xMax + (ii+1)*xMax
 
   # Draw bars and their labels
-  if ii == 0: # first time
+  if ii == 0:  # first time
     for leftLabel in leftLabels:
       lbot = leftWidths[leftLabel]['bottom']
       lll = leftWidths[leftLabel]['left']
@@ -340,7 +341,7 @@ def _sankey(ii, N, data,
     # leftmost title
     if ii == 0:
       xt = -xMax*labelGap + xLeft
-      if (  (titleSide == "top" )
+      if (  (titleSide == "top")
          or (titleSide == "both")):
         yt = titleGap*plotHeight +(leftWidths[leftLabel]['top'])
         va = 'bottom'
@@ -383,10 +384,10 @@ def _sankey(ii, N, data,
     for rightLabel in rightLabels:
           
       if not( any(
-          (left == leftLabel)
-           & (right == rightLabel))):
+          (left == leftLabel) &
+          (right == rightLabel))):
         continue
-	  
+
       lbot = leftWidths[leftLabel]['bottom']
       rbot = rightWidths[rightLabel]['bottom']
       lbar = barSizeLeft[leftLabel][rightLabel]
@@ -411,15 +412,16 @@ def _sankey(ii, N, data,
       
       for jj in range(len(ys_d)-1):
         ax.fill_between(
-          xx[[jj,jj+1]], 
-          ys_d[[jj,jj+1]], 
-          ys_u[[jj,jj+1]],
-          color=cc[:,jj],
+          xx[[jj, jj+1]],
+          ys_d[[jj, jj+1]],
+          ys_u[[jj, jj+1]],
+          color=cc[:, jj],
           alpha=alpha,
           lw=0,
           edgecolor="none",
           snap=True,
         )
+
 
 def check_data_matches_labels(labels, data, side):
   if len(labels) > 0:
@@ -438,24 +440,24 @@ def check_data_matches_labels(labels, data, side):
       raise LabelMismatch('{0} labels and data do not match.{1}'.format(side, msg))
 
 
-def combineColours(c1,c2,N):
+def combineColours(c1, c2, N):
   if len(c1) != 4:
     r1 = int(c1[1:3], 16)/255
     g1 = int(c1[3:5], 16)/255
     b1 = int(c1[5:7], 16)/255
-    c1 = [r1,g1,b1,1]
+    c1 = [r1, g1, b1, 1]
     
   if len(c2) != 4:
     r2 = int(c2[1:3], 16)/255
     g2 = int(c2[3:5], 16)/255
     b2 = int(c2[5:7], 16)/255
-    c2 = [r2,g2,b2,1]
+    c2 = [r2, g2, b2, 1]
 
-  rr = np.linspace(c1[0],c2[0],N)
-  gg = np.linspace(c1[1],c2[1],N)
-  bb = np.linspace(c1[2],c2[2],N)
-  aa = np.linspace(c1[3],c2[3],N)
+  rr = np.linspace(c1[0], c2[0], N)
+  gg = np.linspace(c1[1], c2[1], N)
+  bb = np.linspace(c1[2], c2[2], N)
+  aa = np.linspace(c1[3], c2[3], N)
   
-  return np.array([rr,gg,bb,aa])
+  return np.array([rr, gg, bb, aa])
  
 
