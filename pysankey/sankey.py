@@ -33,7 +33,7 @@ def sankey(
             fontsize=14,
             titles=None,
             titleGap=0.05,
-            titleSide="top", # "bottom", "both"
+            titleSide="top",  # "bottom", "both"
             frameSide="none",
             frameGap=0.1,
             labelDict={},
@@ -45,7 +45,7 @@ def sankey(
             colormap="viridis",
             sorting=0,
             axis=False,
-            valign="bottom", # "top","center"
+            valign="bottom",  # "top","center"
             ax=None,
           ):
   '''
@@ -112,29 +112,29 @@ def sankey(
     
   for ii in range(N-1):
 
-    _sankey(ii,N-1,data, 
-         Wsum=Wsum,
-         titles=titles,
-         titleGap=titleGap,
-         titleSide=titleSide,
-         labelOrder=labelOrder, 
-         colorDict=colorDict,
-         aspect=aspect, 
-         fontsize=fontsize, 
-         labelDict=labelDict,
-         labelWidth=labelWidth,
-         labelGap=labelGap,
-         barWidth=barWidth,
-         barGap=barGap,
-         plotWidth=plotWidth,
-         subplotWidth=subplotWidth,
-         plotHeight=plotHeight,
-         alpha=alpha,
-         valign=valign,
-         Lhgt=Lhgt,
-         voffset=voffset,
-         sorting=sorting,
-         ax=ax
+    _sankey(ii,N-1,data,
+             Wsum=Wsum,
+             titles=titles,
+             titleGap=titleGap,
+             titleSide=titleSide,
+             labelOrder=labelOrder, 
+             colorDict=colorDict,
+             aspect=aspect,
+             fontsize=fontsize,
+             labelDict=labelDict,
+             labelWidth=labelWidth,
+             labelGap=labelGap,
+             barWidth=barWidth,
+             barGap=barGap,
+             plotWidth=plotWidth,
+             subplotWidth=subplotWidth,
+             plotHeight=plotHeight,
+             alpha=alpha,
+             valign=valign,
+             Lhgt=Lhgt,
+             voffset=voffset,
+             sorting=sorting,
+             ax=ax
          )
   
   # frame on top/bottom edge
@@ -163,37 +163,37 @@ def sankey(
 
 
 
-def _sankey(ii,N,data, 
-           Wsum=None,
-           colorDict=None,
-           labelOrder=None,
-           aspect=4, 
-           fontsize=14, 
-           figureName=None, 
-           closePlot=False, 
-           titles=None, 
-           titleGap=0,
-           titleSide="",
-           plotWidth=0,
-           plotHeight=0,
-           subplotWidth=0,
-           labelDict={},
-           labelWidth=0,
-           labelGap=0,
-           barWidth=0,
-           barGap=0,
-           alpha=0,
-           axis=1,
-           valign=None,
-           Lhgt=0,
-           voffset=None,
-           sorting=0,
-           ax=None,
-          ):         
+def _sankey(ii,N,data,
+                 Wsum=None,
+                 colorDict=None,
+                 labelOrder=None,
+                 aspect=4,
+                 fontsize=14,
+                 figureName=None,
+                 closePlot=False,
+                 titles=None,
+                 titleGap=0,
+                 titleSide="",
+                 plotWidth=0,
+                 plotHeight=0,
+                 subplotWidth=0,
+                 labelDict={},
+                 labelWidth=0,
+                 labelGap=0,
+                 barWidth=0,
+                 barGap=0,
+                 alpha=0,
+                 axis=1,
+                 valign=None,
+                 Lhgt=0,
+                 voffset=None,
+                 sorting=0,
+                 ax=None,
+           ):
 
   labelind = 2*ii
   weightind = 2*ii+1
-  
+
   left        = pd.Series(data[labelind])
   right       = pd.Series(data[labelind+2])
   leftWeight  = pd.Series(data[weightind])
@@ -203,7 +203,7 @@ def _sankey(ii,N,data,
       raise NullsInFrame('Sankey graph does not support null values.')
 
   # label order / sorting
-  
+
   # calc label weight then sort
   wgt = {}
   for dd in [0,2]:
