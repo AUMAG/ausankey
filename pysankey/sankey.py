@@ -139,9 +139,9 @@ def sankey(
   
   # frame on top/bottom edge
   if (frameSide == "top") | (frameSide == "both"):
-    col = [0,0,0,1]
+    col = [0, 0, 0, 1]
   else:
-    col = [1,1,1,0]
+    col = [1, 1, 1, 0]
   
   ax.plot(
       [-subplotWidth*barWidth*N/2,plotWidth],
@@ -160,7 +160,6 @@ def sankey(
 
   # complete plot
   ax.axis('off')
-
 
 
 def _sankey(ii,N,data,
