@@ -2,7 +2,7 @@
 
 import pandas as pd
 from pysankey import sankey
-from pysankey.tests.test_fruit import TestFruit
+from .test_fruit import TestFruit
 
 
 class TestReadmeFruit(TestFruit):

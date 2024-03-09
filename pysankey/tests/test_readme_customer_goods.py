@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from pysankey import sankey
-from pysankey.tests.test_customer_goods import TestCustomerGood
+from .test_customer_goods import TestCustomerGood
 
 
 class TestReadmeCustomerGood(TestCustomerGood):

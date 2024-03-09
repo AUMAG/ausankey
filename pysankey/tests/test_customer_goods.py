@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 import pandas as pd
-from pysankey.tests.generic_test import GenericTest
+from .generic_test import GenericTest
 
 
 class TestCustomerGood(GenericTest):

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from pysankey import sankey
-from pysankey.tests.test_fruit import TestFruit
+from .test_fruit import TestFruit
 
 
 class TestErrorCase(TestFruit):
