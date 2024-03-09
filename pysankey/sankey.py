@@ -64,7 +64,7 @@ def sankey(
       None
   '''
 
-  N = int(len(data.columns)/2) # number of labels
+  N = int(len(data.columns)/2)  # number of labels
 
   # sizes
   Wsum = np.empty(N)
@@ -80,21 +80,24 @@ def sankey(
   # overall dimensions
   plotHeight = max(Lhgt)
   subplotWidth = plotHeight/aspect
-  plotWidth = (N-1)*subplotWidth + 2*subplotWidth*labelWidth + N*subplotWidth*barWidth
+  plotWidth = (
+    (N-1)*subplotWidth 
+    + 2*subplotWidth*labelWidth 
+    + N*subplotWidth*barWidth )
       
   # offsets for alignment
   voffset = np.empty(N)
   for ii in range(N):
     match valign:
       case "top":
-        voffset[ii] =  -(plotHeight - Lhgt[1]) + (plotHeight - Lhgt[ii])
+        voffset[ii] = -(plotHeight - Lhgt[1]) + (plotHeight - Lhgt[ii])
       case "bottom":
         voffset[ii] = 0
       case "center":
         voffset[ii] = -(plotHeight - Lhgt[1])/2 + (plotHeight - Lhgt[ii])/2
 
   # labels
-  labelRec = data[range(0,2*N,2)].to_records(index=False)
+  labelRec = data[range(0, 2*N, 2)].to_records(index=False)
   flattened = [item for sublist in labelRec for item in sublist]
   flatcat = pd.Series(flattened).unique()
   
@@ -102,7 +105,7 @@ def sankey(
   if colorDict is None:
     colorDict = {}
     cmap = plt.cm.get_cmap(colormap)
-    colorPalette = cmap(np.linspace(0,1,len(flatcat)))
+    colorPalette = cmap(np.linspace(0, 1, len(flatcat)))
     for i, label in enumerate(flatcat):
       colorDict[label] = colorPalette[i]
 
@@ -112,7 +115,7 @@ def sankey(
     
   for ii in range(N-1):
 
-    _sankey(ii,N-1,data,
+    _sankey(ii, N-1, data,
              Wsum=Wsum,
              titles=titles,
              titleGap=titleGap,
@@ -144,25 +147,25 @@ def sankey(
     col = [1, 1, 1, 0]
   
   ax.plot(
-      [-subplotWidth*barWidth*N/2,plotWidth],
-      min(voffset) + (plotHeight) + (titleGap+frameGap)*plotHeight + [0,0],
+      [-subplotWidth*barWidth*N/2, plotWidth],
+      min(voffset) + (plotHeight) + (titleGap+frameGap)*plotHeight + [0, 0],
       color=col)
 
   if (frameSide == "bottom") | (frameSide == "both"):
-    col = [0,0,0,1]
+    col = [0, 0, 0, 1]
   else:
-    col = [1,1,1,0]
+    col = [1, 1, 1, 0]
   
   ax.plot(
-      [-subplotWidth*barWidth*N/2,plotWidth],
-      min(voffset) - (titleGap+frameGap)*plotHeight + [0,0],
+      [-subplotWidth*barWidth*N/2, plotWidth],
+      min(voffset) - (titleGap+frameGap)*plotHeight + [0, 0],
       color=col)
 
   # complete plot
   ax.axis('off')
 
 
-def _sankey(ii,N,data,
+def _sankey(ii, N, data,
                  Wsum=None,
                  colorDict=None,
                  labelOrder=None,
@@ -193,9 +196,9 @@ def _sankey(ii,N,data,
   labelind = 2*ii
   weightind = 2*ii+1
 
-  left        = pd.Series(data[labelind])
-  right       = pd.Series(data[labelind+2])
-  leftWeight  = pd.Series(data[weightind])
+  left = pd.Series(data[labelind])
+  right = pd.Series(data[labelind+2])
+  leftWeight = pd.Series(data[weightind])
   rightWeight = pd.Series(data[weightind+2])
 
   if any(leftWeight.isnull()) | any(rightWeight.isnull()):
@@ -205,7 +208,7 @@ def _sankey(ii,N,data,
 
   # calc label weight then sort
   wgt = {}
-  for dd in [0,2]:
+  for dd in [0, 2]:
     lbl = data[labelind+dd].unique()
     wgt[dd] = {}
     for uniq in lbl:
@@ -266,11 +269,13 @@ def _sankey(ii,N,data,
   rightWidths = {}
   for i, rightLabel in enumerate(rightLabels):
     myD = {}
-    myD['right'] =  rightWeight[right == rightLabel].sum()
+    myD['right'] = rightWeight[right == rightLabel].sum()
     if i == 0:
       myD['bottom'] = voffset[ii+1]
     else:
-      myD['bottom'] = rightWidths[rightLabels[i - 1]]['top'] + barGap*plotHeight
+      myD['bottom'] = (
+        rightWidths[rightLabels[i-1]]['top']
+         + barGap*plotHeight )
     myD['top'] = myD['bottom'] + myD['right']
     rightWidths[rightLabel] = myD
 
@@ -296,7 +301,7 @@ def _sankey(ii,N,data,
       ax.text(
           xLeft - (labelGap+barWidth)*xMax,
           lbot + 0.5*lll,
-          labelDict.get(leftLabel,leftLabel),
+          labelDict.get(leftLabel, leftLabel),
           {'ha': 'right', 'va': 'center'},
           fontsize=fontsize
       )
@@ -304,7 +309,7 @@ def _sankey(ii,N,data,
     rbot = rightWidths[rightLabel]['bottom']
     rrr = rightWidths[rightLabel]['right']
     ax.fill_between(
-      xRight+[0, barWidth * xMax], 
+      xRight+[0, barWidth * xMax],
       2*[rbot],
       [rbot + rrr],
       color=colorDict[rightLabel],
@@ -312,39 +317,37 @@ def _sankey(ii,N,data,
       lw=0,
       snap=True,
     )
-    if ii < N-1: # inside labels
+    if ii < N-1:  # inside labels
       ax.text(
         xRight + (labelGap+barWidth)*xMax,
         rbot + 0.5*rrr,
-        labelDict.get(rightLabel,rightLabel),
+        labelDict.get(rightLabel, rightLabel),
         {'ha': 'left', 'va': 'center'},
         fontsize=fontsize
       )
-    if ii == N-1: # last time
+    if ii == N-1:  # last time
       ax.text(
         xRight + (labelGap+barWidth)*xMax,
         rbot + 0.5*rrr,
-        labelDict.get(rightLabel,rightLabel),
+        labelDict.get(rightLabel, rightLabel),
         {'ha': 'left', 'va': 'center'},
         fontsize=fontsize
       )
   
   # "titles"
   if titles is not None:
-
     
     # leftmost title
     if ii == 0:
       xt = -xMax*labelGap + xLeft
-      if (  (titleSide == "top" ) 
-         or (titleSide == "both") ):
+      if (  (titleSide == "top" )
+         or (titleSide == "both")):
         yt = titleGap*plotHeight +(leftWidths[leftLabel]['top'])
         va = 'bottom'
         ax.text(xt, yt, titles[ii],
           {'ha': 'center', 'va': va},
-          fontsize = fontsize,
+          fontsize=fontsize,
         )
-
 
       if (titleSide == "bottom") | (titleSide == "both"):
         yt = voffset[ii] - titleGap*plotHeight
@@ -352,7 +355,7 @@ def _sankey(ii,N,data,
       
         ax.text(xt, yt, titles[ii],
           {'ha': 'center', 'va': va},
-          fontsize = fontsize,
+          fontsize=fontsize,
         )
     
     # all other titles
@@ -362,7 +365,7 @@ def _sankey(ii,N,data,
       
       ax.text(xt, yt, titles[ii+1],
         {'ha': 'center', 'va': 'bottom'},
-        fontsize = fontsize,
+        fontsize=fontsize,
       )
 
     if (titleSide == "bottom") | (titleSide == "both"):
@@ -370,7 +373,7 @@ def _sankey(ii,N,data,
                 
       ax.text(xt, yt, titles[ii+1],
         {'ha': 'center', 'va': 'top'},
-        fontsize = fontsize,
+        fontsize=fontsize,
       )
 
   # Plot strips
@@ -379,8 +382,9 @@ def _sankey(ii,N,data,
   for leftLabel in leftLabels:
     for rightLabel in rightLabels:
           
-      if not(any(
-          (left == leftLabel) & (right == rightLabel) )):
+      if not( any(
+          (left == leftLabel)
+           & (right == rightLabel))):
         continue
 	  
       lbot = leftWidths[leftLabel]['bottom']
