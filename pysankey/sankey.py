@@ -1,19 +1,10 @@
 
 """
 Produces simple Sankey Diagrams with matplotlib.
-@author: wspr after Anneya Golob & marcomanz & pierre-sassoulas & jorwoods
-                      .-.
-                 .--.(   ).--.
-      <-.  .-.-.(.->          )_  .--.
-       `-`(     )-'             `)    )
-         (o  o  )                `)`-'
-        (      )                ,)
-        ( ()  )                 )
-         `---"\    ,    ,    ,/`
-               `--' `--' `--'
-                |  |   |   |
-                |  |   |   |
-                '  |   '   |
+
+@author: wspr
+
+Forked from: Anneya Golob & marcomanz & pierre-sassoulas & jorwoods
 """
 
 
@@ -31,27 +22,27 @@ class LabelMismatch(PySankeyException):
     pass
 
 def sankey(
-           data, 
-           colorDict=None,
-           aspect=4, 
-           labelOrder=None,
-           fontsize=14, 
-           titles=None, 
-           titleGap=0.05,
-           titleSide="top", # "bottom", "both"
-           frameSide="none",
-           frameGap=0.1,
-           labelDict={},
-           labelWidth=0,
-           labelGap=0.01,
-           barWidth=0.02,
-           barGap=0.05,
-           alpha=0.65,
-           colormap="viridis",
-           sorting=0,
-           axis=False,
-           valign="bottom", # "top","center"
-           ax=None,
+            data, 
+            colorDict=None,
+            aspect=4, 
+            labelOrder=None,
+            fontsize=14, 
+            titles=None, 
+            titleGap=0.05,
+            titleSide="top", # "bottom", "both"
+            frameSide="none",
+            frameGap=0.1,
+            labelDict={},
+            labelWidth=0,
+            labelGap=0.01,
+            barWidth=0.02,
+            barGap=0.05,
+            alpha=0.65,
+            colormap="viridis",
+            sorting=0,
+            axis=False,
+            valign="bottom", # "top","center"
+            ax=None,
           ):
   '''
   Make Sankey Diagram showing flow from left-->right
