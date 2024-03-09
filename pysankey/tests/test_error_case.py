@@ -5,14 +5,13 @@ from pysankey.tests.test_fruit import TestFruit
 
 
 class TestErrorCase(TestFruit):
-
     """ Test sankey's error case. """
 
     def test_bad_color_labels(self):
         """ sankey raise a value error when there is not enough color info"""
         bad_color_dict = {
-            'apple':'#f71b1b',
-            'orange':'#f78c1b'
+            'apple': '#f71b1b',
+            'orange': '#f78c1b'
         }
         with self.assertRaises(ValueError) as value_error:
             sankey(
