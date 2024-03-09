@@ -12,22 +12,26 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 
+
 class PySankeyException(Exception):
     pass
+
 
 class NullsInFrame(PySankeyException):
     pass
 
+
 class LabelMismatch(PySankeyException):
     pass
 
+
 def sankey(
-            data, 
+            data,
             colorDict=None,
-            aspect=4, 
+            aspect=4,
             labelOrder=None,
-            fontsize=14, 
-            titles=None, 
+            fontsize=14,
+            titles=None,
             titleGap=0.05,
             titleSide="top", # "bottom", "both"
             frameSide="none",
