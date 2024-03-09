@@ -43,6 +43,7 @@ def sankey(
            frameGap=0.1,
            labelDict={},
            labelWidth=0,
+           labelGap=0.01,
            barWidth=0.02,
            barGap=0.05,
            alpha=0.65,
@@ -77,6 +78,8 @@ def sankey(
   for ii in range(N):
     Wsum[ii] = sum(data[2*ii+1])
     Nunq[ii] = len(pd.Series(data[2*ii]).unique())
+
+  for ii in range(N):
     Lhgt[ii] = Wsum[ii] + (Nunq[ii]-1)*barGap*max(Wsum)
 
   # overall dimensions
@@ -125,6 +128,7 @@ def sankey(
          fontsize=fontsize, 
          labelDict=labelDict,
          labelWidth=labelWidth,
+         labelGap=labelGap,
          barWidth=barWidth,
          barGap=barGap,
          plotWidth=plotWidth,
@@ -138,7 +142,7 @@ def sankey(
          ax=ax
          )
   
-  # axis on too edge
+  # frame on top/bottom edge
   if (frameSide == "top") | (frameSide == "both"):
     col = [0,0,0,1]
   else:
@@ -146,7 +150,7 @@ def sankey(
   
   ax.plot(
       [-subplotWidth*barWidth*N/2,plotWidth],
-      (plotHeight-voffset[1]) + (titleGap+frameGap)*plotHeight + [0,0],
+      min(voffset) + (plotHeight) + (titleGap+frameGap)*plotHeight + [0,0],
       color=col)
 
   if (frameSide == "bottom") | (frameSide == "both"):
@@ -180,6 +184,7 @@ def _sankey(ii,N,data,
            subplotWidth=0,
            labelDict={},
            labelWidth=0,
+           labelGap=0,
            barWidth=0,
            barGap=0,
            alpha=0,
@@ -295,7 +300,7 @@ def _sankey(ii,N,data,
           snap=True,
       )
       ax.text(
-          xLeft - 1.5*barWidth*xMax,
+          xLeft - (labelGap+barWidth)*xMax,
           lbot + 0.5*lll,
           labelDict.get(leftLabel,leftLabel),
           {'ha': 'right', 'va': 'center'},
@@ -313,9 +318,17 @@ def _sankey(ii,N,data,
       lw=0,
       snap=True,
     )
+    if ii < N-1: # inside labels
+      ax.text(
+        xRight + (labelGap+barWidth)*xMax,
+        rbot + 0.5*rrr,
+        labelDict.get(rightLabel,rightLabel),
+        {'ha': 'left', 'va': 'center'},
+        fontsize=fontsize
+      )
     if ii == N-1: # last time
       ax.text(
-        xRight + 1.5*barWidth * xMax,
+        xRight + (labelGap+barWidth)*xMax,
         rbot + 0.5*rrr,
         labelDict.get(rightLabel,rightLabel),
         {'ha': 'left', 'va': 'center'},
@@ -328,7 +341,7 @@ def _sankey(ii,N,data,
     
     # leftmost title
     if ii == 0:
-      xt = -xMax*barWidth/2 + xLeft
+      xt = -xMax*labelGap + xLeft
       if (  (titleSide == "top" ) 
          or (titleSide == "both") ):
         yt = titleGap*plotHeight +(leftWidths[leftLabel]['top'])
@@ -367,8 +380,8 @@ def _sankey(ii,N,data,
       )
 
   # Plot strips
-  Ndiv = 10
-  Narr = 25
+  Ndiv = 20
+  Narr = 50
   for leftLabel in leftLabels:
     for rightLabel in rightLabels:
           

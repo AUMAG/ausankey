@@ -21,9 +21,6 @@ sky.sankey(
   aspect=0.5
 )
   
-#plt.gcf().set_size_inches(6,6)
-# plt.savefig('fruits.png',bbox_inches='tight',dpi=150)
-
 plt.show()
 
 colorDict =  {
@@ -44,28 +41,27 @@ data = pd.DataFrame([
   ("b",0.5,"ba",0.8,"ba",0.4),
   ("b",0.5,"ab",0.8,"a",1.0),
   ("d",2.0,"cd",0.4,"d",1.0),
-  ("e",1.0,"e",1.0,"e",1.0),
+  ("e",1.0,"e",1.0,"e",3.0),
 ])
 
-plt.figure()
+plt.figure(dpi=600)
 
 sky.sankey(
   data,
-  sorting = -1,
-  colorDict = colorDict,
-  labelWidth = 0.2,
-  barWidth = 0.05,
-  barGap = 0.02,
-  alpha=0.3,
-  titles = ["Line 1","Line 2","Line 3"],
-  titleGap = 0.025,
-  titleTop = False,
-  axis = False,
-  valign = "top",
+  sorting    = -1,
+  colorDict  = colorDict,
+  labelWidth = 0.1,
+  labelGap   = 0.02,
+  barWidth   = 0.05,
+  barGap     = 0.02,
+  alpha      = 0.3,
+  titles    = ["Stage 1","Stage 2","Stage 3"],
+  titleGap  = 0.05,
+  titleSide = "both",
+  frameSide = "both",
+  frameGap  = 0.1,
+  valign    = "top",
 )
-
-#plt.gcf().set_size_inches(6,6)
-#plt.savefig('fruits.pdf',bbox_inches='tight')
 
 plt.show()
 
