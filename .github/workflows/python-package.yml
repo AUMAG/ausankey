@@ -55,5 +55,5 @@ jobs:
             GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           run: |
             cd pysankey
-            coverage run -m pytest --cov=pysankey --cov-report html
+            coverage html -m pytest
             coveralls debug --service=github
