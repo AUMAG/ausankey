@@ -64,8 +64,10 @@ def sankey(
         None
     '''
 
-    N = int(len(data.columns)/2)  # number of labels
-
+    NC = len(data.columns)
+    data.columns = range(NC)  # force numeric column headings
+    N = int(NC/2)  # number of labels
+    
     # sizes
     Wsum = np.empty(N)
     Nunq = np.empty(N)

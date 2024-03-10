@@ -3,6 +3,16 @@ import pysankey as sky
 import matplotlib.pyplot as plt
 import pandas as pd
 
+data = pd.read_csv(
+    'pysankey/tests/fruit.csv',
+    sep=',',
+)
+print(data)
+
+plt.figure()
+sky.sankey(data)
+plt.show()
+
 data = pd.DataFrame([
   ("a",1.0,"ab",2.0),
   ("a",1.0,"ba",0.8),
