@@ -1,5 +1,5 @@
 import matplotlib.pyplot as plt
-from pysankey import sankey as sky
+import pysankey as sky
 from .test_fruit_setup import TestFruit
 
 class TestFruitDefault(TestFruit):
