@@ -56,4 +56,5 @@ jobs:
           run: |
             cd pysankey
             coverage run -m pytest
-            coveralls debug --service=github
+            echo "COVERAGE"
+            coveralls --service=github
