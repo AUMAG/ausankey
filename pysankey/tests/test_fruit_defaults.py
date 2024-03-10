@@ -35,3 +35,15 @@ class TestFruitDefault(TestFruit):
         
         plt.figure(dpi=150)
         sky.sankey(self.data, titles=["Summer", "Winter"])
+    
+    def test_fruits_valign(self):
+        
+        plt.figure(dpi=150)
+        sky.sankey(self.data, valign="top")
+        
+        plt.figure(dpi=150)
+        sky.sankey(self.data, valign="center")
+        
+        plt.figure(dpi=150)
+        sky.sankey(self.data, valign="bottom")
+
