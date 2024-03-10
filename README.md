@@ -5,6 +5,7 @@ Sankey diagrams</a> flowing only from left to right.
 
 [![Coverage Status](https://coveralls.io/repos/github/AUMAG/pysankey/badge.svg?branch=master)](https://coveralls.io/github/AUMAG/pysankey?branch=master)
 
+These will be the docs for the repository: https://aumag.github.io/pysankey/
 
 **This is the OLD readme. Updates needed.**
 
