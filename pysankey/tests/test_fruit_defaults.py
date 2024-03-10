@@ -25,3 +25,13 @@ class TestFruitDefault(TestFruit):
         plt.figure(dpi=150)
         sky.sankey(self.data, colormap="jet")
         plt.savefig("fruits_colormap_jet.png")
+
+    def test_fruits_colordict(self):
+        
+        plt.figure(dpi=150)
+        sky.sankey(self.data, colorDict=self.colorDict)
+        
+    def test_fruits_titles(self):
+        
+        plt.figure(dpi=150)
+        sky.sankey(self.data, titles=["Summer", "Winter"])
