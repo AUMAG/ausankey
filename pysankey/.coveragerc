@@ -1,4 +1,4 @@
-[run]
-source = sankey.py
 
-omit = tests/*
+[run]
+omit =
+       /usr/*
