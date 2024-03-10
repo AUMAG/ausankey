@@ -1,0 +1,4 @@
+[run]
+source = sankey
+
+omit = tests/*
