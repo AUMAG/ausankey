@@ -40,9 +40,3 @@ jobs:
       run: |
         cd pysankey
         pytest
-    - name: Archive production artifacts
-        uses: actions/upload-artifact@v4
-        with:
-          name: test-png-output
-          path: |
-            **/**/*.png
