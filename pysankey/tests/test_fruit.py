@@ -3,13 +3,13 @@ from .generic_test import GenericTest
 
 
 class TestFruit(GenericTest):
-    """ Permit to test sankey with the data in fruit.txt """
+    """ Setup sankey test with data in fruit.csv """
 
     def setUp(self):
         
         self.figure_name = "fruit"
         self.data = pd.read_csv(
-            'fruit.csv', sep=',']
+            'fruit.csv', sep=','
         )
         self.colorDict = {
             'apple': '#f71b1b',
