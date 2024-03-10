@@ -6,9 +6,10 @@ class TestFruit(GenericTest):
     """ Permit to test sankey with the data in fruit.txt """
 
     def setUp(self):
+        
         self.figure_name = "fruit"
         self.data = pd.read_csv(
-            'fruits.txt', sep=' ', names=['true', 'predicted']
+            'fruit.csv', sep=',']
         )
         self.colorDict = {
             'apple': '#f71b1b',

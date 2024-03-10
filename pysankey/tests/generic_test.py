@@ -12,5 +12,5 @@ class GenericTest(unittest.TestCase):
     def tearDown(self):
         path = "{}.png".format(self.figure_name)
         # Comment this to check the resulting image
-        if os.path.exists(path):
-            os.remove(path)
+        # if os.path.exists(path):
+        #     os.remove(path)
