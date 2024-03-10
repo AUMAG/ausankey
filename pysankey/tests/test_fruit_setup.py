@@ -9,7 +9,7 @@ class TestFruit(GenericTest):
         
         self.figure_name = "fruit"
         self.data = pd.read_csv(
-            'fruit.csv', sep=','
+            'tests/fruit.csv', sep=','
         )
         self.colorDict = {
             'apple': '#f71b1b',
