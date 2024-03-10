@@ -1,0 +1,4 @@
+[run]
+source = pysankey
+
+omit = pysankey/tests/*
