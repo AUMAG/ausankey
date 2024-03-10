@@ -1,6 +1,5 @@
-
-import matplotlib as plt
-from pysankey import sankey
+import matplotlib.pyplot as plt
+from pysankey import sankey as sky
 from .test_fruit_setup import TestFruit
 
 
@@ -9,5 +8,5 @@ class TestFruitDefault(TestFruit):
     def test_fruits_default(self):
         
         plt.figure(dpi=150)
-        sankey(self.data)
+        sky.sankey(self.data)
         plt.savefig("fruits_default.png")
