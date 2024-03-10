@@ -8,7 +8,7 @@ class TestFruit(GenericTest):
     def setUp(self):
         self.figure_name = "fruit"
         self.data = pd.read_csv(
-            'pysankey/fruits.txt', sep=' ', names=['true', 'predicted']
+            'fruits.txt', sep=' ', names=['true', 'predicted']
         )
         self.colorDict = {
             'apple': '#f71b1b',
