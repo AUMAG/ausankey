@@ -37,7 +37,7 @@ classifiers = [
   # "Intended Audience :: Developers",
   # "Topic :: Software Development :: Build Tools",
 
-  "License :: OSI Approved :: GNU Affero General Public License v3",
+  "License :: OSI Approved :: GNU General Public License v3 (GPLv3)",
 
   # Specify the Python versions you support here.
   "Programming Language :: Python :: 3.9",
