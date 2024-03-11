@@ -150,7 +150,7 @@ def sankey(
         col = [1, 1, 1, 0]
 
     ax.plot(
-        [-subplotWidth*barWidth*N/2, plotWidth],
+        [0, plotWidth],
         min(voffset) + (plotHeight) + (titleGap+frameGap)*plotHeight + [0, 0],
         color=col)
 
@@ -160,7 +160,7 @@ def sankey(
         col = [1, 1, 1, 0]
 
     ax.plot(
-        [-subplotWidth*barWidth*N/2, plotWidth],
+        [0, plotWidth],
         min(voffset) - (titleGap+frameGap)*plotHeight + [0, 0],
         color=col)
 
@@ -288,10 +288,11 @@ def _sankey(
         myD['top'] = myD['bottom'] + myD['right']
         rightWidths[rightLabel] = myD
 
-    # horizontal extents of subdiagram
+    # horizontal extents of flows in each subdiagram
     xMax = subplotWidth
-    xLeft = barWidth*xMax*(ii+1)*xMax + labelWidth*xMax + ii*xMax
-    xRight = labelWidth*xMax + (ii+1)*xMax
+    barW = barWidth*xMax
+    xLeft = barW + labelWidth*xMax + ii*(xMax+barW)
+    xRight = xLeft + xMax
 
     # Draw bars and their labels
     if ii == 0:  # first time
@@ -299,7 +300,7 @@ def _sankey(
             lbot = leftWidths[leftLabel]['bottom']
             lll = leftWidths[leftLabel]['left']
             ax.fill_between(
-                xLeft+[-barWidth * xMax, 0],
+                xLeft+[-barW, 0],
                 2*[lbot],
                 2*[lbot + lll],
                 color=colorDict[leftLabel],
@@ -318,7 +319,7 @@ def _sankey(
         rbot = rightWidths[rightLabel]['bottom']
         rrr = rightWidths[rightLabel]['right']
         ax.fill_between(
-          xRight+[0, barWidth * xMax],
+          xRight+[0, barW],
           2*[rbot],
           [rbot + rrr],
           color=colorDict[rightLabel],
@@ -348,7 +349,7 @@ def _sankey(
 
         # leftmost title
         if ii == 0:
-            xt = -xMax*barWidth/2 + xLeft
+            xt = xLeft - xMax*barWidth/2
             if ((titleSide == "top") or (titleSide == "both")):
                 yt = titleGap * plotHeight + leftWidths[leftLabel]['top']
                 va = 'bottom'
