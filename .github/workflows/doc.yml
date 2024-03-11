@@ -41,7 +41,7 @@ jobs:
       - name: Generate images
         run: |
           python sankey-doc-examples.py
-          ls -lR pages/
+          ls -lR doc/
  
       - name: Setup Pages
         uses: actions/configure-pages@v4
