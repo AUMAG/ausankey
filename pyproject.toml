@@ -68,8 +68,6 @@ Issues = "https://github.com/AUMAG/auSankey/issues"
 [tool.hatch.build.targets.sdist]
 ignore-vcs = true
 
-
-[tool.hatch.build.targets.sdist]
 include = [
   "/auSankey/*.py",
   "/tests/*.py",
