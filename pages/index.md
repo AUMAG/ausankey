@@ -55,6 +55,7 @@ sky.sankey(data)
 which produces:
 ![Image with options](fruits_default.png)
 
+
 ## Colours
 
 You can customise the colours either by changing the Matplotlib colormap:
@@ -76,6 +77,13 @@ sky.sankey(data,colorDict=colorDict)
 ```
 ![Image with options](fruits_colordict.png)
 
+The opacity of the flows can be customised:
+```
+sky.sankey(data,alpha=0.3)
+```
+![Image with options](fruits_alpha.png)
+
+
 ## Order of entries (sorting)
 
 The order of the entries is top to bottom corresponding to first to last in the data frame.
@@ -91,3 +99,79 @@ Or lowest to highest:
 sky.sankey(data,sorting=-1)
 ```
 ![Image with options](fruits_sort_n1.png)
+
+
+## Labels
+
+If the data is generated externally it may not be convenient to edit the label text in the source. The typeset labels can be specified using a dictionary of lookup strings:
+```
+labelDict = {
+    'apple':     'Apple',
+    'blueberry': "B'berry",
+    'banana':    'Banana',
+    'lime':      'Lime',
+    'orange':    'Orange'
+}
+sky.sankey(data,labelDict=labelDict)
+```
+![Image with options](fruits_labeldict.png)
+
+Note that the dictionary does not need to contain an entry for each label. 
+
+
+## Titles
+
+Titles for each column of data can be added:
+```
+sky.sankey(data,titles=["Summer","Winter"])
+```
+![Image with options](fruits_titles.png)
+
+Titles can be placed `"top"`, `"bottom"`, or `"both"`:
+```
+sky.sankey(data,
+    titles = ["Summer","Winter"],
+    titleSide = "bottom",
+)
+```
+![Image with options](fruits_titles_bottom.png)
+
+
+## Vertical Alignment
+
+The vertical alignment of the diagram can be  `"top"`, `"bottom"`, or `"center"`:
+```
+sky.sankey(data,valign = "center")
+```
+![Image with options](fruits_valign.png)
+
+
+## Frames
+
+Horizontal framing can be placed `"top"`, `"bottom"`, or `"both"`: 
+```
+sky.sankey(data,frameSide = "both")
+```
+![Image with options](fruits_frame.png)
+
+
+## Spacing
+
+A number of parameters can be set to customise the spacing and layout of the diagram. These parameters are normalised against the diagram height or width according to which direction they are oriented. 
+```
+sky.sankey( data,
+            titles=["Summer","Winter"],
+            titleSide = "both",
+            frameSide = "both",
+            sorting   = -1,
+            valign    = "center",
+            # spacing parameters:
+            barGap     = 0.01 ,
+            barWidth   = 0.1 ,
+            frameGap   = 0.2 ,
+            labelWidth = 0.3 ,
+            labelGap   = 0.02,
+            titleGap   = 0.1 ,
+          )
+ ```
+![Image with options](fruits_spacing.png)

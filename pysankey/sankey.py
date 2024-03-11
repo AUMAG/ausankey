@@ -44,7 +44,6 @@ def sankey(
             alpha=0.65,
             colormap="viridis",
             sorting=0,
-            axis=False,
             valign="bottom",  # "top","center"
             ax=None,
           ):
@@ -190,7 +189,6 @@ def _sankey(
         barWidth=0,
         barGap=0,
         alpha=0,
-        axis=1,
         valign=None,
         Lhgt=0,
         voffset=None,

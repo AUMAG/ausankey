@@ -37,6 +37,24 @@ sky.sankey(data,colorDict=colorDict)
 plt.show()
 plt.savefig("pages/fruits_colordict.png")
 
+labelDict = {
+    'apple':     'Apple',
+    'blueberry': "B'berry",
+    'banana':    'Banana',
+    'lime':      'Lime',
+    'orange':    'Orange'
+}
+
+plt.figure()
+sky.sankey(data,labelDict=labelDict)
+plt.show()
+plt.savefig("pages/fruits_labeldict.png")
+
+plt.figure()
+sky.sankey(data,alpha=0.3)
+plt.show()
+plt.savefig("pages/fruits_alpha.png")
+
 plt.figure()
 sky.sankey(data,sorting=1)
 plt.show()
@@ -46,6 +64,47 @@ plt.figure()
 sky.sankey(data,sorting=-1)
 plt.show()
 plt.savefig("pages/fruits_sort_n1.png")
+
+plt.figure()
+sky.sankey(data,titles=["Summer","Winter"])
+plt.show()
+plt.savefig("pages/fruits_titles.png")
+
+plt.figure()
+sky.sankey(data,
+    titles = ["Summer","Winter"],
+    titleSide = "bottom",
+)
+plt.show()
+plt.savefig("pages/fruits_titles_bottom.png")
+
+plt.figure()
+sky.sankey(data,valign="center")
+plt.show()
+plt.savefig("pages/fruits_valign.png")
+
+plt.figure()
+sky.sankey(data,frameSide="both")
+plt.show()
+plt.savefig("pages/fruits_frame.png")
+
+plt.figure()
+sky.sankey( data,
+            titles=["Summer","Winter"],
+            titleSide = "both",
+            frameSide = "both",
+            sorting   = -1,
+            valign    = "center",
+            # spacing parameters:
+            barGap     = 0.01 ,
+            barWidth   = 0.1 ,
+            frameGap   = 0.2 ,
+            labelWidth = 0.3 ,
+            labelGap   = 0.02,
+            titleGap   = 0.1 ,
+          )
+plt.show()
+plt.savefig("pages/fruits_spacing.png")
 
 data = pd.DataFrame([
   ("a",1.0,"ab",2.0),
