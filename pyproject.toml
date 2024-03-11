@@ -1,0 +1,80 @@
+[build-system]
+requires = ["setuptools"]
+build-backend = "setuptools.build_meta"
+
+
+[project]
+name = "auSankey"
+version = "2024.0"
+
+description = "Left-right Sankey diagrams"
+readme = "README.md"
+license = {file = "LICENSE"}
+
+dependencies = [
+    "matplotlib",
+    "numpy",
+    "pandas",
+]
+
+[project.optional-dependencies]
+dev = [
+    "pylint",
+    "pytest",
+    "flake8",
+    "coverage",
+    "coveralls",
+]
+
+[project]
+requires-python = ">= 3.9"
+
+authors = [
+  {name = "Will Robertson", 
+   email = "wspr81@gmail.com"},
+]
+maintainers = [
+  {name = "Will Robertson", 
+   email = "wspr81@gmail.com"},
+]
+
+[project.urls]
+Homepage = "https://github.com/AUMAG/auSankey"
+Documentation = "https://aumag.github.io/auSankey/"
+Repository = "https://github.com/AUMAG/auSankey.git"
+Issues = "https://github.com/AUMAG/auSankey/issues"
+# Changelog = "https://github.com/me/spam/blob/master/CHANGELOG.md"
+
+[project]
+classifiers = [
+  # How mature is this project? Common values are
+  #   3 - Alpha
+  #   4 - Beta
+  #   5 - Production/Stable
+  "Development Status :: 4 - Beta",
+
+  # Indicate who your project is intended for
+  # "Intended Audience :: Developers",
+  # "Topic :: Software Development :: Build Tools",
+
+  "LICENSE :: OSI APPROVED :: GNU AFFERO GENERAL PUBLIC LICENSE V3",
+
+  # Specify the Python versions you support here.
+  "Programming Language :: Python :: 3.9",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+]
+
+
+[tool.hatch.build.targets.sdist]
+ignore-vcs = true
+
+[tool.hatch.build.targets.sdist]
+include = [
+  "/auSankey/*.py",
+  "/tests/*.py",
+  "/tests/*.csv", 
+]
+exclude = [
+  # "*.json",
+]

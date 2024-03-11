@@ -12,7 +12,7 @@ Currently, the package only supports flows in the horizontal direction (left-rig
 
 This package is a fork and extension of pysankey, which is represented by the following main contenders:
 
-* Original [pysankey](https://github.com/anazalea/pySankey) by anazalea 
+* Original [pysankey](https://github.com/anazalea/pySankey) by anazalea (no longer maintained)
 * Forked [pysankey](https://github.com/Pierre-Sassoulas/pySankey/) by Pierre-Sassoulas
 * [pysankey2](https://github.com/SZJShuffle/pySankey2/) by SZJShuffle
 
