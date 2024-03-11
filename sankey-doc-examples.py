@@ -3,15 +3,49 @@ import pysankey as sky
 import matplotlib.pyplot as plt
 import pandas as pd
 
-data = pd.read_csv(
-    'pysankey/tests/fruit.csv',
-    sep=',',
-)
+data = pd.read_csv('pysankey/tests/fruit.csv')
 print(data)
 
 plt.figure()
 sky.sankey(data)
+plt.show()
 plt.savefig("pages/fruits_default.png")
+
+data = pd.DataFrame([
+    ("apple", 1, "apple", 0.5),
+    ("banana", 2, "banana", 3),
+    ("lime", 0.5, "lime", 0.2),
+    ("blueberry", 0.2, "blueberry", 1),
+    ("orange", 1.5, "orange", 1.5),
+])
+
+plt.figure()
+sky.sankey(data,colormap="jet")
+plt.show()
+plt.savefig("pages/fruits_jet.png")
+
+colorDict = {
+    'apple':     '#f71b1b',
+    'blueberry': '#1b7ef7',
+    'banana':    '#f3f71b',
+    'lime':      '#12e23f',
+    'orange':    '#f78c1b'
+}
+
+plt.figure()
+sky.sankey(data,colorDict=colorDict)
+plt.show()
+plt.savefig("pages/fruits_colordict.png")
+
+plt.figure()
+sky.sankey(data,sorting=1)
+plt.show()
+plt.savefig("pages/fruits_sort_p1.png")
+
+plt.figure()
+sky.sankey(data,sorting=-1)
+plt.show()
+plt.savefig("pages/fruits_sort_n1.png")
 
 data = pd.DataFrame([
   ("a",1.0,"ab",2.0),

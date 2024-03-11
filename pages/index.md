@@ -31,13 +31,11 @@ The data to plot is first created in a Pandas dataFrame:
 ```
 import pandas as pd
 data = pd.DataFrame([
-  (“a”,1.0,”ab”,2.0),
-  (“a”,1.0,”ba”,0.8),
-  (“c”,1.5,”cd”,0.5),
-  (“b”,0.5,”ba”,0.8),
-  (“b”,0.5,”ab”,0.8),
-  (“d”,2.0,”cd”,0.4),
-  (“e”,1.0,”e”,1.0),
+    (“apple”,     1  , “apple”,     0.5),
+    (“banana”,    2  , “banana”,    3  ),
+    (“lime”,      0.5, “lime”,      0.2),
+    (“blueberry”, 0.2, “blueberry”, 1  ),
+    (“orange”,    1.5, “orange”,    1.5),
 ])
 ```
 Note that there can be as many columns as you like and they are always presented in pairs of “label” then “weight”. (Unweighted diagrams – currently – would require you to simple put a weight of 1.0 for each label.)
@@ -45,10 +43,7 @@ Note that there can be as many columns as you like and they are always presented
 Rather than manually typing out the dataFrame, you can also import it from a CSV file or similar:
 ```
 import pandas as pd
-data = pd.read_csv(
-    ‘pysankey/tests/fruit.csv’,
-    sep=‘,’,
-)
+data = pd.read_csv(‘pysankey/tests/fruit.csv’)
 ```
 (You may need to be careful about whether the first row is considered to be data or column headers.)
 
@@ -59,3 +54,40 @@ sky.sankey(data)
 ```
 which produces:
 ![Image with options](fruits_default.png)
+
+## Colours
+
+You can customise the colours either by changing the Matplotlib colormap:
+```
+sky.sankey(data,colormap=“jet”)
+```
+![Image with options](fruits_jet.png)
+
+Or by manually choosing the colours:
+```
+colorDict = {
+    ‘apple’:     ‘#f71b1b’,
+    ‘blueberry’: ‘#1b7ef7’,
+    ‘banana’:    ‘#f3f71b’,
+    ‘lime’:      ‘#12e23f’,
+    ‘orange’:    ‘#f78c1b’
+}
+sky.sankey(data,colorDict=colorDict)
+```
+![Image with options](fruits_colordict.png)
+
+## Order of entries (sorting)
+
+The order of the entries is top to bottom corresponding to first to last in the data frame.
+
+The entries can be sorted highest to lowest:
+```
+sky.sankey(data,sorting=1)
+```
+![Image with options](fruits_sort_p1.png)
+
+Or lowest to highest:
+```
+sky.sankey(data,sorting=-1)
+```
+![Image with options](fruits_sort_n1.png)
