@@ -17,16 +17,6 @@ dependencies = [
     "pandas",
 ]
 
-[project.optional-dependencies]
-dev = [
-    "pylint",
-    "pytest",
-    "flake8",
-    "coverage",
-    "coveralls",
-]
-
-[project]
 requires-python = ">= 3.9"
 
 authors = [
@@ -38,14 +28,6 @@ maintainers = [
    email = "wspr81@gmail.com"},
 ]
 
-[project.urls]
-Homepage = "https://github.com/AUMAG/auSankey"
-Documentation = "https://aumag.github.io/auSankey/"
-Repository = "https://github.com/AUMAG/auSankey.git"
-Issues = "https://github.com/AUMAG/auSankey/issues"
-# Changelog = "https://github.com/me/spam/blob/master/CHANGELOG.md"
-
-[project]
 classifiers = [
   # How mature is this project? Common values are
   #   3 - Alpha
@@ -66,8 +48,28 @@ classifiers = [
 ]
 
 
+[project.optional-dependencies]
+dev = [
+    "pylint",
+    "pytest",
+    "flake8",
+    "coverage",
+    "coveralls",
+]
+
+
+[project.urls]
+Homepage = "https://github.com/AUMAG/auSankey"
+Documentation = "https://aumag.github.io/auSankey/"
+Repository = "https://github.com/AUMAG/auSankey.git"
+Issues = "https://github.com/AUMAG/auSankey/issues"
+# Changelog = "https://github.com/me/spam/blob/master/CHANGELOG.md"
+
+
+
 [tool.hatch.build.targets.sdist]
 ignore-vcs = true
+
 
 [tool.hatch.build.targets.sdist]
 include = [
