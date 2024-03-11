@@ -290,7 +290,7 @@ def _sankey(
 
     # horizontal extents of subdiagram
     xMax = subplotWidth
-    xLeft = barWidth*xMax + labelWidth*xMax + ii*xMax
+    xLeft = barWidth*xMax*(ii+1)*xMax + labelWidth*xMax + ii*xMax
     xRight = labelWidth*xMax + (ii+1)*xMax
 
     # Draw bars and their labels
@@ -348,7 +348,7 @@ def _sankey(
 
         # leftmost title
         if ii == 0:
-            xt = -xMax*labelGap + xLeft
+            xt = -xMax*barWidth/2 + xLeft
             if ((titleSide == "top") or (titleSide == "both")):
                 yt = titleGap * plotHeight + leftWidths[leftLabel]['top']
                 va = 'bottom'
