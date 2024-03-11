@@ -20,12 +20,10 @@ dependencies = [
 requires-python = ">= 3.9"
 
 authors = [
-  {name = "Will Robertson", 
-   email = "wspr81@gmail.com"},
+  {name = "Will Robertson", email = "wspr81@gmail.com"},
 ]
 maintainers = [
-  {name = "Will Robertson", 
-   email = "wspr81@gmail.com"},
+  {name = "Will Robertson", email = "wspr81@gmail.com"},
 ]
 
 classifiers = [
