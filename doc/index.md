@@ -18,8 +18,10 @@ This package is a fork and extension of pysankey, which is represented by the fo
 
 I started redeveloping the package independently to learn more about Python programming, and by the time I was done it was too late to try and resync with one of these forks. Hence, another fork!
 
-## Other works
+## Other works (both Python and not)
 
+* [SankeyMATIC web app](https://sankeymatic.com)
+* [floweaver for Python](https://github.com/ricklupton/floweaver) by ricklupton
 * [alluvial for R](https://github.com/mbojan/alluvial) by mbojan
 
 # Interface
