@@ -8,15 +8,15 @@ with open("requirements.txt", "r") as fh:
 require= [x.strip() for x in require]
 
 setuptools.setup(
-    name="pySankey",
+    name="auSankey",
     version="1.0.0",
-    author="wspr after anazalea et al.",
+    author="Will Robertson (wspr)",
     author_email="wspr81@gmail.com",
     description="Make simple, pretty Sankey Diagrams",
     long_description=long_description,
     license='GNU General Public License v3.0',
     long_description_content_type="text/markdown",
-    url="https://github.com/anazalea/pySankey",
+    url="https://github.com/AUMAG/auSankey",
     packages=setuptools.find_packages(),
     install_requires=require,
     classifiers=(

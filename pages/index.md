@@ -1,4 +1,4 @@
-# The ausankey package
+# The auSankey package for Python
 
 ## Introduction
 
@@ -49,7 +49,7 @@ data = pd.read_csv(‘pysankey/tests/fruit.csv’)
 
 Once you have the data, the diagram is plotted simply using the `sankey` function:
 ```
-import pysankey as sky
+import auSankey as sky
 sky.sankey(data)
 ```
 which produces:

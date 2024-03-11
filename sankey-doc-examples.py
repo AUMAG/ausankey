@@ -1,9 +1,9 @@
 
-import pysankey as sky
+import auSankey as sky
 import matplotlib.pyplot as plt
 import pandas as pd
 
-data = pd.read_csv('pysankey/tests/fruit.csv')
+data = pd.read_csv('auSankey/tests/fruit.csv')
 print(data)
 
 plt.figure()

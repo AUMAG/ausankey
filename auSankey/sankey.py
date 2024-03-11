@@ -13,15 +13,15 @@ import numpy as np
 import pandas as pd
 
 
-class PySankeyException(Exception):
+class SankeyException(Exception):
     pass
 
 
-class NullsInFrame(PySankeyException):
+class NullsInFrame(SankeyException):
     pass
 
 
-class LabelMismatch(PySankeyException):
+class LabelMismatch(SankeyException):
     pass
 
 

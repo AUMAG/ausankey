@@ -1,10 +1,10 @@
 
-import pysankey as sky
+import auSankey as sky
 import matplotlib.pyplot as plt
 import pandas as pd
 
 data = pd.read_csv(
-    'pysankey/tests/fruit.csv',
+    'auSankey/tests/fruit.csv',
     sep=',',
 )
 print(data)
@@ -28,9 +28,17 @@ sky.sankey(
   data,
   sorting = -1,
   colormap = "jet",
-  aspect=0.5
+  aspect=0.1
 )
-  
+plt.show()
+
+plt.figure()
+sky.sankey(
+  data,
+  sorting = -1,
+  colormap = "jet",
+  aspect=20
+)
 plt.show()
 
 colorDict =  {

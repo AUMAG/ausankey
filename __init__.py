@@ -3,4 +3,4 @@
 
 # allow repo itself to be loaded as a package
 
-from .pysankey.sankey import sankey
+from .auSankey.sankey import sankey

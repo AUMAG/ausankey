@@ -1,5 +1,5 @@
 
-import pysankey as sky
+import auSankey as sky
 import matplotlib.pyplot as plt
 import pandas as pd
 
