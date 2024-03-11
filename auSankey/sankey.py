@@ -48,7 +48,7 @@ def sankey(
             ax=None,
           ):
     '''
-    Make Sankey Diagram showing flow from left-->right
+    Make Sankey Diagram with left-right flow
 
     Inputs:
         data = pandas dataframe of labels and weights in alternating columns
@@ -89,14 +89,15 @@ def sankey(
 
     # offsets for alignment
     voffset = np.empty(N)
+    if valign == "top":
+        vscale = 1
+    elif valign == "center":
+        vscale = 0.5
+    else: # bottom, or undefined
+        vscale = 0
+    
     for ii in range(N):
-        match valign:
-            case "top":
-                voffset[ii] = Lhgt[1] - Lhgt[ii]
-            case "bottom":
-                voffset[ii] = 0
-            case "center":
-                voffset[ii] = (Lhgt[1] - Lhgt[ii])/2
+        voffset[ii] = vscale*(Lhgt[1] - Lhgt[ii])
 
     # labels
     labelRec = data[range(0, 2*N, 2)].to_records(index=False)
