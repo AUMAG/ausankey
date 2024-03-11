@@ -33,7 +33,7 @@ data = pd.DataFrame([
 plt.figure()
 sky.sankey(
   data,
-  sorting    = -1,
+  sorting   = -1,
   titles    = ["Stage 1","Stage 2","Stage 3"],
   valign    = "center",
 )
@@ -42,12 +42,10 @@ plt.show()
 
 ## Requirements
 
-Requires python3-tk (for python 3.x) you can
-install the other requirements with:
-
-``` bash
-    pip install -r requirements.txt
-```
+* Python 3.x
+* matplotlib
+* numpy
+* pandas
 
 
 ## Package development
