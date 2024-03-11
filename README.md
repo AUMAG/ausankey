@@ -7,7 +7,7 @@ Sankey diagrams</a> flowing only from left to right.
 
 [![Jekyll Pages](https://github.com/AUMAG/auSankey/actions/workflows/jekyll-gh-pages.yml/badge.svg)](https://github.com/AUMAG/auSankey/actions/workflows/jekyll-gh-pages.yml)
 
-[![Coverage Status](https://coveralls.io/repos/github/AUMAG/auSankey/badge.svg?branch=master)](https://coveralls.io/github/AUMAG/auSankey?branch=master)
+[![Coverage Status](https://coveralls.io/repos/github/AUMAG/auSankey/badge.svg?branch=main)](https://coveralls.io/github/AUMAG/auSankey?branch=main)
 
 User documentation for the repository is published via GitHub Pages: https://aumag.github.io/auSankey/
 
