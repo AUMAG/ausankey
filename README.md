@@ -5,7 +5,7 @@ Sankey diagrams</a> flowing only from left to right.
 
 [![Python package](https://github.com/AUMAG/auSankey/actions/workflows/check.yml/badge.svg)](https://github.com/AUMAG/auSankey/actions/workflows/check.yml)
 
-[![Jekyll Pages](https://github.com/AUMAG/auSankey/actions/workflows/jekyll-gh-pages.yml/badge.svg)](https://github.com/AUMAG/auSankey/actions/workflows/jekyll-gh-pages.yml)
+[![Jekyll Pages](https://github.com/AUMAG/auSankey/actions/workflows/doc.yml/badge.svg)](https://github.com/AUMAG/auSankey/actions/workflows/doc.yml)
 
 [![Coverage Status](https://coveralls.io/repos/github/AUMAG/auSankey/badge.svg?branch=main)](https://coveralls.io/github/AUMAG/auSankey?branch=main)
 
