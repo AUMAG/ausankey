@@ -1,17 +1,26 @@
 name: Publish release
 
 on:
-  release:
-    types: [published]
-
-  # Allows you to run this workflow manually from the Actions tab
-  workflow_dispatch:
+  push:
+    tags:
+      - "*"
 
 permissions:
   contents: read
 
 jobs:
 
+  publish:
+    name: Publish Github
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+      - name: Publish release
+        uses: ghalactic/github-release-from-tag@v5
+        
   deploy:
 
     runs-on: ubuntu-latest
@@ -35,5 +44,5 @@ jobs:
       run: |
         hatch build
         ls -lR dist
-    - name: Publish package to PyPI
+    - name: Publish to PyPI
       uses: pypa/gh-action-pypi-publish@release/v1
