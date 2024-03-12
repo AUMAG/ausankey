@@ -64,6 +64,8 @@ Issues = "https://github.com/AUMAG/auSankey/issues"
 # Changelog = "https://github.com/me/spam/blob/master/CHANGELOG.md"
 
 
+[tool.hatch.build.targets.wheel]
+packages = ["auSankey"]
 
 [tool.hatch.build.targets.sdist]
 ignore-vcs = true
