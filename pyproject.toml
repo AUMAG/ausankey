@@ -5,9 +5,9 @@ build-backend = "hatchling.build"
 
 [project]
 name = "auSankey"
-version = "2024.0"
+version = "1.0"
 
-description = "Left-right Sankey diagrams"
+description = "Sankey diagrams simply"
 readme = "README.md"
 license = {file = "LICENSE"}
 
