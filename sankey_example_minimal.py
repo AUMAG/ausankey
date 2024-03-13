@@ -1,7 +1,8 @@
 
-import auSankey as sky
 import matplotlib.pyplot as plt
 import pandas as pd
+
+import auSankey as sky
 
 data = pd.DataFrame([
   ("a",1.0,"ab",2.0,"a",1.0),

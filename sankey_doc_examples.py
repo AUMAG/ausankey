@@ -1,7 +1,8 @@
 
-import auSankey as sky
 import matplotlib.pyplot as plt
 import pandas as pd
+
+import auSankey as sky
 
 data = pd.read_csv('tests/fruit.csv')
 print(data)

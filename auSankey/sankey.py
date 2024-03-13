@@ -17,11 +17,11 @@ class SankeyError(Exception):
     pass
 
 
-class NullsInFrame(SankeyError):
+class NullsInFrameError(SankeyError):
     pass
 
 
-class LabelMismatch(SankeyError):
+class LabelMismatchError(SankeyError):
     pass
 
 
@@ -36,7 +36,7 @@ def sankey(
             titleSide="top",  # "bottom", "both"
             frameSide="none",
             frameGap=0.1,
-            labelDict={},
+            labelDict=None,
             labelWidth=0,
             labelGap=0.01,
             barWidth=0.02,
@@ -66,7 +66,7 @@ def sankey(
     NC = len(data.columns)
     data.columns = range(NC)  # force numeric column headings
     N = int(NC/2)  # number of labels
-    
+
     # sizes
     Wsum = np.empty(N)
     Nunq = np.empty(N)
@@ -95,7 +95,7 @@ def sankey(
         vscale = 0.5
     else: # bottom, or undefined
         vscale = 0
-    
+
     for ii in range(N):
         voffset[ii] = vscale*(Lhgt[1] - Lhgt[ii])
 
@@ -126,12 +126,11 @@ def sankey(
             labelOrder=labelOrder,
             colorDict=colorDict,
             fontsize=fontsize,
-            labelDict=labelDict,
+            labelDict=labelDict or {},
             labelWidth=labelWidth,
             labelGap=labelGap,
             barWidth=barWidth,
             barGap=barGap,
-            plotWidth=plotWidth,
             subplotWidth=subplotWidth,
             plotHeight=plotHeight,
             alpha=alpha,
@@ -141,7 +140,7 @@ def sankey(
         )
 
     # frame on top/bottom edge
-    if (frameSide == "top") | (frameSide == "both"):
+    if frameSide in ("top", "both"):
         col = [0, 0, 0, 1]
     else:
         col = [1, 1, 1, 0]
@@ -151,7 +150,7 @@ def sankey(
         min(voffset) + (plotHeight) + (titleGap+frameGap)*plotHeight + [0, 0],
         color=col)
 
-    if (frameSide == "bottom") | (frameSide == "both"):
+    if frameSide in ("bottom", "both"):
         col = [0, 0, 0, 1]
     else:
         col = [1, 1, 1, 0]
@@ -173,7 +172,6 @@ def _sankey(
         titles=None,
         titleGap=None,
         titleSide=None,
-        plotWidth=None,
         plotHeight=None,
         subplotWidth=None,
         labelDict=None,
@@ -196,7 +194,7 @@ def _sankey(
     rightWeight = pd.Series(data[weightind+2])
 
     if any(leftWeight.isnull()) | any(rightWeight.isnull()):
-        raise NullsInFrame('Sankey graph does not support null values.')
+        raise NullsInFrameError('Sankey graph does not support null values.')
 
     # label order / sorting
 
@@ -438,11 +436,12 @@ def check_data_matches_labels(labels, data, side):
             labels = set(labels)
         if labels != data:
             msg = "\n"
-            if len(labels) <= 20:
+            maxlen = 20
+            if len(labels) <= maxlen:
                 msg = "Labels: " + ",".join(labels) + "\n"
-            if len(data) < 20:
+            if len(data) < maxlen:
                 msg += "Data: " + ",".join(data)
-            raise LabelMismatch(
+            raise LabelMismatchError(
               '{0} labels and data do not match.{1}'.format(side, msg))
 
 
