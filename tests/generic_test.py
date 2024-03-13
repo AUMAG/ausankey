@@ -8,7 +8,7 @@ class GenericTest(unittest.TestCase):
     will be removed at the end of the tests. """
 
     def tearDown(self):
-        #path = "{}.png".format(self.figure_name)
+        path = "{}.png".format(self.figure_name)
         # Comment this to check the resulting image
-        # if os.path.exists(path):
-        #     os.remove(path)
+        if os.path.exists(path):
+            os.remove(path)
