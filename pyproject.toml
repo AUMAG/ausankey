@@ -72,8 +72,8 @@ ignore-vcs = true
 
 include = [
   "/auSankey/*.py",
-  "/tests/*.py",
-  "/tests/*.csv", 
+  "/auSankey/tests/*.py",
+  "/auSankey/tests/*.csv", 
 ]
 exclude = [
   # "*.json",
