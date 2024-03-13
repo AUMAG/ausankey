@@ -3,7 +3,7 @@ import auSankey as sky
 import matplotlib.pyplot as plt
 import pandas as pd
 
-data = pd.read_csv('auSankey/tests/fruit.csv')
+data = pd.read_csv('tests/fruit.csv')
 print(data)
 
 plt.figure()
