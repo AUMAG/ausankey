@@ -44,17 +44,9 @@ jobs:
       runs-on: ubuntu-latest
       steps:
         - uses: actions/checkout@v4
-        - name: Python ${{ matrix.python-version }}
-          uses: actions/setup-python@v5
-        - name: Install dependencies
-          run: |
-            python -m pip install --upgrade pip
-            pip install -r requirements_dev.txt 
         - name: Coverage
           env:
             GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           run: |
             cd ${{ vars.SOURCE_DIR }}
-            coverage run -m pytest
-            echo "COVERAGE"
-            coveralls --service=github
+            hatch run test:cov

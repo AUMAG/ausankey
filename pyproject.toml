@@ -78,3 +78,12 @@ include = [
 exclude = [
   # "*.json",
 ]
+
+[tool.hatch.envs.test]
+dependencies = ["pylint", "pytest", "flake8", "coverage", "coveralls"]
+
+[tool.hatch.envs.test.scripts]
+test = "python -m pytest"
+test-cov = "coverage run -m pytest"
+coverall = "coveralls --service=github"
+cov = ["test-cov", "coverall"]
