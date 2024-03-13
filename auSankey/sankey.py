@@ -120,13 +120,11 @@ def sankey(
 
         _sankey(
             ii, N-1, data,
-            Wsum=Wsum,
             titles=titles,
             titleGap=titleGap,
             titleSide=titleSide,
             labelOrder=labelOrder,
             colorDict=colorDict,
-            aspect=aspect,
             fontsize=fontsize,
             labelDict=labelDict,
             labelWidth=labelWidth,
@@ -137,8 +135,6 @@ def sankey(
             subplotWidth=subplotWidth,
             plotHeight=plotHeight,
             alpha=alpha,
-            valign=valign,
-            Lhgt=Lhgt,
             voffset=voffset,
             sorting=sorting,
             ax=ax,
@@ -171,29 +167,23 @@ def sankey(
 
 def _sankey(
         ii, N, data,
-        Wsum=None,
         colorDict=None,
         labelOrder=None,
-        aspect=4,
-        fontsize=14,
-        figureName=None,
-        closePlot=False,
+        fontsize=None,
         titles=None,
-        titleGap=0,
-        titleSide="",
-        plotWidth=0,
-        plotHeight=0,
-        subplotWidth=0,
-        labelDict={},
-        labelWidth=0,
-        labelGap=0,
-        barWidth=0,
-        barGap=0,
-        alpha=0,
-        valign=None,
-        Lhgt=0,
+        titleGap=None,
+        titleSide=None,
+        plotWidth=None,
+        plotHeight=None,
+        subplotWidth=None,
+        labelDict=None,
+        labelWidth=None,
+        labelGap=None,
+        barWidth=None,
+        barGap=None,
+        alpha=None,
         voffset=None,
-        sorting=0,
+        sorting=None,
         ax=None,
       ):
 
@@ -241,7 +231,7 @@ def _sankey(
     # check colours
     allLabels = pd.Series(np.r_[left.unique(), right.unique()]).unique()
 
-    missing = [label for label in allLabels if label not in colorDict.keys()]
+    missing = [label for label in allLabels if label not in colorDict]
     if missing:
         msg = (
             "The colorDict parameter is missing "
@@ -351,7 +341,7 @@ def _sankey(
         # leftmost title
         if ii == 0:
             xt = xLeft - xMax*barWidth/2
-            if ((titleSide == "top") or (titleSide == "both")):
+            if titleSide in ("top", "both"):
                 yt = titleGap * plotHeight + leftWidths[leftLabel]['top']
                 va = 'bottom'
                 ax.text(
@@ -360,7 +350,7 @@ def _sankey(
                     fontsize=fontsize,
                 )
 
-            if (titleSide == "bottom") | (titleSide == "both"):
+            if titleSide in ("bottom", "both"):
                 yt = voffset[ii] - titleGap*plotHeight
                 va = 'top'
 
@@ -457,13 +447,17 @@ def check_data_matches_labels(labels, data, side):
 
 
 def combineColours(c1, c2, N):
-    if len(c1) != 4:
+
+    colorArrayLen = 4
+    # if not [r,g,b,a] assume a hex string like "#rrggbb":
+    
+    if len(c1) != colorArrayLen:
         r1 = int(c1[1:3], 16)/255
         g1 = int(c1[3:5], 16)/255
         b1 = int(c1[5:7], 16)/255
         c1 = [r1, g1, b1, 1]
 
-    if len(c2) != 4:
+    if len(c2) != colorArrayLen:
         r2 = int(c2[1:3], 16)/255
         g2 = int(c2[3:5], 16)/255
         b2 = int(c2[5:7], 16)/255

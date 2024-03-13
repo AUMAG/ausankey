@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 import pandas as pd
 
 data = pd.read_csv(
-    'auSankey/tests/fruit.csv',
+    'tests/fruit.csv',
     sep=',',
 )
 print(data)
