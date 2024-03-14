@@ -39,7 +39,7 @@ jobs:
             cd ${{ vars.SOURCE_DIR }}
             hatch fmt
         - name: Autocommit fixes 
-        - uses: stefanzweifel/git-auto-commit-action@v4
+          uses: stefanzweifel/git-auto-commit-action@v4
           with:
             commit_message: 'style fixes by ruff'
 
