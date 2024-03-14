@@ -18,7 +18,8 @@ class SankeyError(Exception):
 
 
 class NullsInFrameError(SankeyError):
-    pass
+    def __init__(self):
+        super().__init__(f"Sankey graph does not support null values.")
 
 
 class LabelMismatchError(SankeyError):
@@ -194,7 +195,7 @@ def _sankey(
     rightWeight = pd.Series(data[weightind+2])
 
     if any(leftWeight.isnull()) | any(rightWeight.isnull()):
-        raise NullsInFrameError('Sankey graph does not support null values.')
+        raise NullsInFrameError()
 
     # label order / sorting
 
