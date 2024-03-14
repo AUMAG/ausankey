@@ -1,7 +1,0 @@
--r requirements.txt
-
-pylint
-pytest
-flake8
-coverage
-coveralls
