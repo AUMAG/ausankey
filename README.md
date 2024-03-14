@@ -9,7 +9,7 @@ Sankey diagrams</a> flowing only from left to right.
 
 [![Jekyll Pages](https://github.com/AUMAG/auSankey/actions/workflows/doc.yml/badge.svg)](https://github.com/AUMAG/auSankey/actions/workflows/doc.yml)
 
-[![Publish to PyPI](https://github.com/AUMAG/auSankey/actions/workflows/release.yml/badge.svg)](https://github.com/AUMAG/auSankey/actions/workflows/release.yml)
+[![Publish release](https://github.com/AUMAG/ausankey/actions/workflows/release.yml/badge.svg)](https://github.com/AUMAG/ausankey/actions/workflows/release.yml)
 
 [![Coverage Status](https://coveralls.io/repos/github/AUMAG/auSankey/badge.svg?branch=main)](https://coveralls.io/github/AUMAG/auSankey?branch=main)
 
