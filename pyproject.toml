@@ -82,5 +82,8 @@ coverall = "coveralls --service=github"
 cov = ["test-cov", "coverall"]
 
 [tool.ruff]
-exclude = ["__init__.py"]
+exclude = [
+  "__init__.py",
+  "/doc/*",
+ ]
 output-format = "github"
