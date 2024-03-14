@@ -47,21 +47,21 @@ classifiers = [
 
 
 [project.urls]
-Homepage = "https://github.com/AUMAG/auSankey"
-Documentation = "https://aumag.github.io/auSankey/"
-Repository = "https://github.com/AUMAG/auSankey.git"
-Issues = "https://github.com/AUMAG/auSankey/issues"
-# Changelog = "https://github.com/me/spam/blob/master/CHANGELOG.md"
+Homepage = "https://github.com/AUMAG/ausankey"
+Documentation = "https://aumag.github.io/ausankey/"
+Repository = "https://github.com/AUMAG/ausankey.git"
+Issues = "https://github.com/AUMAG/ausankey/issues"
+Changelog = "https://github.com/AUMAG/ausankey/blob/master/CHANGELOG.md"
 
 
 [tool.hatch.build.targets.wheel]
-packages = ["auSankey"]
+packages = ["ausankey"]
 
 [tool.hatch.build.targets.sdist]
 ignore-vcs = true
 
 include = [
-  "/auSankey/*.py",
+  "/ausankey/*.py",
   "/tests/*.py",
   "/tests/*.csv", 
 ]
