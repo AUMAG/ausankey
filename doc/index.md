@@ -1,10 +1,10 @@
-# The ausankey package for Python
+# The `ausankey` package for Python
 
 ## Introduction
 
 This Python package is used for creating diagrams like this, often known as Sankey diagrams:
 
-![Image with options](frame3_many.png)
+![Image with options](frame3_pretty.png)
 
 Currently, the package only supports flows in the horizontal direction (left-right).
 

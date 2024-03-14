@@ -3,12 +3,12 @@ import pandas as pd
 
 import ausankey as sky
 
-data = pd.read_csv("tests/fruit.csv")
+data = pd.read_csv("../tests/fruit.csv")
 
 plt.figure()
 sky.sankey(data)
 plt.show()
-plt.savefig("doc/fruits_default.png")
+plt.savefig("fruits_default.png")
 
 data = pd.DataFrame(
     [
@@ -23,41 +23,41 @@ data = pd.DataFrame(
 plt.figure()
 sky.sankey(data, colormap="jet")
 plt.show()
-plt.savefig("doc/fruits_jet.png")
+plt.savefig("fruits_jet.png")
 
 color_dict = {"apple": "#f71b1b", "blueberry": "#1b7ef7", "banana": "#f3f71b", "lime": "#12e23f", "orange": "#f78c1b"}
 
 plt.figure()
 sky.sankey(data, color_dict=color_dict)
 plt.show()
-plt.savefig("doc/fruits_colordict.png")
+plt.savefig("fruits_colordict.png")
 
 label_dict = {"apple": "Apple", "blueberry": "B'berry", "banana": "Banana", "lime": "Lime", "orange": "Orange"}
 
 plt.figure()
 sky.sankey(data, label_dict=label_dict)
 plt.show()
-plt.savefig("doc/fruits_labeldict.png")
+plt.savefig("fruits_labeldict.png")
 
 plt.figure()
 sky.sankey(data, alpha=0.3)
 plt.show()
-plt.savefig("doc/fruits_alpha.png")
+plt.savefig("fruits_alpha.png")
 
 plt.figure()
 sky.sankey(data, sorting=1)
 plt.show()
-plt.savefig("doc/fruits_sort_p1.png")
+plt.savefig("fruits_sort_p1.png")
 
 plt.figure()
 sky.sankey(data, sorting=-1)
 plt.show()
-plt.savefig("doc/fruits_sort_n1.png")
+plt.savefig("fruits_sort_n1.png")
 
 plt.figure()
 sky.sankey(data, titles=["Summer", "Winter"])
 plt.show()
-plt.savefig("doc/fruits_titles.png")
+plt.savefig("fruits_titles.png")
 
 plt.figure()
 sky.sankey(
@@ -66,17 +66,17 @@ sky.sankey(
     title_side="bottom",
 )
 plt.show()
-plt.savefig("doc/fruits_titles_bottom.png")
+plt.savefig("fruits_titles_bottom.png")
 
 plt.figure()
 sky.sankey(data, valign="center")
 plt.show()
-plt.savefig("doc/fruits_valign.png")
+plt.savefig("fruits_valign.png")
 
 plt.figure()
 sky.sankey(data, frame_side="both")
 plt.show()
-plt.savefig("doc/fruits_frame.png")
+plt.savefig("fruits_frame.png")
 
 plt.figure()
 sky.sankey(
@@ -95,7 +95,7 @@ sky.sankey(
     title_gap=0.1,
 )
 plt.show()
-plt.savefig("doc/fruits_spacing.png")
+plt.savefig("fruits_spacing.png")
 
 data = pd.DataFrame(
     [
@@ -111,7 +111,7 @@ data = pd.DataFrame(
 
 plt.figure()
 sky.sankey(data, sorting=-1, colormap="jet", aspect=0.5)
-plt.savefig("doc/frame2_sort_n1.png")
+plt.savefig("frame2_sort_n1.png")
 
 
 color_dict = {
@@ -138,6 +138,15 @@ data = pd.DataFrame(
 )
 
 plt.figure(dpi=600)
+sky.sankey(
+    data,
+    sorting=-1,
+    titles=["Stage 1", "Stage 2", "Stage 3"],
+    valign="center",
+)
+plt.savefig("frame3_pretty.png")
+
+plt.figure(dpi=600)
 
 sky.sankey(
     data,
@@ -156,4 +165,4 @@ sky.sankey(
     valign="top",
 )
 
-plt.savefig("doc/frame3_many.png")
+plt.savefig("frame3_many.png")
