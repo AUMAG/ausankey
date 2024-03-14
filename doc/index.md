@@ -107,14 +107,14 @@ sky.sankey(data,sorting=-1)
 
 If the data is generated externally it may not be convenient to edit the label text in the source. The typeset labels can be specified using a dictionary of lookup strings:
 ```
-labelDict = {
+label_dict = {
     'apple':     'Apple',
     'blueberry': "B'berry",
     'banana':    'Banana',
     'lime':      'Lime',
     'orange':    'Orange'
 }
-sky.sankey(data,labelDict=labelDict)
+sky.sankey(data,label_dict=label_dict)
 ```
 ![Image with options](fruits_labeldict.png)
 
