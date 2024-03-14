@@ -142,21 +142,18 @@ def sankey(
             ax=ax,
         )
 
+    frame_top = frameSide in ("top", "both")
+    frame_bot = frameSide in ("bottom", "both")
+        
     # frame on top/bottom edge
-    if frameSide in ("top", "both"):
-        col = [0, 0, 0, 1]
-    else:
-        col = [1, 1, 1, 0]
+    col = [0, 0, 0, 1] if frame_top else [1, 1, 1, 0]
 
     ax.plot(
         [0, plot_width],
         min(voffset) + (plot_height) + (titleGap+frameGap)*plot_height + [0, 0],
         color=col)
 
-    if frameSide in ("bottom", "both"):
-        col = [0, 0, 0, 1]
-    else:
-        col = [1, 1, 1, 0]
+    col = [0, 0, 0, 1] if frame_bot else [1, 1, 1, 0]
 
     ax.plot(
         [0, plot_width],
@@ -291,7 +288,7 @@ def _sankey(
             lbot = left_widths[left_label]['bottom']
             lll = left_widths[left_label]['left']
             ax.fill_between(
-                x_left+[-x_bar_width, 0],
+                [x_left-x_bar_width, x_left],
                 2*[lbot],
                 2*[lbot + lll],
                 color=colorDict[left_label],
@@ -310,7 +307,7 @@ def _sankey(
         rbot = right_widths[right_label]['bottom']
         rrr = right_widths[right_label]['right']
         ax.fill_between(
-          x_right+[0, x_bar_width],
+          [x_right, x_right+x_bar_width],
           2*[rbot],
           [rbot + rrr],
           color=colorDict[right_label],
@@ -362,7 +359,7 @@ def _sankey(
 
         # all other titles
         xt = x_right + x_bar_width/2
-        if (titleSide == "top") | (titleSide == "both"):
+        if titleSide in ("top", "both"):
             yt = titleGap * plot_height + right_widths[right_label]['top']
 
             ax.text(
@@ -371,7 +368,7 @@ def _sankey(
                 fontsize=fontsize,
             )
 
-        if (titleSide == "bottom") | (titleSide == "both"):
+        if titleSide in ("bottom", "both"):
             yt = voffset[ii+1] - titleGap*plot_height
 
             ax.text(
@@ -386,8 +383,10 @@ def _sankey(
     for left_label in left_labels:
         for right_label in right_labels:
 
-            if not any(
-                  (left == left_label) & (right == right_label)):
+            lind = (left == left_label)
+            rind = (right == right_label)
+            
+            if not any(lind & rind):
                 continue
 
             lbot = left_widths[left_label]['bottom']
