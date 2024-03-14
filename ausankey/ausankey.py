@@ -38,7 +38,7 @@ def sankey(
             title_side="top",  # "bottom", "both"
             frame_side="none",
             frame_gap=0.1,
-            labelDict=None,
+            label_dict=None,
             label_width=0,
             label_gap=0.01,
             bar_width=0.02,
@@ -129,7 +129,7 @@ def sankey(
             label_order=label_order,
             color_dict=color_dict,
             fontsize=fontsize,
-            labelDict=labelDict or {},
+            label_dict=label_dict or {},
             label_width=label_width,
             label_gap=label_gap,
             bar_width=bar_width,
@@ -174,7 +174,7 @@ def _sankey(
         title_side=None,
         plot_height=None,
         sub_width=None,
-        labelDict=None,
+        label_dict=None,
         label_width=None,
         label_gap=None,
         bar_width=None,
@@ -299,7 +299,7 @@ def _sankey(
             ax.text(
                 x_left - (label_gap+bar_width)*sub_width,
                 lbot + 0.5*lll,
-                labelDict.get(left_label, left_label),
+                label_dict.get(left_label, left_label),
                 {'ha': 'right', 'va': 'center'},
                 fontsize=fontsize
             )
@@ -319,7 +319,7 @@ def _sankey(
             ax.text(
               x_right + (label_gap+bar_width)*sub_width,
               rbot + 0.5*rrr,
-              labelDict.get(right_label, right_label),
+              label_dict.get(right_label, right_label),
               {'ha': 'left', 'va': 'center'},
               fontsize=fontsize
             )
@@ -327,7 +327,7 @@ def _sankey(
             ax.text(
               x_right + (label_gap+bar_width)*sub_width,
               rbot + 0.5*rrr,
-              labelDict.get(right_label, right_label),
+              label_dict.get(right_label, right_label),
               {'ha': 'left', 'va': 'center'},
               fontsize=fontsize
             )

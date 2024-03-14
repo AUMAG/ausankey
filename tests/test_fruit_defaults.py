@@ -26,7 +26,7 @@ class TestFruitDefault(TestFruit):
     def test_fruits_colordict(self):
 
         plt.figure(dpi=150)
-        sky.sankey(self.data, colorDict=self.color_dict)
+        sky.sankey(self.data, color_dict=self.color_dict)
 
     def test_fruits_titles(self):
 
