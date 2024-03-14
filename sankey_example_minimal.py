@@ -1,6 +1,6 @@
-import pandas as pd
-import matplotlib.pyplot as plt
 import ausankey as sky
+import matplotlib.pyplot as plt
+import pandas as pd
 
 data = pd.DataFrame([
   ("a",1.0,"ab",2.0,"a",1.0),
