@@ -66,15 +66,15 @@ include = [
   "/tests/*.csv", 
 ]
 exclude = [
-  "/doc/*",
+  "/docs/*",
 ]
 
 [tool.hatch.envs.doc]
 dependencies = ["mkdocs", "mkdocstrings"]
 
 [tool.hatch.envs.doc.scripts]
-img = "cd doc; python sankey_doc_examples.py"
-ref = "cd doc; mkdocs build"
+img = "cd docs; python sankey_doc_examples.py"
+ref = "mkdocs build"
 
 [tool.hatch.envs.test]
 dependencies = ["pylint", "pytest", "flake8", "coverage", "coveralls","mkdocstrings"]
@@ -89,6 +89,6 @@ cov = ["test-cov", "coverall"]
 extend-exclude = [
   "sankey_doc_examples.py",
   "__init__.py",
-  "doc/*",
+  "docs/*",
  ]
 output-format = "github"
