@@ -13,7 +13,7 @@ Sankey diagrams</a> flowing only from left to right.
 
 [![Coverage Status](https://coveralls.io/repos/github/AUMAG/auSankey/badge.svg?branch=main)](https://coveralls.io/github/AUMAG/auSankey?branch=main)
 
-User documentation for the repository is published via GitHub Pages: https://aumag.github.io/auSankey/
+User documentation for the repository is published via GitHub Pages: https://aumag.github.io/ausankey/
 
 ## Minimal example
 
