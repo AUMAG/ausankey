@@ -9,13 +9,11 @@ on:
 
 jobs:
   test:
-
     runs-on: ubuntu-latest
     strategy:
       fail-fast: false
       matrix:
         python-version: ["3.9","3.10","3.11"]
-
     steps:
     - uses: actions/checkout@v4
     - name: Set up Python ${{ matrix.python-version }}
@@ -31,29 +29,28 @@ jobs:
   lint:
     runs-on: ubuntu-latest
     steps:
-        - uses: actions/checkout@v4
-        - name: Install Hatch
-          run: pipx install hatch
-        - name: Lint with Ruff
-          run: |
-            cd ${{ vars.SOURCE_DIR }}
-            hatch fmt
-        - name: Autocommit fixes 
-          uses: stefanzweifel/git-auto-commit-action@v4
-          with:
-            commit_message: 'style fixes by ruff'
-
+      - uses: actions/checkout@v4
+      - name: Install Hatch
+        run: pipx install hatch
+      - name: Lint with Ruff
+        run: |
+          cd ${{ vars.SOURCE_DIR }}
+          hatch fmt
+      - name: Autocommit fixes 
+        uses: stefanzweifel/git-auto-commit-action@v4
+        with:
+          commit_message: 'style fixes by ruff'
 
 
   coverage:
-      runs-on: ubuntu-latest
-      steps:
-        - uses: actions/checkout@v4
-        - name: Install Hatch
-          run: pipx install hatch
-        - name: Coverage
-          env:
-            GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          run: |
-            cd ${{ vars.SOURCE_DIR }}
-            hatch run test:cov
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Install Hatch
+        run: pipx install hatch
+      - name: Coverage
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          cd ${{ vars.SOURCE_DIR }}
+          hatch run test:cov
