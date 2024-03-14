@@ -4,14 +4,11 @@ Uses matplotlib to create simple <a href="https://en.wikipedia.org/wiki/Sankey_d
 Sankey diagrams</a> flowing only from left to right.
 
 [![PyPI version](https://badge.fury.io/py/auSankey.svg)](https://badge.fury.io/py/auSankey)
+[![Coverage Status](https://coveralls.io/repos/github/AUMAG/auSankey/badge.svg?branch=main)](https://coveralls.io/github/AUMAG/auSankey?branch=main)
 
 [![Python package](https://github.com/AUMAG/auSankey/actions/workflows/check.yml/badge.svg)](https://github.com/AUMAG/auSankey/actions/workflows/check.yml)
-
 [![Jekyll Pages](https://github.com/AUMAG/auSankey/actions/workflows/doc.yml/badge.svg)](https://github.com/AUMAG/auSankey/actions/workflows/doc.yml)
-
 [![Publish release](https://github.com/AUMAG/ausankey/actions/workflows/release.yml/badge.svg)](https://github.com/AUMAG/ausankey/actions/workflows/release.yml)
-
-[![Coverage Status](https://coveralls.io/repos/github/AUMAG/auSankey/badge.svg?branch=main)](https://coveralls.io/github/AUMAG/auSankey?branch=main)
 
 User documentation for the repository is published via GitHub Pages: https://aumag.github.io/ausankey/
 
