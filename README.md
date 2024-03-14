@@ -1,4 +1,4 @@
-# auSankey
+# ausankey
 
 Uses matplotlib to create simple <a href="https://en.wikipedia.org/wiki/Sankey_diagram">
 Sankey diagrams</a> flowing only from left to right.
@@ -18,7 +18,7 @@ User documentation for the repository is published via GitHub Pages: https://aum
 ## Minimal example
 
 ``` python
-import auSankey as sky
+import ausankey as sky
 import matplotlib.pyplot as plt
 import pandas as pd
 

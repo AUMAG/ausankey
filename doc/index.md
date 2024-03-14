@@ -1,4 +1,4 @@
-# The auSankey package for Python
+# The ausankey package for Python
 
 ## Introduction
 
