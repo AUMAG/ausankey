@@ -1,6 +1,6 @@
 # Changelog for ausankey
 
-## unreleased
+## 2024-03-14 v1.1
 
 * Change package name from `auSankey` to `ausankey` to match Python standards
 * All `mixedCase` options converted to `snake_case`
