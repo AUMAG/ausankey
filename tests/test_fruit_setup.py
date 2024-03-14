@@ -1,17 +1,18 @@
-import pandas as pd
+
 from .generic_test import GenericTest
 
+import pandas as pd
 
 class TestFruit(GenericTest):
     """ Setup sankey test with data in fruit.csv """
 
     def setUp(self):
-        
+
         self.figure_name = "fruit"
         self.data = pd.read_csv(
             'tests/fruit.csv', sep=','
         )
-        self.colorDict = {
+        self.color_dict = {
             'apple': '#f71b1b',
             'blueberry': '#1b7ef7',
             'banana': '#f3f71b',

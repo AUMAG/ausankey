@@ -5,7 +5,6 @@ import pandas as pd
 import ausankey as sky
 
 data = pd.read_csv('tests/fruit.csv')
-print(data)
 
 plt.figure()
 sky.sankey(data)
@@ -25,7 +24,7 @@ sky.sankey(data,colormap="jet")
 plt.show()
 plt.savefig("doc/fruits_jet.png")
 
-colorDict = {
+color_dict = {
     'apple':     '#f71b1b',
     'blueberry': '#1b7ef7',
     'banana':    '#f3f71b',
@@ -34,11 +33,11 @@ colorDict = {
 }
 
 plt.figure()
-sky.sankey(data,colorDict=colorDict)
+sky.sankey(data,colorDict=color_dict)
 plt.show()
 plt.savefig("doc/fruits_colordict.png")
 
-labelDict = {
+label_dict = {
     'apple':     'Apple',
     'blueberry': "B'berry",
     'banana':    'Banana',
@@ -47,7 +46,7 @@ labelDict = {
 }
 
 plt.figure()
-sky.sankey(data,labelDict=labelDict)
+sky.sankey(data,labelDict=label_dict)
 plt.show()
 plt.savefig("doc/fruits_labeldict.png")
 
@@ -127,7 +126,7 @@ sky.sankey(
 plt.savefig("doc/frame2_sort_n1.png")
 
 
-colorDict =  {
+color_dict =  {
    'a':'#f71b1b',
    'b':'#1b7ef7',
   'ab':'#8821aa',
@@ -153,7 +152,7 @@ plt.figure(dpi=600)
 sky.sankey(
   data,
   sorting    = -1,
-  colorDict  = colorDict,
+  colorDict  = color_dict,
   labelWidth = 0.1,
   labelGap   = 0.02,
   barWidth   = 0.05,

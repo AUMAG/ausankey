@@ -67,30 +67,31 @@ def sankey(
 
     num_col = len(data.columns)
     data.columns = range(num_col)  # force numeric column headings
-    N = int(num_col/2)  # number of labels
+    num_side = int(num_col/2)  # number of labels
+    num_flow = num_side - 1
 
     # sizes
-    weight_sum = np.empty(N)
-    num_uniq = np.empty(N)
-    col_hgt = np.empty(N)
-    for ii in range(N):
+    weight_sum = np.empty(num_side)
+    num_uniq = np.empty(num_side)
+    col_hgt = np.empty(num_side)
+    for ii in range(num_side):
         weight_sum[ii] = sum(data[2*ii+1])
         num_uniq[ii] = len(pd.Series(data[2*ii]).unique())
 
-    for ii in range(N):
+    for ii in range(num_side):
         col_hgt[ii] = weight_sum[ii] + (num_uniq[ii]-1)*barGap*max(weight_sum)
 
     # overall dimensions
     plot_height = max(col_hgt)
     sub_width = plot_height/aspect
     plotWidth = (
-        (N-1)*sub_width
+        (num_side-1)*sub_width
         + 2*sub_width*labelWidth
-        + N*sub_width*barWidth
+        + num_side*sub_width*barWidth
       )
 
     # offsets for alignment
-    voffset = np.empty(N)
+    voffset = np.empty(num_side)
     if valign == "top":
         vscale = 1
     elif valign == "center":
@@ -98,11 +99,11 @@ def sankey(
     else: # bottom, or undefined
         vscale = 0
 
-    for ii in range(N):
+    for ii in range(num_side):
         voffset[ii] = vscale*(col_hgt[1] - col_hgt[ii])
 
     # labels
-    label_record = data[range(0, 2*N, 2)].to_records(index=False)
+    label_record = data[range(0, 2*num_side, 2)].to_records(index=False)
     flattened = [item for sublist in label_record for item in sublist]
     flatcat = pd.Series(flattened).unique()
 
@@ -118,10 +119,10 @@ def sankey(
     if ax is None:
         ax = plt.gca()
 
-    for ii in range(N-1):
+    for ii in range(num_flow):
 
         _sankey(
-            ii, N-1, data,
+            ii, num_flow, data,
             titles=titles,
             titleGap=titleGap,
             titleSide=titleSide,
@@ -167,7 +168,7 @@ def sankey(
 
 
 def _sankey(
-        ii, N, data,
+        ii, num_flow, data,
         colorDict=None,
         labelOrder=None,
         fontsize=None,
@@ -318,7 +319,7 @@ def _sankey(
           lw=0,
           snap=True,
         )
-        if ii < N-1:  # inside labels
+        if ii < num_flow-1:  # inside labels
             ax.text(
               xRight + (labelGap+barWidth)*xMax,
               rbot + 0.5*rrr,
@@ -326,7 +327,7 @@ def _sankey(
               {'ha': 'left', 'va': 'center'},
               fontsize=fontsize
             )
-        if ii == N-1:  # last time
+        if ii == num_flow-1:  # last time
             ax.text(
               xRight + (labelGap+barWidth)*xMax,
               rbot + 0.5*rrr,
@@ -446,7 +447,7 @@ def check_data_matches_labels(labels, data, side):
             raise LabelMismatchError(side, msg)
 
 
-def combineColours(c1, c2, N):
+def combineColours(c1, c2, num_col):
 
     colorArrayLen = 4
     # if not [r,g,b,a] assume a hex string like "#rrggbb":
@@ -463,10 +464,10 @@ def combineColours(c1, c2, N):
         b2 = int(c2[5:7], 16)/255
         c2 = [r2, g2, b2, 1]
 
-    rr = np.linspace(c1[0], c2[0], N)
-    gg = np.linspace(c1[1], c2[1], N)
-    bb = np.linspace(c1[2], c2[2], N)
-    aa = np.linspace(c1[3], c2[3], N)
+    rr = np.linspace(c1[0], c2[0], num_col)
+    gg = np.linspace(c1[1], c2[1], num_col)
+    bb = np.linspace(c1[2], c2[2], num_col)
+    aa = np.linspace(c1[3], c2[3], num_col)
 
     return np.array([rr, gg, bb, aa])
 
