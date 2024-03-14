@@ -29,19 +29,19 @@ class LabelMismatchError(SankeyError):
 
 def sankey(
             data,
-            colorDict=None,
+            color_dict=None,
             aspect=4,
-            labelOrder=None,
+            label_order=None,
             fontsize=14,
             titles=None,
             title_gap=0.05,
-            titleSide="top",  # "bottom", "both"
-            frameSide="none",
-            frameGap=0.1,
+            title_side="top",  # "bottom", "both"
+            frame_side="none",
+            frame_gap=0.1,
             labelDict=None,
-            labelWidth=0,
+            label_width=0,
             label_gap=0.01,
-            barWidth=0.02,
+            bar_width=0.02,
             bar_gap=0.05,
             alpha=0.65,
             colormap="viridis",
@@ -54,7 +54,7 @@ def sankey(
 
     Inputs:
         data = pandas dataframe of labels and weights in alternating columns
-        colorDict = Dictionary of colors to use for each label
+        color_dict = Dictionary of colors to use for each label
             {'label':'color'}
         left_labels = order of the left labels in the diagram
         right_labels = order of the right labels in the diagram
@@ -86,8 +86,8 @@ def sankey(
     sub_width = plot_height/aspect
     plot_width = (
         (num_side-1)*sub_width
-        + 2*sub_width*labelWidth
-        + num_side*sub_width*barWidth
+        + 2*sub_width*label_width
+        + num_side*sub_width*bar_width
       )
 
     # offsets for alignment
@@ -107,13 +107,13 @@ def sankey(
     flattened = [item for sublist in label_record for item in sublist]
     flatcat = pd.Series(flattened).unique()
 
-    # If no colorDict given, make one
-    if colorDict is None:
-        colorDict = {}
+    # If no color_dict given, make one
+    if color_dict is None:
+        color_dict = {}
         cmap = plt.cm.get_cmap(colormap)
         color_palette = cmap(np.linspace(0, 1, len(flatcat)))
         for i, label in enumerate(flatcat):
-            colorDict[label] = color_palette[i]
+            color_dict[label] = color_palette[i]
 
     # draw each segment of the graph
     if ax is None:
@@ -125,14 +125,14 @@ def sankey(
             ii, num_flow, data,
             titles=titles,
             title_gap=title_gap,
-            titleSide=titleSide,
-            labelOrder=labelOrder,
-            colorDict=colorDict,
+            title_side=title_side,
+            label_order=label_order,
+            color_dict=color_dict,
             fontsize=fontsize,
             labelDict=labelDict or {},
-            labelWidth=labelWidth,
+            label_width=label_width,
             label_gap=label_gap,
-            barWidth=barWidth,
+            bar_width=bar_width,
             bar_gap=bar_gap,
             sub_width=sub_width,
             plot_height=plot_height,
@@ -142,22 +142,22 @@ def sankey(
             ax=ax,
         )
 
-    frame_top = frameSide in ("top", "both")
-    frame_bot = frameSide in ("bottom", "both")
+    frame_top = frame_side in ("top", "both")
+    frame_bot = frame_side in ("bottom", "both")
 
     # frame on top/bottom edge
     col = [0, 0, 0, 1] if frame_top else [1, 1, 1, 0]
 
     ax.plot(
         [0, plot_width],
-        min(voffset) + (plot_height) + (title_gap+frameGap)*plot_height + [0, 0],
+        min(voffset) + (plot_height) + (title_gap+frame_gap)*plot_height + [0, 0],
         color=col)
 
     col = [0, 0, 0, 1] if frame_bot else [1, 1, 1, 0]
 
     ax.plot(
         [0, plot_width],
-        min(voffset) - (title_gap+frameGap)*plot_height + [0, 0],
+        min(voffset) - (title_gap+frame_gap)*plot_height + [0, 0],
         color=col)
 
     # complete plot
@@ -166,18 +166,18 @@ def sankey(
 
 def _sankey(
         ii, num_flow, data,
-        colorDict=None,
-        labelOrder=None,
+        color_dict=None,
+        label_order=None,
         fontsize=None,
         titles=None,
         title_gap=None,
-        titleSide=None,
+        title_side=None,
         plot_height=None,
         sub_width=None,
         labelDict=None,
-        labelWidth=None,
+        label_width=None,
         label_gap=None,
-        barWidth=None,
+        bar_width=None,
         bar_gap=None,
         alpha=None,
         voffset=None,
@@ -213,9 +213,9 @@ def _sankey(
           # sorting = 0,1,-1 affects this
         ))
 
-    if labelOrder is not None:
-        left_labels = list(labelOrder[ii])
-        right_labels = list(labelOrder[ii+1])
+    if label_order is not None:
+        left_labels = list(label_order[ii])
+        right_labels = list(label_order[ii+1])
     else:
         left_labels = list(wgt[0].keys())
         right_labels = list(wgt[2].keys())
@@ -229,10 +229,10 @@ def _sankey(
     # check colours
     all_labels = pd.Series(np.r_[left.unique(), right.unique()]).unique()
 
-    missing = [label for label in all_labels if label not in colorDict]
+    missing = [label for label in all_labels if label not in color_dict]
     if missing:
         msg = (
-            "The colorDict parameter is missing "
+            "The color_dict parameter is missing "
             "values for the following labels: "
         )
         msg += '{}'.format(', '.join(missing))
@@ -278,8 +278,8 @@ def _sankey(
         right_widths[right_label] = tmp_dict
 
     # horizontal extents of flows in each subdiagram
-    x_bar_width = barWidth*sub_width
-    x_left = x_bar_width + labelWidth*sub_width + ii*(sub_width+x_bar_width)
+    x_bar_width = bar_width*sub_width
+    x_left = x_bar_width + label_width*sub_width + ii*(sub_width+x_bar_width)
     x_right = x_left + sub_width
 
     # Draw bars and their labels
@@ -291,13 +291,13 @@ def _sankey(
                 [x_left-x_bar_width, x_left],
                 2*[lbot],
                 2*[lbot + lll],
-                color=colorDict[left_label],
+                color=color_dict[left_label],
                 alpha=1,
                 lw=0,
                 snap=True,
             )
             ax.text(
-                x_left - (label_gap+barWidth)*sub_width,
+                x_left - (label_gap+bar_width)*sub_width,
                 lbot + 0.5*lll,
                 labelDict.get(left_label, left_label),
                 {'ha': 'right', 'va': 'center'},
@@ -310,14 +310,14 @@ def _sankey(
           [x_right, x_right+x_bar_width],
           2*[rbot],
           [rbot + rrr],
-          color=colorDict[right_label],
+          color=color_dict[right_label],
           alpha=1,
           lw=0,
           snap=True,
         )
         if ii < num_flow-1:  # inside labels
             ax.text(
-              x_right + (label_gap+barWidth)*sub_width,
+              x_right + (label_gap+bar_width)*sub_width,
               rbot + 0.5*rrr,
               labelDict.get(right_label, right_label),
               {'ha': 'left', 'va': 'center'},
@@ -325,7 +325,7 @@ def _sankey(
             )
         if ii == num_flow-1:  # last time
             ax.text(
-              x_right + (label_gap+barWidth)*sub_width,
+              x_right + (label_gap+bar_width)*sub_width,
               rbot + 0.5*rrr,
               labelDict.get(right_label, right_label),
               {'ha': 'left', 'va': 'center'},
@@ -338,7 +338,7 @@ def _sankey(
         # leftmost title
         if ii == 0:
             xt = x_left - x_bar_width/2
-            if titleSide in ("top", "both"):
+            if title_side in ("top", "both"):
                 yt = title_gap * plot_height + left_widths[left_label]['top']
                 va = 'bottom'
                 ax.text(
@@ -347,7 +347,7 @@ def _sankey(
                     fontsize=fontsize,
                 )
 
-            if titleSide in ("bottom", "both"):
+            if title_side in ("bottom", "both"):
                 yt = voffset[ii] - title_gap*plot_height
                 va = 'top'
 
@@ -359,7 +359,7 @@ def _sankey(
 
         # all other titles
         xt = x_right + x_bar_width/2
-        if titleSide in ("top", "both"):
+        if title_side in ("top", "both"):
             yt = title_gap * plot_height + right_widths[right_label]['top']
 
             ax.text(
@@ -368,7 +368,7 @@ def _sankey(
                 fontsize=fontsize,
             )
 
-        if titleSide in ("bottom", "both"):
+        if title_side in ("bottom", "both"):
             yt = voffset[ii+1] - title_gap*plot_height
 
             ax.text(
@@ -411,8 +411,8 @@ def _sankey(
 
             xx = np.linspace(x_left, x_right, len(ys_d))
             cc = combine_colours(
-              colorDict[left_label],
-              colorDict[right_label], len(ys_d))
+              color_dict[left_label],
+              color_dict[right_label], len(ys_d))
 
             for jj in range(len(ys_d)-1):
                 ax.fill_between(

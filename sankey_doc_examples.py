@@ -33,7 +33,7 @@ color_dict = {
 }
 
 plt.figure()
-sky.sankey(data,colorDict=color_dict)
+sky.sankey(data,color_dict=color_dict)
 plt.show()
 plt.savefig("doc/fruits_colordict.png")
 
@@ -46,7 +46,7 @@ label_dict = {
 }
 
 plt.figure()
-sky.sankey(data,labelDict=label_dict)
+sky.sankey(data,label_dict=label_dict)
 plt.show()
 plt.savefig("doc/fruits_labeldict.png")
 
@@ -73,7 +73,7 @@ plt.savefig("doc/fruits_titles.png")
 plt.figure()
 sky.sankey(data,
     titles = ["Summer","Winter"],
-    titleSide = "bottom",
+    title_side = "bottom",
 )
 plt.show()
 plt.savefig("doc/fruits_titles_bottom.png")
@@ -84,7 +84,7 @@ plt.show()
 plt.savefig("doc/fruits_valign.png")
 
 plt.figure()
-sky.sankey(data,frameSide="both")
+sky.sankey(data,frame_side="both")
 plt.show()
 plt.savefig("doc/fruits_frame.png")
 
@@ -151,19 +151,19 @@ plt.figure(dpi=600)
 
 sky.sankey(
   data,
-  sorting    = -1,
-  colorDict  = color_dict,
-  labelWidth = 0.1,
-  label_gap  = 0.02,
-  barWidth   = 0.05,
-  bar_gap    = 0.02,
-  alpha      = 0.3,
-  titles     = ["Stage 1","Stage 2","Stage 3"],
-  titleGap  = 0.05,
-  titleSide = "both",
-  frameSide = "both",
-  frameGap  = 0.1,
-  valign    = "top",
+  sorting     = -1,
+  color_dict  = color_dict,
+  label_width = 0.1,
+  label_gap   = 0.02,
+  bar_width   = 0.05,
+  bar_gap     = 0.02,
+  alpha       = 0.3,
+  titles      = ["Stage 1","Stage 2","Stage 3"],
+  title_gap   = 0.05,
+  title_side  = "both",
+  frame_side  = "both",
+  frame_gap   = 0.1,
+  valign      = "top",
 )
 
 plt.savefig("doc/frame3_many.png")

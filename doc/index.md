@@ -68,14 +68,14 @@ sky.sankey(data,colormap=“jet”)
 
 Or by manually choosing the colours:
 ```
-colorDict = {
+color_dict = {
     ‘apple’:     ‘#f71b1b’,
     ‘blueberry’: ‘#1b7ef7’,
     ‘banana’:    ‘#f3f71b’,
     ‘lime’:      ‘#12e23f’,
     ‘orange’:    ‘#f78c1b’
 }
-sky.sankey(data,colorDict=colorDict)
+sky.sankey(data,color_dict=color_dict)
 ```
 ![Image with options](fruits_colordict.png)
 
@@ -133,7 +133,7 @@ Titles can be placed `"top"`, `"bottom"`, or `"both"`:
 ```
 sky.sankey(data,
     titles = ["Summer","Winter"],
-    titleSide = "bottom",
+    title_side = "bottom",
 )
 ```
 ![Image with options](fruits_titles_bottom.png)
@@ -152,7 +152,7 @@ sky.sankey(data,valign = "center")
 
 Horizontal framing can be placed `"top"`, `"bottom"`, or `"both"`: 
 ```
-sky.sankey(data,frameSide = "both")
+sky.sankey(data,frame_side = "both")
 ```
 ![Image with options](fruits_frame.png)
 
