@@ -65,28 +65,28 @@ def sankey(
         None
     '''
 
-    NC = len(data.columns)
-    data.columns = range(NC)  # force numeric column headings
-    N = int(NC/2)  # number of labels
+    num_col = len(data.columns)
+    data.columns = range(num_col)  # force numeric column headings
+    N = int(num_col/2)  # number of labels
 
     # sizes
-    Wsum = np.empty(N)
-    Nunq = np.empty(N)
-    Lhgt = np.empty(N)
+    weight_sum = np.empty(N)
+    num_uniq = np.empty(N)
+    col_hgt = np.empty(N)
     for ii in range(N):
-        Wsum[ii] = sum(data[2*ii+1])
-        Nunq[ii] = len(pd.Series(data[2*ii]).unique())
+        weight_sum[ii] = sum(data[2*ii+1])
+        num_uniq[ii] = len(pd.Series(data[2*ii]).unique())
 
     for ii in range(N):
-        Lhgt[ii] = Wsum[ii] + (Nunq[ii]-1)*barGap*max(Wsum)
+        col_hgt[ii] = weight_sum[ii] + (num_uniq[ii]-1)*barGap*max(weight_sum)
 
     # overall dimensions
-    plotHeight = max(Lhgt)
-    subplotWidth = plotHeight/aspect
+    plot_height = max(col_hgt)
+    sub_width = plot_height/aspect
     plotWidth = (
-        (N-1)*subplotWidth
-        + 2*subplotWidth*labelWidth
-        + N*subplotWidth*barWidth
+        (N-1)*sub_width
+        + 2*sub_width*labelWidth
+        + N*sub_width*barWidth
       )
 
     # offsets for alignment
@@ -99,20 +99,20 @@ def sankey(
         vscale = 0
 
     for ii in range(N):
-        voffset[ii] = vscale*(Lhgt[1] - Lhgt[ii])
+        voffset[ii] = vscale*(col_hgt[1] - col_hgt[ii])
 
     # labels
-    labelRec = data[range(0, 2*N, 2)].to_records(index=False)
-    flattened = [item for sublist in labelRec for item in sublist]
+    label_record = data[range(0, 2*N, 2)].to_records(index=False)
+    flattened = [item for sublist in label_record for item in sublist]
     flatcat = pd.Series(flattened).unique()
 
     # If no colorDict given, make one
     if colorDict is None:
         colorDict = {}
         cmap = plt.cm.get_cmap(colormap)
-        colorPalette = cmap(np.linspace(0, 1, len(flatcat)))
+        color_palette = cmap(np.linspace(0, 1, len(flatcat)))
         for i, label in enumerate(flatcat):
-            colorDict[label] = colorPalette[i]
+            colorDict[label] = color_palette[i]
 
     # draw each segment of the graph
     if ax is None:
@@ -133,8 +133,8 @@ def sankey(
             labelGap=labelGap,
             barWidth=barWidth,
             barGap=barGap,
-            subplotWidth=subplotWidth,
-            plotHeight=plotHeight,
+            sub_width=sub_width,
+            plot_height=plot_height,
             alpha=alpha,
             voffset=voffset,
             sorting=sorting,
@@ -149,7 +149,7 @@ def sankey(
 
     ax.plot(
         [0, plotWidth],
-        min(voffset) + (plotHeight) + (titleGap+frameGap)*plotHeight + [0, 0],
+        min(voffset) + (plot_height) + (titleGap+frameGap)*plot_height + [0, 0],
         color=col)
 
     if frameSide in ("bottom", "both"):
@@ -159,7 +159,7 @@ def sankey(
 
     ax.plot(
         [0, plotWidth],
-        min(voffset) - (titleGap+frameGap)*plotHeight + [0, 0],
+        min(voffset) - (titleGap+frameGap)*plot_height + [0, 0],
         color=col)
 
     # complete plot
@@ -174,8 +174,8 @@ def _sankey(
         titles=None,
         titleGap=None,
         titleSide=None,
-        plotHeight=None,
-        subplotWidth=None,
+        plot_height=None,
+        sub_width=None,
         labelDict=None,
         labelWidth=None,
         labelGap=None,
@@ -192,10 +192,10 @@ def _sankey(
 
     left = pd.Series(data[labelind])
     right = pd.Series(data[labelind+2])
-    leftWeight = pd.Series(data[weightind])
-    rightWeight = pd.Series(data[weightind+2])
+    left_weight = pd.Series(data[weightind])
+    right_weight = pd.Series(data[weightind+2])
 
-    if any(leftWeight.isnull()) | any(rightWeight.isnull()):
+    if any(left_weight.isnull()) | any(right_weight.isnull()):
         raise NullsInFrameError()
 
     # label order / sorting
@@ -248,19 +248,19 @@ def _sankey(
         barSizeRight[leftLabel] = {}
         for rightLabel in rightLabels:
             ind = (left == leftLabel) & (right == rightLabel)
-            barSizeLeft[leftLabel][rightLabel] = leftWeight[ind].sum()
-            barSizeRight[leftLabel][rightLabel] = rightWeight[ind].sum()
+            barSizeLeft[leftLabel][rightLabel] = left_weight[ind].sum()
+            barSizeRight[leftLabel][rightLabel] = right_weight[ind].sum()
 
     # Determine positions of left label patches and total widths
     leftWidths = {}
     for i, leftLabel in enumerate(leftLabels):
         myD = {}
-        myD['left'] = leftWeight[left == leftLabel].sum()
+        myD['left'] = left_weight[left == leftLabel].sum()
         if i == 0:
             myD['bottom'] = voffset[ii]
         else:
             myD['bottom'] = (
-                leftWidths[leftLabels[i-1]]['top'] + barGap*plotHeight
+                leftWidths[leftLabels[i-1]]['top'] + barGap*plot_height
             )
         myD['top'] = myD['bottom'] + myD['left']
         leftWidths[leftLabel] = myD
@@ -269,18 +269,18 @@ def _sankey(
     rightWidths = {}
     for i, rightLabel in enumerate(rightLabels):
         myD = {}
-        myD['right'] = rightWeight[right == rightLabel].sum()
+        myD['right'] = right_weight[right == rightLabel].sum()
         if i == 0:
             myD['bottom'] = voffset[ii+1]
         else:
             myD['bottom'] = (
-                rightWidths[rightLabels[i-1]]['top'] + barGap * plotHeight
+                rightWidths[rightLabels[i-1]]['top'] + barGap * plot_height
             )
         myD['top'] = myD['bottom'] + myD['right']
         rightWidths[rightLabel] = myD
 
     # horizontal extents of flows in each subdiagram
-    xMax = subplotWidth
+    xMax = sub_width
     barW = barWidth*xMax
     xLeft = barW + labelWidth*xMax + ii*(xMax+barW)
     xRight = xLeft + xMax
@@ -342,7 +342,7 @@ def _sankey(
         if ii == 0:
             xt = xLeft - xMax*barWidth/2
             if titleSide in ("top", "both"):
-                yt = titleGap * plotHeight + leftWidths[leftLabel]['top']
+                yt = titleGap * plot_height + leftWidths[leftLabel]['top']
                 va = 'bottom'
                 ax.text(
                     xt, yt, titles[ii],
@@ -351,7 +351,7 @@ def _sankey(
                 )
 
             if titleSide in ("bottom", "both"):
-                yt = voffset[ii] - titleGap*plotHeight
+                yt = voffset[ii] - titleGap*plot_height
                 va = 'top'
 
                 ax.text(
@@ -363,7 +363,7 @@ def _sankey(
         # all other titles
         xt = xRight + xMax*barWidth/2
         if (titleSide == "top") | (titleSide == "both"):
-            yt = titleGap * plotHeight + rightWidths[rightLabel]['top']
+            yt = titleGap * plot_height + rightWidths[rightLabel]['top']
 
             ax.text(
                 xt, yt, titles[ii+1],
@@ -372,7 +372,7 @@ def _sankey(
             )
 
         if (titleSide == "bottom") | (titleSide == "both"):
-            yt = voffset[ii+1] - titleGap*plotHeight
+            yt = voffset[ii+1] - titleGap*plot_height
 
             ax.text(
                 xt, yt, titles[ii+1],
@@ -381,8 +381,8 @@ def _sankey(
             )
 
     # Plot strips
-    Ndiv = 20
-    Narr = 50
+    num_div = 20
+    num_arr = 50
     for leftLabel in leftLabels:
         for rightLabel in rightLabels:
 
@@ -397,13 +397,13 @@ def _sankey(
 
             # Create array of y values for each strip, half at left value,
             # half at right, convolve
-            ys_d = np.array(Narr*[lbot] + Narr*[rbot])
-            ys_d = np.convolve(ys_d, 1/Ndiv * np.ones(Ndiv), mode='valid')
-            ys_d = np.convolve(ys_d, 1/Ndiv * np.ones(Ndiv), mode='valid')
+            ys_d = np.array(num_arr*[lbot] + num_arr*[rbot])
+            ys_d = np.convolve(ys_d, 1/num_div * np.ones(num_div), mode='valid')
+            ys_d = np.convolve(ys_d, 1/num_div * np.ones(num_div), mode='valid')
 
-            ys_u = np.array(Narr * [lbot + lbar] + Narr * [rbot + rbar])
-            ys_u = np.convolve(ys_u, 1/Ndiv * np.ones(Ndiv), mode='valid')
-            ys_u = np.convolve(ys_u, 1/Ndiv * np.ones(Ndiv), mode='valid')
+            ys_u = np.array(num_arr * [lbot + lbar] + num_arr * [rbot + rbar])
+            ys_u = np.convolve(ys_u, 1/num_div * np.ones(num_div), mode='valid')
+            ys_u = np.convolve(ys_u, 1/num_div * np.ones(num_div), mode='valid')
 
             # Update bottom edges at each label
             # so next strip starts at the right place
@@ -450,7 +450,7 @@ def combineColours(c1, c2, N):
 
     colorArrayLen = 4
     # if not [r,g,b,a] assume a hex string like "#rrggbb":
-    
+
     if len(c1) != colorArrayLen:
         r1 = int(c1[1:3], 16)/255
         g1 = int(c1[3:5], 16)/255
