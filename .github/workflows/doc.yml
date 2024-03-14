@@ -30,9 +30,12 @@ jobs:
  
       - name: Install Hatch
         run: pipx install hatch
-      
+        
       - name: Generate images
         run: hatch run doc:img
+        
+      - name: Generate reference doc
+        run: hatch run doc:ref 
  
       - name: Setup Pages
         uses: actions/configure-pages@v4

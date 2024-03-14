@@ -71,9 +71,10 @@ exclude = [
 
 [tool.hatch.envs.doc.scripts]
 img = "cd doc; python sankey_doc_examples.py"
+ref = "cd doc; mkdocs build"
 
 [tool.hatch.envs.test]
-dependencies = ["pylint", "pytest", "flake8", "coverage", "coveralls"]
+dependencies = ["pylint", "pytest", "flake8", "coverage", "coveralls","mkdocstrings"]
 
 [tool.hatch.envs.test.scripts]
 test = "python -m pytest"
