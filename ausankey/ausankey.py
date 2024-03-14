@@ -40,9 +40,9 @@ def sankey(
             frameGap=0.1,
             labelDict=None,
             labelWidth=0,
-            labelGap=0.01,
+            label_gap=0.01,
             barWidth=0.02,
-            barGap=0.05,
+            bar_gap=0.05,
             alpha=0.65,
             colormap="viridis",
             sorting=0,
@@ -79,7 +79,7 @@ def sankey(
         num_uniq[ii] = len(pd.Series(data[2*ii]).unique())
 
     for ii in range(num_side):
-        col_hgt[ii] = weight_sum[ii] + (num_uniq[ii]-1)*barGap*max(weight_sum)
+        col_hgt[ii] = weight_sum[ii] + (num_uniq[ii]-1)*bar_gap*max(weight_sum)
 
     # overall dimensions
     plot_height = max(col_hgt)
@@ -131,9 +131,9 @@ def sankey(
             fontsize=fontsize,
             labelDict=labelDict or {},
             labelWidth=labelWidth,
-            labelGap=labelGap,
+            label_gap=label_gap,
             barWidth=barWidth,
-            barGap=barGap,
+            bar_gap=bar_gap,
             sub_width=sub_width,
             plot_height=plot_height,
             alpha=alpha,
@@ -176,9 +176,9 @@ def _sankey(
         sub_width=None,
         labelDict=None,
         labelWidth=None,
-        labelGap=None,
+        label_gap=None,
         barWidth=None,
-        barGap=None,
+        bar_gap=None,
         alpha=None,
         voffset=None,
         sorting=None,
@@ -258,7 +258,7 @@ def _sankey(
             tmp_dict['bottom'] = voffset[ii]
         else:
             tmp_dict['bottom'] = (
-                left_widths[left_labels[i-1]]['top'] + barGap*plot_height
+                left_widths[left_labels[i-1]]['top'] + bar_gap*plot_height
             )
         tmp_dict['top'] = tmp_dict['bottom'] + tmp_dict['left']
         left_widths[left_label] = tmp_dict
@@ -272,7 +272,7 @@ def _sankey(
             tmp_dict['bottom'] = voffset[ii+1]
         else:
             tmp_dict['bottom'] = (
-                right_widths[right_labels[i-1]]['top'] + barGap * plot_height
+                right_widths[right_labels[i-1]]['top'] + bar_gap * plot_height
             )
         tmp_dict['top'] = tmp_dict['bottom'] + tmp_dict['right']
         right_widths[right_label] = tmp_dict
@@ -297,7 +297,7 @@ def _sankey(
                 snap=True,
             )
             ax.text(
-                x_left - (labelGap+barWidth)*sub_width,
+                x_left - (label_gap+barWidth)*sub_width,
                 lbot + 0.5*lll,
                 labelDict.get(left_label, left_label),
                 {'ha': 'right', 'va': 'center'},
@@ -317,7 +317,7 @@ def _sankey(
         )
         if ii < num_flow-1:  # inside labels
             ax.text(
-              x_right + (labelGap+barWidth)*sub_width,
+              x_right + (label_gap+barWidth)*sub_width,
               rbot + 0.5*rrr,
               labelDict.get(right_label, right_label),
               {'ha': 'left', 'va': 'center'},
@@ -325,7 +325,7 @@ def _sankey(
             )
         if ii == num_flow-1:  # last time
             ax.text(
-              x_right + (labelGap+barWidth)*sub_width,
+              x_right + (label_gap+barWidth)*sub_width,
               rbot + 0.5*rrr,
               labelDict.get(right_label, right_label),
               {'ha': 'left', 'va': 'center'},
