@@ -23,7 +23,8 @@ class NullsInFrameError(SankeyError):
 
 
 class LabelMismatchError(SankeyError):
-    pass
+    def __init__(self,side,msg):
+        super().__init__(f'{side} labels and data do not match.{msg}')
 
 
 def sankey(
@@ -442,8 +443,7 @@ def check_data_matches_labels(labels, data, side):
                 msg = "Labels: " + ",".join(labels) + "\n"
             if len(data) < maxlen:
                 msg += "Data: " + ",".join(data)
-            raise LabelMismatchError(
-              '{0} labels and data do not match.{1}'.format(side, msg))
+            raise LabelMismatchError(side, msg)
 
 
 def combineColours(c1, c2, N):
