@@ -46,16 +46,6 @@ classifiers = [
 ]
 
 
-[project.optional-dependencies]
-dev = [
-    "pylint",
-    "pytest",
-    "flake8",
-    "coverage",
-    "coveralls",
-]
-
-
 [project.urls]
 Homepage = "https://github.com/AUMAG/auSankey"
 Documentation = "https://aumag.github.io/auSankey/"
@@ -78,6 +68,9 @@ include = [
 exclude = [
   # "*.json",
 ]
+
+[tool.hatch.envs.doc.scripts]
+img = "python sankey_doc_examples.py"
 
 [tool.hatch.envs.test]
 dependencies = ["pylint", "pytest", "flake8", "coverage", "coveralls"]
