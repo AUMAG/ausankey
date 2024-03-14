@@ -17,6 +17,8 @@ User documentation for the repository is published via GitHub Pages: https://aum
 
 ## Minimal example
 
+![example](https://aumag.github.io/ausankey/frame3_pretty.png)
+
 ``` python
 import ausankey as sky
 import matplotlib.pyplot as plt
