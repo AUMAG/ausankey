@@ -34,7 +34,7 @@ def sankey(
             labelOrder=None,
             fontsize=14,
             titles=None,
-            titleGap=0.05,
+            title_gap=0.05,
             titleSide="top",  # "bottom", "both"
             frameSide="none",
             frameGap=0.1,
@@ -124,7 +124,7 @@ def sankey(
         _sankey(
             ii, num_flow, data,
             titles=titles,
-            titleGap=titleGap,
+            title_gap=title_gap,
             titleSide=titleSide,
             labelOrder=labelOrder,
             colorDict=colorDict,
@@ -144,20 +144,20 @@ def sankey(
 
     frame_top = frameSide in ("top", "both")
     frame_bot = frameSide in ("bottom", "both")
-        
+
     # frame on top/bottom edge
     col = [0, 0, 0, 1] if frame_top else [1, 1, 1, 0]
 
     ax.plot(
         [0, plot_width],
-        min(voffset) + (plot_height) + (titleGap+frameGap)*plot_height + [0, 0],
+        min(voffset) + (plot_height) + (title_gap+frameGap)*plot_height + [0, 0],
         color=col)
 
     col = [0, 0, 0, 1] if frame_bot else [1, 1, 1, 0]
 
     ax.plot(
         [0, plot_width],
-        min(voffset) - (titleGap+frameGap)*plot_height + [0, 0],
+        min(voffset) - (title_gap+frameGap)*plot_height + [0, 0],
         color=col)
 
     # complete plot
@@ -170,7 +170,7 @@ def _sankey(
         labelOrder=None,
         fontsize=None,
         titles=None,
-        titleGap=None,
+        title_gap=None,
         titleSide=None,
         plot_height=None,
         sub_width=None,
@@ -339,7 +339,7 @@ def _sankey(
         if ii == 0:
             xt = x_left - x_bar_width/2
             if titleSide in ("top", "both"):
-                yt = titleGap * plot_height + left_widths[left_label]['top']
+                yt = title_gap * plot_height + left_widths[left_label]['top']
                 va = 'bottom'
                 ax.text(
                     xt, yt, titles[ii],
@@ -348,7 +348,7 @@ def _sankey(
                 )
 
             if titleSide in ("bottom", "both"):
-                yt = voffset[ii] - titleGap*plot_height
+                yt = voffset[ii] - title_gap*plot_height
                 va = 'top'
 
                 ax.text(
@@ -360,7 +360,7 @@ def _sankey(
         # all other titles
         xt = x_right + x_bar_width/2
         if titleSide in ("top", "both"):
-            yt = titleGap * plot_height + right_widths[right_label]['top']
+            yt = title_gap * plot_height + right_widths[right_label]['top']
 
             ax.text(
                 xt, yt, titles[ii+1],
@@ -369,7 +369,7 @@ def _sankey(
             )
 
         if titleSide in ("bottom", "both"):
-            yt = voffset[ii+1] - titleGap*plot_height
+            yt = voffset[ii+1] - title_gap*plot_height
 
             ax.text(
                 xt, yt, titles[ii+1],
@@ -385,7 +385,7 @@ def _sankey(
 
             lind = (left == left_label)
             rind = (right == right_label)
-            
+
             if not any(lind & rind):
                 continue
 

@@ -90,18 +90,18 @@ plt.savefig("doc/fruits_frame.png")
 
 plt.figure()
 sky.sankey( data,
-            titles=["Summer","Winter"],
-            titleSide = "both",
-            frameSide = "both",
-            sorting   = -1,
-            valign    = "center",
+            titles = ["Summer","Winter"],
+            title_side  = "both",
+            frame_side  = "both",
+            sorting     = -1,
+            valign      = "center",
             # spacing parameters:
-            barGap     = 0.01 ,
-            barWidth   = 0.1 ,
-            frameGap   = 0.2 ,
-            labelWidth = 0.3 ,
-            labelGap   = 0.02,
-            titleGap   = 0.1 ,
+            bar_gap     = 0.01 ,
+            bar_width   = 0.1 ,
+            frame_gap   = 0.2 ,
+            label_width = 0.3 ,
+            label_gap   = 0.02,
+            title_gap   = 0.1 ,
           )
 plt.show()
 plt.savefig("doc/fruits_spacing.png")

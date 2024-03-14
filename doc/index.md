@@ -162,18 +162,18 @@ sky.sankey(data,frameSide = "both")
 A number of parameters can be set to customise the spacing and layout of the diagram. These parameters are normalised against the diagram height or width according to which direction they are oriented. 
 ```
 sky.sankey( data,
-            titles=["Summer","Winter"],
-            titleSide = "both",
-            frameSide = "both",
-            sorting   = -1,
-            valign    = "center",
+            titles = [“Summer”,”Winter”],
+            title_side  = “both”,
+            frame_side  = “both”,
+            sorting     = -1,
+            valign      = “center”,
             # spacing parameters:
-            barGap     = 0.01 ,
-            barWidth   = 0.1 ,
-            frameGap   = 0.2 ,
-            labelWidth = 0.3 ,
-            labelGap   = 0.02,
-            titleGap   = 0.1 ,
+            bar_gap     = 0.01 ,
+            bar_width   = 0.1 ,
+            frame_gap   = 0.2 ,
+            label_width = 0.3 ,
+            label_gap   = 0.02,
+            title_gap   = 0.1 ,
           )
  ```
 ![Image with options](fruits_spacing.png)
