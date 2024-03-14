@@ -1,5 +1,6 @@
-import matplotlib.pyplot as plt
 import ausankey as sky
+import matplotlib.pyplot as plt
+
 from .test_fruit_setup import TestFruit
 
 class TestFruitDefault(TestFruit):

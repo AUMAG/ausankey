@@ -19,7 +19,7 @@ class SankeyError(Exception):
 
 class NullsInFrameError(SankeyError):
     def __init__(self):
-        super().__init__(f"Sankey graph does not support null values.")
+        super().__init__("Sankey graph does not support null values.")
 
 
 class LabelMismatchError(SankeyError):
@@ -84,7 +84,7 @@ def sankey(
     # overall dimensions
     plot_height = max(col_hgt)
     sub_width = plot_height/aspect
-    plotWidth = (
+    plot_width = (
         (num_side-1)*sub_width
         + 2*sub_width*labelWidth
         + num_side*sub_width*barWidth
@@ -149,7 +149,7 @@ def sankey(
         col = [1, 1, 1, 0]
 
     ax.plot(
-        [0, plotWidth],
+        [0, plot_width],
         min(voffset) + (plot_height) + (titleGap+frameGap)*plot_height + [0, 0],
         color=col)
 
@@ -159,7 +159,7 @@ def sankey(
         col = [1, 1, 1, 0]
 
     ax.plot(
-        [0, plotWidth],
+        [0, plot_width],
         min(voffset) - (titleGap+frameGap)*plot_height + [0, 0],
         color=col)
 
@@ -197,7 +197,7 @@ def _sankey(
     right_weight = pd.Series(data[weightind+2])
 
     if any(left_weight.isnull()) | any(right_weight.isnull()):
-        raise NullsInFrameError()
+        raise NullsInFrameError
 
     # label order / sorting
 
@@ -242,43 +242,43 @@ def _sankey(
         raise ValueError(msg)
 
     # Determine sizes of individual strips
-    barSizeLeft = {}
-    barSizeRight = {}
+    barsize_left = {}
+    barsize_right = {}
     for left_label in left_labels:
-        barSizeLeft[left_label] = {}
-        barSizeRight[left_label] = {}
+        barsize_left[left_label] = {}
+        barsize_right[left_label] = {}
         for right_label in right_labels:
             ind = (left == left_label) & (right == right_label)
-            barSizeLeft[left_label][right_label] = left_weight[ind].sum()
-            barSizeRight[left_label][right_label] = right_weight[ind].sum()
+            barsize_left[left_label][right_label] = left_weight[ind].sum()
+            barsize_right[left_label][right_label] = right_weight[ind].sum()
 
     # Determine positions of left label patches and total widths
     left_widths = {}
     for i, left_label in enumerate(left_labels):
-        myD = {}
-        myD['left'] = left_weight[left == left_label].sum()
+        tmp_dict = {}
+        tmp_dict['left'] = left_weight[left == left_label].sum()
         if i == 0:
-            myD['bottom'] = voffset[ii]
+            tmp_dict['bottom'] = voffset[ii]
         else:
-            myD['bottom'] = (
+            tmp_dict['bottom'] = (
                 left_widths[left_labels[i-1]]['top'] + barGap*plot_height
             )
-        myD['top'] = myD['bottom'] + myD['left']
-        left_widths[left_label] = myD
+        tmp_dict['top'] = tmp_dict['bottom'] + tmp_dict['left']
+        left_widths[left_label] = tmp_dict
 
     # Determine positions of right label patches and total widths
     right_widths = {}
     for i, right_label in enumerate(right_labels):
-        myD = {}
-        myD['right'] = right_weight[right == right_label].sum()
+        tmp_dict = {}
+        tmp_dict['right'] = right_weight[right == right_label].sum()
         if i == 0:
-            myD['bottom'] = voffset[ii+1]
+            tmp_dict['bottom'] = voffset[ii+1]
         else:
-            myD['bottom'] = (
+            tmp_dict['bottom'] = (
                 right_widths[right_labels[i-1]]['top'] + barGap * plot_height
             )
-        myD['top'] = myD['bottom'] + myD['right']
-        right_widths[right_label] = myD
+        tmp_dict['top'] = tmp_dict['bottom'] + tmp_dict['right']
+        right_widths[right_label] = tmp_dict
 
     # horizontal extents of flows in each subdiagram
     x_bar_width = barWidth*sub_width
@@ -392,8 +392,8 @@ def _sankey(
 
             lbot = left_widths[left_label]['bottom']
             rbot = right_widths[right_label]['bottom']
-            lbar = barSizeLeft[left_label][right_label]
-            rbar = barSizeRight[left_label][right_label]
+            lbar = barsize_left[left_label][right_label]
+            rbar = barsize_right[left_label][right_label]
 
             # Create array of y values for each strip, half at left value,
             # half at right, convolve
@@ -448,16 +448,16 @@ def check_data_matches_labels(labels, data, side):
 
 def combine_colours(c1, c2, num_col):
 
-    colorArrayLen = 4
+    color_array_len = 4
     # if not [r,g,b,a] assume a hex string like "#rrggbb":
 
-    if len(c1) != colorArrayLen:
+    if len(c1) != color_array_len:
         r1 = int(c1[1:3], 16)/255
         g1 = int(c1[3:5], 16)/255
         b1 = int(c1[5:7], 16)/255
         c1 = [r1, g1, b1, 1]
 
-    if len(c2) != colorArrayLen:
+    if len(c2) != color_array_len:
         r2 = int(c2[1:3], 16)/255
         g2 = int(c2[3:5], 16)/255
         b2 = int(c2[5:7], 16)/255

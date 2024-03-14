@@ -1,7 +1,6 @@
+import pandas as pd
 
 from .generic_test import GenericTest
-
-import pandas as pd
 
 class TestFruit(GenericTest):
     """ Setup sankey test with data in fruit.csv """
