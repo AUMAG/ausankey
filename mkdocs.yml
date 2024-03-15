@@ -9,5 +9,5 @@ plugins:
       default_handler: python
       handlers:
         python:
-          paths: [ausankey]
+          paths: [.]
   
