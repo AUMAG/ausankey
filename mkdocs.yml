@@ -1,8 +1,13 @@
-site_name: "My Library"
+site_name: "ausankey"
 
 theme:
   name: "mkdocs"
 
 plugins:
-- search
-- mkdocstrings
+  - search
+  - mkdocstrings:
+      default_handler: python
+      handlers:
+        python:
+          paths: [ausankey]
+  
