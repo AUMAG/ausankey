@@ -1,3 +1,3 @@
 # Reference
 
-::: ausankey.sankey
+::: ausankey.ausankey
