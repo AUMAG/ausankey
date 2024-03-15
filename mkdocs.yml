@@ -15,7 +15,7 @@ plugins:
         python:
           paths: [ausankey]
           options:
-            docstring_style: google
+            docstring_style: numpy
 
 docs_dir: "docs"
 site_dir: "_site"
