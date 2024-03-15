@@ -60,19 +60,19 @@ def sankey(
 
     aspect : float
         vertical extent of the diagram in units of horizontal extent
-        
+
     fontsize : int
         Font size of labels
-        
+
     titles : :obj:`list` of :obj:`str`)
         Array of title strings for each columns
-        
+
     title_gap : float
         Normalised vertical gap between the column and the title string (1.0 = 100% of plot height)
 
     Returns
     -------
-    
+
     None
     """
 
