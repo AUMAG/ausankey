@@ -73,8 +73,9 @@ exclude = [
 dependencies = ["mkdocs", "mkdocstrings[python]"]
 
 [tool.hatch.envs.doc.scripts]
-img = "cd docs; python sankey_doc_examples.py"
 ref = "mkdocs -v build"
+img = "cd docs; python sankey_doc_examples.py; cp *.png ../_site/"
+
 
 [tool.hatch.envs.test]
 dependencies = [
