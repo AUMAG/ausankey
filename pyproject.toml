@@ -63,7 +63,7 @@ ignore-vcs = true
 include = [
   "/ausankey/*.py",
   "/tests/*.py",
-  "/tests/*.csv", 
+  "/tests/*.csv",
 ]
 exclude = [
   "/docs/*",
@@ -74,12 +74,12 @@ dependencies = ["mkdocs", "mkdocstrings"]
 
 [tool.hatch.envs.doc.scripts]
 img = "cd docs; python sankey_doc_examples.py"
-ref = "cd docs; mkdocs -v build"
+ref = "mkdocs -v build"
 
 [tool.hatch.envs.test]
 dependencies = [
-    "pytest", "coverage", "coveralls", 
-    "mkdocstrings","mkdocstrings[python]'",
+    "pytest", "coverage", "coveralls",
+    "mkdocstrings","mkdocstrings-python",
 ]
 
 [tool.hatch.envs.test.scripts]

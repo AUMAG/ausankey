@@ -9,7 +9,7 @@ plugins:
       default_handler: python
       handlers:
         python:
-          paths: [..]
+          paths: [.]
 
-docs_dir: "."
-site_dir: "../_site/"
+docs_dir: "docs"
+site_dir: "_site"
