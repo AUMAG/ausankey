@@ -77,7 +77,10 @@ img = "cd docs; python sankey_doc_examples.py"
 ref = "mkdocs build"
 
 [tool.hatch.envs.test]
-dependencies = ["pylint", "pytest", "flake8", "coverage", "coveralls","mkdocstrings"]
+dependencies = [
+    "pytest", "coverage", "coveralls", 
+    "mkdocstrings","mkdocstrings[python]'",
+]
 
 [tool.hatch.envs.test.scripts]
 test = "python -m pytest"
