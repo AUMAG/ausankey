@@ -63,13 +63,13 @@ def sankey(
 
     fontsize : int
         Font size of labels
-        
+
     titles : `list` of `str`)
         Array of title strings for each columns
 
     title_gap : float
         Normalised vertical gap between the column and the title string (1.0 = 100% of plot height)
-        
+
     title_side : str
         Whether to place the titles above or below the plot. Allowed values: `"top"`, `"bottom"`, or `"both"`.
 
@@ -192,7 +192,7 @@ def _sankey(
     ax=None,
 ):
     """Subroutine for plotting successful horizontal sections of the Sankey plot
-    
+
     Some special-casing is used for plotting/labelling differents for the first and last cases.
     """
     labelind = 2 * ii
@@ -454,25 +454,25 @@ def check_data_matches_labels(labels, data, side):
 
 def combine_colours(c1, c2, num_col):
     """Creates N colours needed to produce a gradient
-    
+
     Parameters
     -------—--
-    
+
     c1 : col
         First (left) colour. Can be a colour string `"#rrbbgg"` or a colour list `[r, b, g, a]`
-        
+
     c1 : col
         Second (right) colour. As above.
 
     num_col : int
-        The number of colours N to create in the array.  
-    
+        The number of colours N to create in the array.
+
     Returns
     -------
-    
+
     color_array : np.array
         4xN array of numerical colours
-    """ 
+    """
     color_array_len = 4
     # if not [r,g,b,a] assume a hex string like "#rrggbb":
 
