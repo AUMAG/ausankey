@@ -1,4 +1,7 @@
-site_name: "ausankey"
+site_name: "The ausankey package"
+
+nav:
+  - Home: index.md
 
 theme:
   name: "mkdocs"
@@ -9,7 +12,7 @@ plugins:
       default_handler: python
       handlers:
         python:
-          paths: [.]
+          paths: [ausankey]
 
 docs_dir: "docs"
 site_dir: "_site"
