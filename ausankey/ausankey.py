@@ -456,8 +456,8 @@ def combine_colours(c1, c2, num_col):
     """Creates N colours needed to produce a gradient
 
     Parameters
-    -------—--
-
+    ----------
+    
     c1 : col
         First (left) colour. Can be a colour string `"#rrbbgg"` or a colour list `[r, b, g, a]`
 
