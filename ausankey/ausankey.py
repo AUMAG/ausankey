@@ -457,7 +457,7 @@ def combine_colours(c1, c2, num_col):
 
     Parameters
     ----------
-    
+
     c1 : col
         First (left) colour. Can be a colour string `"#rrbbgg"` or a colour list `[r, b, g, a]`
 
