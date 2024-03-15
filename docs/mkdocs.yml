@@ -11,4 +11,5 @@ plugins:
         python:
           paths: [..]
 
+docs_dir: "."
 site_dir: "../_site/"

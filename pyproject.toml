@@ -74,7 +74,7 @@ dependencies = ["mkdocs", "mkdocstrings"]
 
 [tool.hatch.envs.doc.scripts]
 img = "cd docs; python sankey_doc_examples.py"
-ref = "cd docs; mkdocs build"
+ref = "cd docs; mkdocs -v build"
 
 [tool.hatch.envs.test]
 dependencies = [
