@@ -56,11 +56,11 @@ def sankey(
         color_dict : Dictionary of colors to use for each label `{'label':'color'}`
 
         aspect : vertical extent of the diagram in units of horizontal extent
-        
+
         fontsize (int) : Font size of labels
-        
+
         titles (arr) : Array of title strings for each columns
-        
+
         title_gap (float) : normalised vertical gap between the column and the title string (1.0 = 100% of plot height)
 
     Returns:
