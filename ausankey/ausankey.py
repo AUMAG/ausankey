@@ -51,11 +51,17 @@ def sankey(
     """Make Sankey Diagram with left-right flow
 
     Args:
-        data : pandas dataframe of labels and weights in alternating columns
+        data (DataFrame) : pandas dataframe of labels and weights in alternating columns
+
         color_dict : Dictionary of colors to use for each label `{'label':'color'}`
-        left_labels : order of the left labels in the diagram
-        right_labels : order of the right labels in the diagram
+
         aspect : vertical extent of the diagram in units of horizontal extent
+        
+        fontsize (int) : Font size of labels
+        
+        titles (arr) : Array of title strings for each columns
+        
+        title_gap (float) : normalised vertical gap between the column and the title string (1.0 = 100% of plot height)
 
     Returns:
         None
