@@ -48,19 +48,16 @@ def sankey(
     valign="bottom",  # "top","center"
     ax=None,
 ):
-    """
-    Make Sankey Diagram with left-right flow
+    """Make Sankey Diagram with left-right flow
 
-    Inputs:
-        data = pandas dataframe of labels and weights in alternating columns
-        color_dict = Dictionary of colors to use for each label
-            {'label':'color'}
-        left_labels = order of the left labels in the diagram
-        right_labels = order of the right labels in the diagram
-        aspect = vertical extent of the diagram in units of horizontal extent
-        rightColor = If true, each strip in the diagram will be be colored
-                    according to its left label
-    Ouput:
+    Args:
+        data : pandas dataframe of labels and weights in alternating columns
+        color_dict : Dictionary of colors to use for each label `{'label':'color'}`
+        left_labels : order of the left labels in the diagram
+        right_labels : order of the right labels in the diagram
+        aspect : vertical extent of the diagram in units of horizontal extent
+
+    Returns:
         None
     """
 
