@@ -2,6 +2,7 @@ site_name: "The ausankey package"
 
 nav:
   - Home: index.md
+  - Reference: reference.md
 
 theme:
   name: "mkdocs"
