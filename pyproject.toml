@@ -70,7 +70,7 @@ exclude = [
 ]
 
 [tool.hatch.envs.doc]
-dependencies = ["mkdocs", "mkdocstrings"]
+dependencies = ["mkdocs", "mkdocstrings[python]"]
 
 [tool.hatch.envs.doc.scripts]
 img = "cd docs; python sankey_doc_examples.py"
