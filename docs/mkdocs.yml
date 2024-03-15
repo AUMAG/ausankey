@@ -9,6 +9,6 @@ plugins:
       default_handler: python
       handlers:
         python:
-          paths: [../ausankey]
+          paths: [..]
 
 site_dir: "../_site/"
