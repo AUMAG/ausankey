@@ -168,7 +168,9 @@ def sankey(
     # complete plot
     ax.axis("off")
 
+
 ###########################################
+
 
 def _sankey(
     ii,
@@ -238,7 +240,7 @@ def _sankey(
     check_data_matches_labels(right_labels, right, "right")
 
     # check colours
-    all_labels = pd.Series([*left,*right]).unique()
+    all_labels = pd.Series([*left, *right]).unique()
 
     missing = [label for label in all_labels if label not in color_dict]
     if missing:
@@ -434,7 +436,9 @@ def _sankey(
                     snap=True,
                 )
 
+
 ###########################################
+
 
 def check_data_matches_labels(labels, data, side):
     if len(labels) > 0:
@@ -453,7 +457,9 @@ def check_data_matches_labels(labels, data, side):
                 msg += "Data: " + ",".join(data)
             raise LabelMismatchError(side, msg)
 
+
 ###########################################
+
 
 def combine_colours(c1, c2, num_col):
     """Creates N colours needed to produce a gradient
