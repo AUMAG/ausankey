@@ -28,25 +28,25 @@ class LabelMismatchError(SankeyError):
 
 def sankey(
     data,
-    color_dict=None,
     aspect=4,
-    label_order=None,
+    alpha=0.65,
+    ax=None,
+    bar_width=0.02,
+    bar_gap=0.05,
+    color_dict=None,
+    colormap="viridis",
     fontsize=14,
-    titles=None,
-    title_gap=0.05,
-    title_side="top",  # "bottom", "both"
     frame_side="none",
     frame_gap=0.1,
+    label_order=None,
     label_dict=None,
     label_width=0,
     label_gap=0.01,
-    bar_width=0.02,
-    bar_gap=0.05,
-    alpha=0.65,
-    colormap="viridis",
+    titles=None,
+    title_gap=0.05,
+    title_side="top",  # "bottom", "both"
     sorting=0,
     valign="bottom",  # "top","center"
-    ax=None,
 ):
     """Make Sankey Diagram with left-right flow
 
@@ -55,14 +55,47 @@ def sankey(
     data : DataFrame
         pandas dataframe of labels and weights in alternating columns
 
-    color_dict : dict
-        Dictionary of colors to use for each label `{'label': 'color'}`
+    alpha : float
+        Opacity of the flows (`0.0` = transparent, `1.0` = opaque)
 
     aspect : float
         vertical extent of the diagram in units of horizontal extent
 
+    ax : Axis
+        Matplotlib plot axis to use
+
+    bar_width : float
+        Normalised horizontal width of the data bars (1.0 = 100% of plot width)
+
+    bar_gap : float
+        Normalised vertical gap between successive data bars (1.0 = 100% of nominal plot height).
+
+    color_dict : dict
+        Dictionary of colors to use for each label `{'label': 'color'}`
+
+    colormap : str
+        Matplotlib colormap name
+
     fontsize : int
         Font size of labels
+
+    frame_side : str
+        Whether to place a frame (horizontal rule) above or below the plot. Allowed values: `"none"`, `"top"`, `"bottom"`, or `"both"`
+
+    frame_gap : str
+        Normalised vertical gap between the top/bottom of the plot and the frame (1.0 = 100% of plot height)
+
+    label_dict : dict
+        Dictionary of labels to optionally replace the labels in the data (e.g., to provide abbreviations or human readable alternatives). Format: `{'orig_label': 'printed_label'}`
+
+    label_width : float
+        How much normalised horizontal space to reserve putside the plot on the left and the right for labels 1.0 = 100% of plot height)
+
+    label_gap : float
+        Normalised horizontal gap between the left/right of the plot edges and the label (1.0 = 100% of plot width)
+
+    sorting : int
+        Parity bit for how to sort the display of the data. `0` is unsorted — display data in order it appears in the DataFrame. `1` and `-1` sort high to low or vice versa.
 
     titles : `list` of `str`)
         Array of title strings for each columns
@@ -71,19 +104,11 @@ def sankey(
         Normalised vertical gap between the column and the title string (1.0 = 100% of plot height)
 
     title_side : str
-        Whether to place the titles above or below the plot. Allowed values: `"top"`, `"bottom"`, or `"both"`.
+        Whether to place the titles above or below the plot. Allowed values: `"top"`, `"bottom"`, or `"both"`
 
-    frame_side : str
-        Whether to place a frame (horizontal rule) above or below the plot. Allowed values: `"none"`, `"top"`, `"bottom"`, or `"both"`.
+    valign : str
+        Vertical alignment of the data bars at each stage, with respect to the whole plot. Allowed values: `"top"`, `"bottom"`, or `"center"`
 
-    frame_gap : str
-        Normalised vertical gap between the top/bottom of the plot and the frame (1.0 = 100% of plot height).
-
-    label_dict : dict
-        Dictionary of labels to optionally replace the labels in the data (e.g., to provide abbreviations or human readable alternatives). Format: `{'orig_label': 'printed_label'}`
-
-    label_width : float
-        How much horizontal space to reserve putside the plot on the left and the right for labels.
 
     Returns
     -------
