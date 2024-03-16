@@ -56,7 +56,7 @@ def sankey(
         pandas dataframe of labels and weights in alternating columns
 
     color_dict : dict
-        Dictionary of colors to use for each label `{'label':'color'}`
+        Dictionary of colors to use for each label `{'label': 'color'}`
 
     aspect : float
         vertical extent of the diagram in units of horizontal extent
@@ -72,6 +72,18 @@ def sankey(
 
     title_side : str
         Whether to place the titles above or below the plot. Allowed values: `"top"`, `"bottom"`, or `"both"`.
+
+    frame_side : str
+        Whether to place a frame (horizontal rule) above or below the plot. Allowed values: `"none"`, `"top"`, `"bottom"`, or `"both"`.
+
+    frame_gap : str
+        Normalised vertical gap between the top/bottom of the plot and the frame (1.0 = 100% of plot height).
+
+    label_dict : dict
+        Dictionary of labels to optionally replace the labels in the data (e.g., to provide abbreviations or human readable alternatives). Format: `{'orig_label': 'printed_label'}`
+
+    label_width : float
+        How much horizontal space to reserve putside the plot on the left and the right for labels.
 
     Returns
     -------
