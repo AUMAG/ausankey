@@ -216,11 +216,21 @@ def sankey(
     # frame on top/bottom edge
     frame_color = frame_color or [0, 0, 0, 1]
 
+    y_frame_gap = (title_gap + frame_gap) * plot_height
+
     col = frame_color if frame_top else [1, 1, 1, 0]
-    ax.plot([0, plot_width], min(voffset) + (plot_height) + (title_gap + frame_gap) * plot_height + [0, 0], color=col)
+    ax.plot(
+        [0, plot_width],
+        min(voffset) + (plot_height) + y_frame_gap + [0, 0],
+        color=col,
+    )
 
     col = frame_color if frame_bot else [1, 1, 1, 0]
-    ax.plot([0, plot_width], min(voffset) - (title_gap + frame_gap) * plot_height + [0, 0], color=col)
+    ax.plot(
+        [0, plot_width],
+        min(voffset) - y_frame_gap + [0, 0],
+        color=col,
+    )
 
     # complete plot
     ax.axis("off")
