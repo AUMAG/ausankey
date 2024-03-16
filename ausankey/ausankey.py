@@ -391,8 +391,6 @@ def _sankey(
             )
 
     # Plot strips
-    num_div = 20
-    num_arr = 50
     for left_label in left_labels:
         for right_label in right_labels:
             lind = left == left_label
@@ -406,15 +404,8 @@ def _sankey(
             lbar = barsize_left[left_label][right_label]
             rbar = barsize_right[left_label][right_label]
 
-            # Create array of y values for each strip, half at left value,
-            # half at right, convolve
-            ys_d = np.array(num_arr * [lbot] + num_arr * [rbot])
-            ys_d = np.convolve(ys_d, 1 / num_div * np.ones(num_div), mode="valid")
-            ys_d = np.convolve(ys_d, 1 / num_div * np.ones(num_div), mode="valid")
-
-            ys_u = np.array(num_arr * [lbot + lbar] + num_arr * [rbot + rbar])
-            ys_u = np.convolve(ys_u, 1 / num_div * np.ones(num_div), mode="valid")
-            ys_u = np.convolve(ys_u, 1 / num_div * np.ones(num_div), mode="valid")
+            ys_d = create_curve(lbot, rbot)
+            ys_u = create_curve(lbot+lbar, rbot+rbar)
 
             # Update bottom edges at each label
             # so next strip starts at the right place
@@ -460,6 +451,23 @@ def check_data_matches_labels(labels, data, side):
 
 ###########################################
 
+def create_curve(lpoint, rpoint):
+    """Create array of y values for each strip
+    """
+
+    num_div = 20
+    num_arr = 50
+
+    # half at left value, half at right, convolve
+    
+    ys = np.array(num_arr * [lpoint] + num_arr * [rpoint])
+
+    ys = np.convolve(ys, 1 / num_div * np.ones(num_div), mode="valid")
+    ys = np.convolve(ys, 1 / num_div * np.ones(num_div), mode="valid")
+
+    return ys
+ 
+###########################################
 
 def combine_colours(c1, c2, num_col):
     """Creates N colours needed to produce a gradient
