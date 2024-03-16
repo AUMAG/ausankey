@@ -6,6 +6,10 @@
 
 ## Internal/private functions
 
-### ::: ausankey._sankey
+### _sankey
 
-### ::: ausankey.combine_colours
+::: ausankey._sankey
+
+### combine_colours
+
+::: ausankey.combine_colours
