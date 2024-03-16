@@ -38,6 +38,7 @@ def sankey(
     fontsize=14,
     frame_side="none",
     frame_gap=0.1,
+    frame_color=None,
     label_order=None,
     label_dict=None,
     label_width=0,
@@ -76,7 +77,8 @@ def sankey(
         Dictionary of colors to use for each label `{'label': 'color'}`
 
     colormap : str
-        Matplotlib colormap name
+        Matplotlib colormap name to automatically assign colours.
+        `color_dict` can overide these on an individual basis if needed
 
     fontsize : int
         Font size of labels
@@ -89,7 +91,10 @@ def sankey(
         Normalised vertical gap between the top/bottom of the plot and the frame
         (1.0 = 100% of plot height)
 
-    label_dict : dict
+    frame_color : color
+        Color of frame
+
+        label_dict : dict
         Dictionary of labels to optionally replace the labels in the data
         (e.g., to provide abbreviations or human readable alternatives).
         Format: `{'orig_label': 'printed_label'}`
@@ -109,7 +114,7 @@ def sankey(
         `0` is unsorted — display data in order it appears in the DataFrame.
         `1` and `-1` sort high to low or vice versa.
 
-    titles : `list` of `str`)
+    titles : list of str
         Array of title strings for each columns
 
     title_gap : float
@@ -171,16 +176,15 @@ def sankey(
     flatcat = pd.Series(flattened).unique()
 
     # If no color_dict given, make one
-    if color_dict is None:
-        color_dict = {}
-        cmap = plt.cm.get_cmap(colormap)
-        color_palette = cmap(np.linspace(0, 1, len(flatcat)))
-        for i, label in enumerate(flatcat):
-            color_dict[label] = color_palette[i]
+    color_dict = color_dict or {}
+    color_dict_new = {}
+    cmap = plt.cm.get_cmap(colormap)
+    color_palette = cmap(np.linspace(0, 1, len(flatcat)))
+    for i, label in enumerate(flatcat):
+        color_dict_new[label] = color_dict.get(label,color_palette[i])
 
     # draw each segment of the graph
-    if ax is None:
-        ax = plt.gca()
+    ax = ax or plt.gca()
 
     for ii in range(num_flow):
         _sankey(
@@ -191,7 +195,7 @@ def sankey(
             title_gap=title_gap,
             title_side=title_side,
             label_order=label_order,
-            color_dict=color_dict,
+            color_dict=color_dict_new,
             fontsize=fontsize,
             label_dict=label_dict or {},
             label_width=label_width,
@@ -210,12 +214,12 @@ def sankey(
     frame_bot = frame_side in ("bottom", "both")
 
     # frame on top/bottom edge
-    col = [0, 0, 0, 1] if frame_top else [1, 1, 1, 0]
-
+    frame_color = frame_color or [0, 0, 0, 1]
+    
+    col = frame_color if frame_top else [1, 1, 1, 0]
     ax.plot([0, plot_width], min(voffset) + (plot_height) + (title_gap + frame_gap) * plot_height + [0, 0], color=col)
 
-    col = [0, 0, 0, 1] if frame_bot else [1, 1, 1, 0]
-
+    col = frame_color if frame_bot else [1, 1, 1, 0]
     ax.plot([0, plot_width], min(voffset) - (title_gap + frame_gap) * plot_height + [0, 0], color=col)
 
     # complete plot
