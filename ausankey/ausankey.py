@@ -82,11 +82,11 @@ def sankey(
         Font size of labels
 
     frame_side : str
-        Whether to place a frame (horizontal rule) above or below the plot. 
+        Whether to place a frame (horizontal rule) above or below the plot.
         Allowed values: `"none"`, `"top"`, `"bottom"`, or `"both"`
 
     frame_gap : str
-        Normalised vertical gap between the top/bottom of the plot and the frame 
+        Normalised vertical gap between the top/bottom of the plot and the frame
         (1.0 = 100% of plot height)
 
     label_dict : dict
@@ -95,12 +95,12 @@ def sankey(
         Format: `{'orig_label': 'printed_label'}`
 
     label_width : float
-        Normalised horizontal space to reserve outside the plot 
+        Normalised horizontal space to reserve outside the plot
         on the left and the right for labels
         (1.0 = 100% of plot height)
 
     label_gap : float
-        Normalised horizontal gap between the left/right of the 
+        Normalised horizontal gap between the left/right of the
         plot edges and the label
         (1.0 = 100% of plot width)
 
@@ -458,7 +458,7 @@ def _sankey(
             rbar = barsize_right[left_label][right_label]
 
             ys_d = create_curve(lbot, rbot)
-            ys_u = create_curve(lbot+lbar, rbot+rbar)
+            ys_u = create_curve(lbot + lbar, rbot + rbar)
 
             # Update bottom edges at each label
             # so next strip starts at the right place
@@ -504,22 +504,24 @@ def check_data_matches_labels(labels, data, side):
 
 ###########################################
 
+
 def create_curve(lpoint, rpoint):
-    """Create array of y values for each strip
-    """
+    """Create array of y values for each strip"""
 
     num_div = 20
     num_arr = 50
 
     # half at left value, half at right, convolve
-    
+
     ys = np.array(num_arr * [lpoint] + num_arr * [rpoint])
 
     ys = np.convolve(ys, 1 / num_div * np.ones(num_div), mode="valid")
 
     return np.convolve(ys, 1 / num_div * np.ones(num_div), mode="valid")
- 
+
+
 ###########################################
+
 
 def combine_colours(c1, c2, num_col):
     """Creates N colours needed to produce a gradient
