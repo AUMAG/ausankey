@@ -181,7 +181,7 @@ def sankey(
     cmap = plt.cm.get_cmap(colormap)
     color_palette = cmap(np.linspace(0, 1, len(flatcat)))
     for i, label in enumerate(flatcat):
-        color_dict_new[label] = color_dict.get(label,color_palette[i])
+        color_dict_new[label] = color_dict.get(label, color_palette[i])
 
     # draw each segment of the graph
     ax = ax or plt.gca()
@@ -215,7 +215,7 @@ def sankey(
 
     # frame on top/bottom edge
     frame_color = frame_color or [0, 0, 0, 1]
-    
+
     col = frame_color if frame_top else [1, 1, 1, 0]
     ax.plot([0, plot_width], min(voffset) + (plot_height) + (title_gap + frame_gap) * plot_height + [0, 0], color=col)
 
