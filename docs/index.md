@@ -156,6 +156,14 @@ sky.sankey(data,frame_side = "both")
 ```
 ![Image with options](fruits_frame.png)
 
+The frame can be coloured:
+```
+sky.sankey(data,
+    frame_side=“both”,
+    frame_color=“#62dcbe”,
+ )
+```
+![Image with options](fruits_frame_color.png)
 
 ## Spacing
 

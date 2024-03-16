@@ -79,6 +79,14 @@ plt.show()
 plt.savefig("fruits_frame.png")
 
 plt.figure()
+sky.sankey(data,
+    frame_side="both",
+    frame_color="#62dcbe",
+ )
+plt.show()
+plt.savefig("fruits_frame_color.png")
+
+plt.figure()
 sky.sankey(
     data,
     titles=["Summer", "Winter"],
