@@ -262,7 +262,7 @@ def _sankey(
     right = pd.Series(data[labelind + 2])
     left_weight = pd.Series(data[weightind])
     right_weight = pd.Series(data[weightind + 2])
-    
+
     notnull = left.notnull() & right.notnull()
     left = left[notnull]
     right = right[notnull]
@@ -278,8 +278,8 @@ def _sankey(
         left_labels = list(label_order[ii])
         right_labels = list(label_order[ii + 1])
     else:
-        left_labels = weighted_sort(left,left_weight,sorting)
-        right_labels = weighted_sort(right,right_weight,sorting)
+        left_labels = weighted_sort(left, left_weight, sorting)
+        right_labels = weighted_sort(right, right_weight, sorting)
 
     # check labels
     check_data_matches_labels(left_labels, left, "left")
@@ -476,21 +476,25 @@ def _sankey(
 
 ###########################################
 
-def weighted_sort(lbl,wgt,sorting):
-        
-        arr = {}
-        for uniq in lbl.unique():
-            arr[uniq] = wgt[lbl==uniq].sum()
 
-        return list(dict(
+def weighted_sort(lbl, wgt, sorting):
+    arr = {}
+    for uniq in lbl.unique():
+        arr[uniq] = wgt[lbl == uniq].sum()
+
+    return list(
+        dict(
             sorted(
                 arr.items(),
                 key=lambda item: sorting * item[1],
                 # sorting = 0,1,-1 affects this
             )
-        ))
+        )
+    )
+
 
 ###########################################
+
 
 def check_data_matches_labels(labels, data, side):
     if len(labels) > 0:
