@@ -479,17 +479,17 @@ def _sankey(
 
 def weighted_sort(lbl, wgt, sorting):
     """creates a sorted list of labels by their summed weights"""
-    
+
     arr = {}
     for uniq in lbl.unique():
         arr[uniq] = wgt[lbl == uniq].sum()
 
     sort_arr = sorted(
         arr.items(),
-        key=lambda item: sorting*item[1],
+        key=lambda item: sorting * item[1],
         # sorting = 0,1,-1 affects this
     )
-    
+
     return list(dict(sort_arr))
 
 
@@ -497,9 +497,9 @@ def weighted_sort(lbl, wgt, sorting):
 
 
 def check_data_matches_labels(labels, data, side):
-    """Consistency check of label data. 
-    
-    Ensures after filtering and sorting, 
+    """Consistency check of label data.
+
+    Ensures after filtering and sorting,
     or manually specifying the label order,
     that the order of labels is still consistent
     with the labels in the data.
