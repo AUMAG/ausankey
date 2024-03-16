@@ -147,7 +147,7 @@ def sankey(
     num_uniq = np.empty(num_side)
     col_hgt = np.empty(num_side)
     for ii in range(num_side):
-        weight_sum[ii] = sum(data[2 * ii + 1])
+        weight_sum[ii] = data[2 * ii + 1].sum()
         num_uniq[ii] = len(pd.Series(data[2 * ii]).unique())
 
     for ii in range(num_side):
