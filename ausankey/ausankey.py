@@ -65,10 +65,12 @@ def sankey(
         Matplotlib plot axis to use
 
     bar_width : float
-        Normalised horizontal width of the data bars (1.0 = 100% of plot width)
+        Normalised horizontal width of the data bars
+        (1.0 = 100% of plot width)
 
     bar_gap : float
-        Normalised vertical gap between successive data bars (1.0 = 100% of nominal plot height).
+        Normalised vertical gap between successive data bars
+        (1.0 = 100% of nominal plot height).
 
     color_dict : dict
         Dictionary of colors to use for each label `{'label': 'color'}`
@@ -111,13 +113,17 @@ def sankey(
         Array of title strings for each columns
 
     title_gap : float
-        Normalised vertical gap between the column and the title string (1.0 = 100% of plot height)
+        Normalised vertical gap between the column and the title string
+        (1.0 = 100% of plot height)
 
     title_side : str
-        Whether to place the titles above or below the plot. Allowed values: `"top"`, `"bottom"`, or `"both"`
+        Whether to place the titles above or below the plot.
+        Allowed values: `"top"`, `"bottom"`, or `"both"`
 
     valign : str
-        Vertical alignment of the data bars at each stage, with respect to the whole plot. Allowed values: `"top"`, `"bottom"`, or `"center"`
+        Vertical alignment of the data bars at each stage,
+        with respect to the whole plot.
+        Allowed values: `"top"`, `"bottom"`, or `"center"`
 
 
     Returns
