@@ -475,9 +475,8 @@ def create_curve(lpoint, rpoint):
     ys = np.array(num_arr * [lpoint] + num_arr * [rpoint])
 
     ys = np.convolve(ys, 1 / num_div * np.ones(num_div), mode="valid")
-    ys = np.convolve(ys, 1 / num_div * np.ones(num_div), mode="valid")
 
-    return ys
+    return np.convolve(ys, 1 / num_div * np.ones(num_div), mode="valid")
  
 ###########################################
 
