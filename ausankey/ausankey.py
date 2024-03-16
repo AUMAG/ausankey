@@ -262,35 +262,24 @@ def _sankey(
     right = pd.Series(data[labelind + 2])
     left_weight = pd.Series(data[weightind])
     right_weight = pd.Series(data[weightind + 2])
+    
+    notnull = left.notnull() & right.notnull()
+    left = left[notnull]
+    right = right[notnull]
+    left_weight = left_weight[notnull]
+    right_weight = right_weight[notnull]
 
     if any(left_weight.isnull()) | any(right_weight.isnull()):
         raise NullsInFrameError
 
     # label order / sorting
 
-    # calc label weight then sort
-    wgt = {}
-    for dd in [0, 2]:
-        lbl = data[labelind + dd].unique()
-        wgt[dd] = {}
-        for uniq in lbl:
-            ind = data[labelind + dd] == uniq
-            wgt[dd][uniq] = data[weightind + dd][ind].sum()
-
-        wgt[dd] = dict(
-            sorted(
-                wgt[dd].items(),
-                key=lambda item: sorting * item[1],
-                # sorting = 0,1,-1 affects this
-            )
-        )
-
     if label_order is not None:
         left_labels = list(label_order[ii])
         right_labels = list(label_order[ii + 1])
     else:
-        left_labels = list(wgt[0].keys())
-        right_labels = list(wgt[2].keys())
+        left_labels = weighted_sort(left,left_weight,sorting)
+        right_labels = weighted_sort(right,right_weight,sorting)
 
     # check labels
     check_data_matches_labels(left_labels, left, "left")
@@ -487,6 +476,21 @@ def _sankey(
 
 ###########################################
 
+def weighted_sort(lbl,wgt,sorting):
+        
+        arr = {}
+        for uniq in lbl.unique():
+            arr[uniq] = wgt[lbl==uniq].sum()
+
+        return list(dict(
+            sorted(
+                arr.items(),
+                key=lambda item: sorting * item[1],
+                # sorting = 0,1,-1 affects this
+            )
+        ))
+
+###########################################
 
 def check_data_matches_labels(labels, data, side):
     if len(labels) > 0:
