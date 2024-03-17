@@ -329,9 +329,9 @@ def _sankey(
     for lr in [0, 1]:
         for i, label in enumerate(bar_lr[lr]):
             barpos[lr][label] = {}
-            barpos[lr][label]["total"] = weights_lr[lr][labels_lr[lr] == label].sum()
-            barpos[lr][label]["bottom"] = voffset[ii+lr] if i == 0 else barpos[lr][bar_lr[lr][i-1]]["top"] + y_bar_gap
-            barpos[lr][label]["top"] = barpos[lr][label]["bottom"] + barpos[lr][label]["total"]
+            barpos[lr][label]["tot"] = weights_lr[lr][labels_lr[lr] == label].sum()
+            barpos[lr][label]["bot"] = voffset[ii+lr] if i == 0 else barpos[lr][bar_lr[lr][i-1]]["top"] + y_bar_gap
+            barpos[lr][label]["top"] = barpos[lr][label]["bot"] + barpos[lr][label]["tot"]
 
     # horizontal extents of flows in each subdiagram
     x_bar_width = bar_width * sub_width
@@ -343,8 +343,8 @@ def _sankey(
     # Draw bars and their labels
     if ii == 0:  # first time
         for label in bar_lr[0]:
-            lbot = barpos[0][label]["bottom"]
-            lll = barpos[0][label]["total"]
+            lbot = barpos[0][label]["bot"]
+            lll = barpos[0][label]["tot"]
             ax.fill_between(
                 [x_left - x_bar_width, x_left],
                 lbot,
@@ -362,8 +362,8 @@ def _sankey(
                 fontsize=fontsize,
             )
     for label in bar_lr[1]:
-        rbot = barpos[1][label]["bottom"]
-        rrr = barpos[1][label]["total"]
+        rbot = barpos[1][label]["bot"]
+        rrr = barpos[1][label]["tot"]
         ax.fill_between(
             [x_right, x_right + x_bar_width],
             rbot,
@@ -450,8 +450,8 @@ def _sankey(
             if not any(lind & rind):
                 continue
 
-            lbot = barpos[0][left_label]["bottom"]
-            rbot = barpos[1][right_label]["bottom"]
+            lbot = barpos[0][left_label]["bot"]
+            rbot = barpos[1][right_label]["bot"]
             lbar = barsize[0][left_label][right_label]
             rbar = barsize[1][left_label][right_label]
 
@@ -460,8 +460,8 @@ def _sankey(
 
             # Update bottom edges at each label
             # so next strip starts at the right place
-            barpos[0][left_label]["bottom"] += lbar
-            barpos[1][right_label]["bottom"] += rbar
+            barpos[0][left_label]["bot"] += lbar
+            barpos[1][right_label]["bot"] += rbar
 
             xx = np.linspace(x_left, x_right, len(ys_d))
             cc = combine_colours(color_dict[left_label], color_dict[right_label], len(ys_d))
