@@ -46,6 +46,7 @@ def sankey(
     titles=None,
     title_gap=0.05,
     title_side="top",  # "bottom", "both"
+    title_loc="inner",  # "outer"
     sorting=0,
     valign="bottom",  # "top","center"
 ):
@@ -124,6 +125,11 @@ def sankey(
     title_side : str
         Whether to place the titles above or below the plot.
         Allowed values: `"top"`, `"bottom"`, or `"both"`
+
+    title_loc : str
+        Whether to place the titles next to each bar of the plot
+        or outside the frame.
+        Allowed values: `"inner"` or `"outer"`
 
     valign : str
         Vertical alignment of the data bars at each stage,
@@ -217,9 +223,11 @@ def sankey(
             titles=titles,
             title_gap=title_gap,
             title_side=title_side,
+            title_loc=title_loc,
             label_order=label_order,
             color_dict=color_dict_new,
             fontsize=fontsize,
+            frame_gap=frame_gap,
             label_dict=label_dict or {},
             label_width=label_width,
             label_gap=label_gap,
@@ -247,9 +255,11 @@ def _sankey(
     color_dict=None,
     label_order=None,
     fontsize=None,
+    frame_gap=None,
     titles=None,
     title_gap=None,
     title_side=None,
+    title_loc=None,
     plot_height=None,
     sub_width=None,
     label_dict=None,
@@ -389,53 +399,45 @@ def _sankey(
     # "titles"
     if titles is not None:
         y_title_gap = title_gap * plot_height
+        y_frame_gap = frame_gap * plot_height
 
+        title_x = [
+            x_left - x_bar_width / 2,
+            x_right + x_bar_width / 2,
+        ]
+        top_y = [
+            barpos[0][lbl_l]["top"],
+            barpos[1][lbl_r]["top"],
+        ]
         # leftmost title
-        if ii == 0:
-            xt = x_left - x_bar_width / 2
+        title_lr = [0,1] if ii == 0 else [1]
+        
+        for lr in title_lr:
             if title_side in ("top", "both"):
-                yt = y_title_gap + barpos[0][lbl_l]["top"]
-                va = "bottom"
+                if title_loc == "outer":
+                    yt = min(voffset) + y_title_gap + y_frame_gap + plot_height
+                elif title_loc == "inner":
+                    yt = y_title_gap + top_y[lr]
                 ax.text(
-                    xt,
+                    title_x[lr],
                     yt,
-                    titles[ii],
-                    {"ha": "center", "va": va},
+                    titles[ii+lr],
+                    {"ha": "center", "va": "bottom"},
                     fontsize=fontsize,
                 )
 
             if title_side in ("bottom", "both"):
-                yt = voffset[ii] - y_title_gap
-                va = "top"
+                if title_loc == "outer":
+                    yt = min(voffset) - y_title_gap - y_frame_gap
+                elif title_loc == "inner":
+                    yt = voffset[ii+lr] - y_title_gap
                 ax.text(
-                    xt,
+                    title_x[lr],
                     yt,
-                    titles[ii],
-                    {"ha": "center", "va": va},
+                    titles[ii+lr],
+                    {"ha": "center", "va": "top"},
                     fontsize=fontsize,
                 )
-
-        # all other titles
-        xt = x_right + x_bar_width / 2
-        if title_side in ("top", "both"):
-            yt = y_title_gap + barpos[1][lbl_r]["top"]
-            ax.text(
-                xt,
-                yt,
-                titles[ii + 1],
-                {"ha": "center", "va": "bottom"},
-                fontsize=fontsize,
-            )
-
-        if title_side in ("bottom", "both"):
-            yt = voffset[ii + 1] - y_title_gap
-            ax.text(
-                xt,
-                yt,
-                titles[ii + 1],
-                {"ha": "center", "va": "top"},
-                fontsize=fontsize,
-            )
 
     # Plot strips
     for lbl_l in bar_lr[0]:
