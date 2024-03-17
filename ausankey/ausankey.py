@@ -326,18 +326,12 @@ def _sankey(
     y_bar_gap = bar_gap * plot_height
 
     barpos = [{}, {}]
-    for i, label in enumerate(bar_lr[0]):
-        barpos[0][label] = {}
-        barpos[0][label]["total"] = weights_lr[0][labels_lr[0] == label].sum()
-        barpos[0][label]["bottom"] = voffset[ii] if i == 0 else barpos[0][bar_lr[0][i - 1]]["top"] + y_bar_gap
-        barpos[0][label]["top"] = barpos[0][label]["bottom"] + barpos[0][label]["total"]
-
-    # Determine positions of right label patches and total widths
-    for i, label in enumerate(bar_lr[1]):
-        barpos[1][label] = {}
-        barpos[1][label]["total"] = weights_lr[1][labels_lr[1] == label].sum()
-        barpos[1][label]["bottom"] = voffset[ii + 1] if i == 0 else barpos[1][bar_lr[1][i - 1]]["top"] + y_bar_gap
-        barpos[1][label]["top"] = barpos[1][label]["bottom"] + barpos[1][label]["total"]
+    for lr in [0, 1]:
+        for i, label in enumerate(bar_lr[lr]):
+            barpos[lr][label] = {}
+            barpos[lr][label]["total"] = weights_lr[lr][labels_lr[lr] == label].sum()
+            barpos[lr][label]["bottom"] = voffset[ii+lr] if i == 0 else barpos[lr][bar_lr[lr][i-1]]["top"] + y_bar_gap
+            barpos[lr][label]["top"] = barpos[lr][label]["bottom"] + barpos[lr][label]["total"]
 
     # horizontal extents of flows in each subdiagram
     x_bar_width = bar_width * sub_width
