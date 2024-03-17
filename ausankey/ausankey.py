@@ -319,8 +319,8 @@ def _sankey(
             barsize[0][lbl_l][lbl_r] = weights_lr[0][ind].sum()
             barsize[1][lbl_l][lbl_r] = weights_lr[1][ind].sum()
 
-    # Determine positions of left label patches and total widths
-    y_bar_gap = bar_gap * plot_height
+    # Determine positions of label patches and total widths
+    y_bar_gap = bar_gap*plot_height
 
     barpos = [{}, {}]
     for lr in [0, 1]:
@@ -344,8 +344,7 @@ def _sankey(
             lll = barpos[0][label]["tot"]
             ax.fill_between(
                 [x_left - x_bar_width, x_left],
-                lbot,
-                lbot + lll,
+                lbot, lbot + lll,
                 color=color_dict[label],
                 alpha=1,
                 lw=0,
@@ -363,8 +362,7 @@ def _sankey(
         rrr = barpos[1][label]["tot"]
         ax.fill_between(
             [x_right, x_right + x_bar_width],
-            rbot,
-            rbot + rrr,
+            rbot, rbot + rrr,
             color=color_dict[label],
             alpha=1,
             lw=0,
@@ -398,9 +396,7 @@ def _sankey(
                 yt = y_title_gap + barpos[0][lbl_l]["top"]
                 va = "bottom"
                 ax.text(
-                    xt,
-                    yt,
-                    titles[ii],
+                    xt, yt, titles[ii],
                     {"ha": "center", "va": va},
                     fontsize=fontsize,
                 )
@@ -409,21 +405,17 @@ def _sankey(
                 yt = voffset[ii] - y_title_gap
                 va = "top"
                 ax.text(
-                    xt,
-                    yt,
-                    titles[ii],
+                    xt, yt, titles[ii],
                     {"ha": "center", "va": va},
                     fontsize=fontsize,
                 )
 
         # all other titles
-        xt = x_right + x_bar_width / 2
+        xt = x_right + x_bar_width/2
         if title_side in ("top", "both"):
             yt = y_title_gap + barpos[1][lbl_r]["top"]
             ax.text(
-                xt,
-                yt,
-                titles[ii + 1],
+                xt, yt, titles[ii + 1],
                 {"ha": "center", "va": "bottom"},
                 fontsize=fontsize,
             )
@@ -431,9 +423,7 @@ def _sankey(
         if title_side in ("bottom", "both"):
             yt = voffset[ii + 1] - y_title_gap
             ax.text(
-                xt,
-                yt,
-                titles[ii + 1],
+                xt, yt, titles[ii + 1],
                 {"ha": "center", "va": "top"},
                 fontsize=fontsize,
             )
@@ -453,7 +443,7 @@ def _sankey(
             rbar = barsize[1][lbl_l][lbl_r]
 
             ys_d = create_curve(lbot, rbot)
-            ys_u = create_curve(lbot + lbar, rbot + rbar)
+            ys_u = create_curve(lbot+lbar, rbot+rbar)
 
             # Update bottom edges at each label
             # so next strip starts at the right place
