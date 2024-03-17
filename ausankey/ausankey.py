@@ -207,7 +207,7 @@ def sankey(
         min(voffset) - y_frame_gap + [0, 0],
         color=col,
     )
-    
+
     # draw each segment
     for ii in range(num_flow):
         _sankey(
