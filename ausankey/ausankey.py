@@ -266,8 +266,8 @@ def _sankey(
     Some special-casing is used for plotting/labelling differently
     for the first and last cases.
     """
-    labelind = 2 * ii
-    weightind = 2 * ii + 1
+    labelind = 2*ii
+    weightind = 2*ii + 1
 
     labels_lr = [
         pd.Series(data[labelind]),
@@ -290,15 +290,19 @@ def _sankey(
     # label order / sorting
 
     if label_order is not None:
-        left_labels = list(label_order[ii])
-        right_labels = list(label_order[ii + 1])
+        bar_lr = [
+            list(label_order[ii]),
+            list(label_order[ii + 1]),
+        ]
     else:
-        left_labels = weighted_sort(labels_lr[0], weights_lr[0], sorting)
-        right_labels = weighted_sort(labels_lr[1], weights_lr[1], sorting)
+        bar_lr = [
+            weighted_sort(labels_lr[0], weights_lr[0], sorting),
+            weighted_sort(labels_lr[1], weights_lr[1], sorting),
+        ]
 
     # check labels
-    check_data_matches_labels(left_labels, labels_lr[0], "left")
-    check_data_matches_labels(right_labels, labels_lr[1], "right")
+    check_data_matches_labels(bar_lr[0], labels_lr[0], "left")
+    check_data_matches_labels(bar_lr[1], labels_lr[1], "right")
 
     # check colours
     all_labels = pd.Series([*labels_lr[0], *labels_lr[1]]).unique()
@@ -310,10 +314,10 @@ def _sankey(
 
     # Determine sizes of individual strips
     barsize = [{}, {}]
-    for left_label in left_labels:
+    for left_label in bar_lr[0]:
         barsize[0][left_label] = {}
         barsize[1][left_label] = {}
-        for right_label in right_labels:
+        for right_label in bar_lr[1]:
             ind = (labels_lr[0] == left_label) & (labels_lr[1] == right_label)
             barsize[0][left_label][right_label] = weights_lr[0][ind].sum()
             barsize[1][left_label][right_label] = weights_lr[1][ind].sum()
@@ -322,17 +326,17 @@ def _sankey(
     y_bar_gap = bar_gap * plot_height
 
     barpos = [{}, {}]
-    for i, label in enumerate(left_labels):
+    for i, label in enumerate(bar_lr[0]):
         barpos[0][label] = {}
         barpos[0][label]["total"] = weights_lr[0][labels_lr[0] == label].sum()
-        barpos[0][label]["bottom"] = voffset[ii] if i == 0 else barpos[0][left_labels[i - 1]]["top"] + y_bar_gap
+        barpos[0][label]["bottom"] = voffset[ii] if i == 0 else barpos[0][bar_lr[0][i - 1]]["top"] + y_bar_gap
         barpos[0][label]["top"] = barpos[0][label]["bottom"] + barpos[0][label]["total"]
 
     # Determine positions of right label patches and total widths
-    for i, label in enumerate(right_labels):
+    for i, label in enumerate(bar_lr[1]):
         barpos[1][label] = {}
         barpos[1][label]["total"] = weights_lr[1][labels_lr[1] == label].sum()
-        barpos[1][label]["bottom"] = voffset[ii + 1] if i == 0 else barpos[1][right_labels[i - 1]]["top"] + y_bar_gap
+        barpos[1][label]["bottom"] = voffset[ii + 1] if i == 0 else barpos[1][bar_lr[1][i - 1]]["top"] + y_bar_gap
         barpos[1][label]["top"] = barpos[1][label]["bottom"] + barpos[1][label]["total"]
 
     # horizontal extents of flows in each subdiagram
@@ -344,7 +348,7 @@ def _sankey(
 
     # Draw bars and their labels
     if ii == 0:  # first time
-        for label in left_labels:
+        for label in bar_lr[0]:
             lbot = barpos[0][label]["bottom"]
             lll = barpos[0][label]["total"]
             ax.fill_between(
@@ -363,7 +367,7 @@ def _sankey(
                 {"ha": "right", "va": "center"},
                 fontsize=fontsize,
             )
-    for label in right_labels:
+    for label in bar_lr[1]:
         rbot = barpos[1][label]["bottom"]
         rrr = barpos[1][label]["total"]
         ax.fill_between(
@@ -444,8 +448,8 @@ def _sankey(
             )
 
     # Plot strips
-    for left_label in left_labels:
-        for right_label in right_labels:
+    for left_label in bar_lr[0]:
+        for right_label in bar_lr[1]:
             lind = labels_lr[0] == left_label
             rind = labels_lr[1] == right_label
 
