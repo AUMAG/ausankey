@@ -266,13 +266,10 @@ def _sankey(
     Some special-casing is used for plotting/labelling differently
     for the first and last cases.
     """
-    labelind = 2*ii
-    weightind = 2*ii + 1
+    labelind = 2 * ii
+    weightind = 2 * ii + 1
 
-    labels_lr = [
-        pd.Series(data[labelind]),
-        pd.Series(data[labelind + 2])
-    ]
+    labels_lr = [pd.Series(data[labelind]), pd.Series(data[labelind + 2])]
     weights_lr = [
         pd.Series(data[weightind]),
         pd.Series(data[weightind + 2]),
@@ -330,7 +327,7 @@ def _sankey(
         for i, label in enumerate(bar_lr[lr]):
             barpos[lr][label] = {}
             barpos[lr][label]["tot"] = weights_lr[lr][labels_lr[lr] == label].sum()
-            barpos[lr][label]["bot"] = voffset[ii+lr] if i == 0 else barpos[lr][bar_lr[lr][i-1]]["top"] + y_bar_gap
+            barpos[lr][label]["bot"] = voffset[ii + lr] if i == 0 else barpos[lr][bar_lr[lr][i - 1]]["top"] + y_bar_gap
             barpos[lr][label]["top"] = barpos[lr][label]["bot"] + barpos[lr][label]["tot"]
 
     # horizontal extents of flows in each subdiagram
