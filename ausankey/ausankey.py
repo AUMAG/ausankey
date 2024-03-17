@@ -338,7 +338,7 @@ def _sankey(
     x_right = x_left + sub_width
 
     # Draw bars and their labels
-    
+
     def draw_bar(x, y, dy, label):
         ax.fill_between(
             [x, x + x_bar_width],
@@ -349,12 +349,13 @@ def _sankey(
             lw=0,
             snap=True,
         )
+
     if ii == 0:  # first time
         for label in bar_lr[0]:
             lbot = barpos[0][label]["bot"]
             lll = barpos[0][label]["tot"]
             draw_bar(x_left - x_bar_width, lbot, lll, label)
-            
+
             ax.text(
                 x_left - x_label_gap - x_bar_width,
                 lbot + lll / 2,
@@ -366,7 +367,7 @@ def _sankey(
         rbot = barpos[1][label]["bot"]
         rrr = barpos[1][label]["tot"]
         draw_bar(x_right, rbot, rrr, label)
-        
+
         if ii < num_flow - 1:  # inside labels
             ax.text(
                 x_right + x_label_gap + x_bar_width,
