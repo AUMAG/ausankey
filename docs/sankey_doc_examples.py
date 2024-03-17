@@ -69,6 +69,15 @@ plt.show()
 plt.savefig("fruits_titles_bottom.png")
 
 plt.figure()
+sky.sankey(data,
+    titles = ["Summer","Winter"],
+    frame_side = "both",
+    title_loc = "outer",
+)
+plt.show()
+plt.savefig("fruits_titles_outer.png")
+
+plt.figure()
 sky.sankey(data, valign="center")
 plt.show()
 plt.savefig("fruits_valign.png")

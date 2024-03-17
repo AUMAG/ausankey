@@ -138,6 +138,15 @@ sky.sankey(data,
 ```
 ![Image with options](fruits_titles_bottom.png)
 
+Titles can also be placed “outside” the plot area, with default spacing intending to be placed outside the frame:
+```
+sky.sankey(data,
+    titles = ["Summer","Winter"],
+    frame_side = "both",
+    title_loc = "outer",
+)
+```
+![Image with options](fruits_titles_outer.png)
 
 ## Vertical Alignment
 
