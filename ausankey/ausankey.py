@@ -261,9 +261,10 @@ def _sankey(
     sorting=None,
     ax=None,
 ):
-    """Subroutine for plotting successful horizontal sections of the Sankey plot
+    """Subroutine for plotting horizontal sections of the Sankey plot
 
-    Some special-casing is used for plotting/labelling differents for the first and last cases.
+    Some special-casing is used for plotting/labelling differently
+    for the first and last cases.
     """
     labelind = 2 * ii
     weightind = 2 * ii + 1
@@ -340,8 +341,10 @@ def _sankey(
         right_widths[right_label] = tmp_dict
 
     # horizontal extents of flows in each subdiagram
-    x_bar_width = bar_width * sub_width
-    x_left = x_bar_width + label_width * sub_width + ii * (sub_width + x_bar_width)
+    x_bar_width = bar_width*sub_width
+    x_label_width = label_width*sub_width
+    x_label_gap = label_gap*sub_width
+    x_left = x_bar_width + x_label_gap + x_label_width + ii*(sub_width + x_bar_width)
     x_right = x_left + sub_width
 
     # Draw bars and their labels
@@ -359,7 +362,7 @@ def _sankey(
                 snap=True,
             )
             ax.text(
-                x_left - (label_gap + bar_width) * sub_width,
+                x_left - x_label_gap - x_bar_width,
                 lbot + 0.5 * lll,
                 label_dict.get(left_label, left_label),
                 {"ha": "right", "va": "center"},
@@ -379,7 +382,7 @@ def _sankey(
         )
         if ii < num_flow - 1:  # inside labels
             ax.text(
-                x_right + (label_gap + bar_width) * sub_width,
+                x_right + x_label_gap + x_bar_width,
                 rbot + 0.5 * rrr,
                 label_dict.get(right_label, right_label),
                 {"ha": "left", "va": "center"},
@@ -387,7 +390,7 @@ def _sankey(
             )
         if ii == num_flow - 1:  # last time
             ax.text(
-                x_right + (label_gap + bar_width) * sub_width,
+                x_right + x_label_gap + x_bar_width,
                 rbot + 0.5 * rrr,
                 label_dict.get(right_label, right_label),
                 {"ha": "left", "va": "center"},
