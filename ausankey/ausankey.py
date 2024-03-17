@@ -315,28 +315,20 @@ def _sankey(
             barsize[1][left_label][right_label] = right_weight[ind].sum()
 
     # Determine positions of left label patches and total widths
+    y_bar_gap = bar_gap*plot_height
+    
     barpos = [{}, {}]
     for i, label in enumerate(left_labels):
         barpos[0][label] = {}
         barpos[0][label]["total"] = left_weight[left == label].sum()
-        if i == 0:
-            bot = voffset[ii]
-        else:
-            bot = barpos[0][left_labels[i-1]]["top"] + bar_gap*plot_height
-        
-        barpos[0][label]["bottom"] = bot
+        barpos[0][label]["bottom"] = voffset[ii] if i == 0 else barpos[0][left_labels[i-1]]["top"] + y_bar_gap
         barpos[0][label]["top"] = barpos[0][label]["bottom"] + barpos[0][label]["total"]
 
     # Determine positions of right label patches and total widths
     for i, label in enumerate(right_labels):
         barpos[1][label] = {}
         barpos[1][label]["total"] = right_weight[right == label].sum()
-        if i == 0:
-            bot = voffset[ii+1]
-        else:
-            bot = barpos[1][right_labels[i-1]]["top"] + bar_gap * plot_height
-        
-        barpos[1][label]["bottom"] = bot
+        barpos[1][label]["bottom"] = voffset[ii+1] if i == 0 else barpos[1][right_labels[i-1]]["top"] + y_bar_gap
         barpos[1][label]["top"] = barpos[1][label]["bottom"] + barpos[1][label]["total"]
 
     # horizontal extents of flows in each subdiagram
@@ -348,13 +340,13 @@ def _sankey(
 
     # Draw bars and their labels
     if ii == 0:  # first time
-        for left_label in left_labels:
-            lbot = barpos[0][left_label]["bottom"]
-            lll = barpos[0][left_label]["total"]
+        for label in left_labels:
+            lbot = barpos[0][label]["bottom"]
+            lll = barpos[0][label]["total"]
             ax.fill_between(
                 [x_left - x_bar_width, x_left],
                 lbot, lbot + lll,
-                color=color_dict[left_label],
+                color=color_dict[label],
                 alpha=1,
                 lw=0,
                 snap=True,
@@ -362,17 +354,17 @@ def _sankey(
             ax.text(
                 x_left - x_label_gap - x_bar_width,
                 lbot + lll/2,
-                label_dict.get(left_label, left_label),
+                label_dict.get(label, label),
                 {"ha": "right", "va": "center"},
                 fontsize=fontsize,
             )
-    for right_label in right_labels:
-        rbot = barpos[1][right_label]["bottom"]
-        rrr = barpos[1][right_label]["total"]
+    for label in right_labels:
+        rbot = barpos[1][label]["bottom"]
+        rrr = barpos[1][label]["total"]
         ax.fill_between(
             [x_right, x_right + x_bar_width],
             rbot, rbot + rrr,
-            color=color_dict[right_label],
+            color=color_dict[label],
             alpha=1,
             lw=0,
             snap=True,
@@ -381,7 +373,7 @@ def _sankey(
             ax.text(
                 x_right + x_label_gap + x_bar_width,
                 rbot + rrr/2,
-                label_dict.get(right_label, right_label),
+                label_dict.get(label, label),
                 {"ha": "left", "va": "center"},
                 fontsize=fontsize,
             )
@@ -389,7 +381,7 @@ def _sankey(
             ax.text(
                 x_right + x_label_gap + x_bar_width,
                 rbot + rrr/2,
-                label_dict.get(right_label, right_label),
+                label_dict.get(label, label),
                 {"ha": "left", "va": "center"},
                 fontsize=fontsize,
             )
