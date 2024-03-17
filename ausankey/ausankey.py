@@ -410,8 +410,8 @@ def _sankey(
             barpos[1][lbl_r]["top"],
         ]
         # leftmost title
-        title_lr = [0,1] if ii == 0 else [1]
-        
+        title_lr = [0, 1] if ii == 0 else [1]
+
         for lr in title_lr:
             if title_side in ("top", "both"):
                 if title_loc == "outer":
@@ -421,7 +421,7 @@ def _sankey(
                 ax.text(
                     title_x[lr],
                     yt,
-                    titles[ii+lr],
+                    titles[ii + lr],
                     {"ha": "center", "va": "bottom"},
                     fontsize=fontsize,
                 )
@@ -430,11 +430,11 @@ def _sankey(
                 if title_loc == "outer":
                     yt = min(voffset) - y_title_gap - y_frame_gap
                 elif title_loc == "inner":
-                    yt = voffset[ii+lr] - y_title_gap
+                    yt = voffset[ii + lr] - y_title_gap
                 ax.text(
                     title_x[lr],
                     yt,
-                    titles[ii+lr],
+                    titles[ii + lr],
                     {"ha": "center", "va": "top"},
                     fontsize=fontsize,
                 )
