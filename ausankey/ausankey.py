@@ -341,10 +341,10 @@ def _sankey(
         right_widths[right_label] = tmp_dict
 
     # horizontal extents of flows in each subdiagram
-    x_bar_width = bar_width*sub_width
-    x_label_width = label_width*sub_width
-    x_label_gap = label_gap*sub_width
-    x_left = x_bar_width + x_label_gap + x_label_width + ii*(sub_width + x_bar_width)
+    x_bar_width = bar_width * sub_width
+    x_label_width = label_width * sub_width
+    x_label_gap = label_gap * sub_width
+    x_left = x_bar_width + x_label_gap + x_label_width + ii * (sub_width + x_bar_width)
     x_right = x_left + sub_width
 
     # Draw bars and their labels
