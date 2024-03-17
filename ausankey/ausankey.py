@@ -269,18 +269,22 @@ def _sankey(
     labelind = 2 * ii
     weightind = 2 * ii + 1
 
-    left = pd.Series(data[labelind])
-    right = pd.Series(data[labelind + 2])
-    left_weight = pd.Series(data[weightind])
-    right_weight = pd.Series(data[weightind + 2])
+    labels_lr = [
+        pd.Series(data[labelind]),
+        pd.Series(data[labelind + 2])
+    ]
+    weights_lr = [
+        pd.Series(data[weightind]),
+        pd.Series(data[weightind + 2]),
+    ]
 
-    notnull = left.notnull() & right.notnull()
-    left = left[notnull]
-    right = right[notnull]
-    left_weight = left_weight[notnull]
-    right_weight = right_weight[notnull]
+    notnull = labels_lr[0].notnull() & labels_lr[1].notnull()
+    labels_lr[0] = labels_lr[0][notnull]
+    labels_lr[1] = labels_lr[1][notnull]
+    weights_lr[0] = weights_lr[0][notnull]
+    weights_lr[1] = weights_lr[1][notnull]
 
-    if any(left_weight.isnull()) | any(right_weight.isnull()):
+    if any(weights_lr[0].isnull()) | any(weights_lr[1].isnull()):
         raise NullsInFrameError
 
     # label order / sorting
@@ -289,15 +293,15 @@ def _sankey(
         left_labels = list(label_order[ii])
         right_labels = list(label_order[ii + 1])
     else:
-        left_labels = weighted_sort(left, left_weight, sorting)
-        right_labels = weighted_sort(right, right_weight, sorting)
+        left_labels = weighted_sort(labels_lr[0], weights_lr[0], sorting)
+        right_labels = weighted_sort(labels_lr[1], weights_lr[1], sorting)
 
     # check labels
-    check_data_matches_labels(left_labels, left, "left")
-    check_data_matches_labels(right_labels, right, "right")
+    check_data_matches_labels(left_labels, labels_lr[0], "left")
+    check_data_matches_labels(right_labels, labels_lr[1], "right")
 
     # check colours
-    all_labels = pd.Series([*left, *right]).unique()
+    all_labels = pd.Series([*labels_lr[0], *labels_lr[1]]).unique()
     missing = [label for label in all_labels if label not in color_dict]
     if missing:
         msg = "The color_dict parameter is missing " "values for the following labels: "
@@ -310,9 +314,9 @@ def _sankey(
         barsize[0][left_label] = {}
         barsize[1][left_label] = {}
         for right_label in right_labels:
-            ind = (left == left_label) & (right == right_label)
-            barsize[0][left_label][right_label] = left_weight[ind].sum()
-            barsize[1][left_label][right_label] = right_weight[ind].sum()
+            ind = (labels_lr[0] == left_label) & (labels_lr[1] == right_label)
+            barsize[0][left_label][right_label] = weights_lr[0][ind].sum()
+            barsize[1][left_label][right_label] = weights_lr[1][ind].sum()
 
     # Determine positions of left label patches and total widths
     y_bar_gap = bar_gap * plot_height
@@ -320,14 +324,14 @@ def _sankey(
     barpos = [{}, {}]
     for i, label in enumerate(left_labels):
         barpos[0][label] = {}
-        barpos[0][label]["total"] = left_weight[left == label].sum()
+        barpos[0][label]["total"] = weights_lr[0][labels_lr[0] == label].sum()
         barpos[0][label]["bottom"] = voffset[ii] if i == 0 else barpos[0][left_labels[i - 1]]["top"] + y_bar_gap
         barpos[0][label]["top"] = barpos[0][label]["bottom"] + barpos[0][label]["total"]
 
     # Determine positions of right label patches and total widths
     for i, label in enumerate(right_labels):
         barpos[1][label] = {}
-        barpos[1][label]["total"] = right_weight[right == label].sum()
+        barpos[1][label]["total"] = weights_lr[1][labels_lr[1] == label].sum()
         barpos[1][label]["bottom"] = voffset[ii + 1] if i == 0 else barpos[1][right_labels[i - 1]]["top"] + y_bar_gap
         barpos[1][label]["top"] = barpos[1][label]["bottom"] + barpos[1][label]["total"]
 
@@ -442,8 +446,8 @@ def _sankey(
     # Plot strips
     for left_label in left_labels:
         for right_label in right_labels:
-            lind = left == left_label
-            rind = right == right_label
+            lind = labels_lr[0] == left_label
+            rind = labels_lr[1] == right_label
 
             if not any(lind & rind):
                 continue
