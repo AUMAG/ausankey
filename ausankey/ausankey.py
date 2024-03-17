@@ -162,7 +162,9 @@ def sankey(
     # overall dimensions
     plot_height = max(col_hgt)
     sub_width = plot_height / aspect
-    plot_width = (num_side - 1) * sub_width + 2 * sub_width * (label_gap+label_width) + num_side * sub_width * bar_width
+    plot_width = (
+        (num_side - 1) * sub_width + 2 * sub_width * (label_gap + label_width) + num_side * sub_width * bar_width
+    )
 
     # offsets for alignment
     voffset = np.empty(num_side)
