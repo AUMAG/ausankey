@@ -183,9 +183,32 @@ def sankey(
     for i, label in enumerate(flatcat):
         color_dict_new[label] = color_dict.get(label, color_palette[i])
 
-    # draw each segment of the graph
+    # initialise plot
     ax = ax or plt.gca()
 
+    # frame on top/bottom edge
+    frame_top = frame_side in ("top", "both")
+    frame_bot = frame_side in ("bottom", "both")
+
+    frame_color = frame_color or [0, 0, 0, 1]
+
+    y_frame_gap = frame_gap * plot_height
+
+    col = frame_color if frame_top else [1, 1, 1, 0]
+    ax.plot(
+        [0, plot_width],
+        min(voffset) + (plot_height) + y_frame_gap + [0, 0],
+        color=col,
+    )
+
+    col = frame_color if frame_bot else [1, 1, 1, 0]
+    ax.plot(
+        [0, plot_width],
+        min(voffset) - y_frame_gap + [0, 0],
+        color=col,
+    )
+    
+    # draw each segment
     for ii in range(num_flow):
         _sankey(
             ii,
@@ -209,28 +232,6 @@ def sankey(
             sorting=sorting,
             ax=ax,
         )
-
-    frame_top = frame_side in ("top", "both")
-    frame_bot = frame_side in ("bottom", "both")
-
-    # frame on top/bottom edge
-    frame_color = frame_color or [0, 0, 0, 1]
-
-    y_frame_gap = (title_gap + frame_gap) * plot_height
-
-    col = frame_color if frame_top else [1, 1, 1, 0]
-    ax.plot(
-        [0, plot_width],
-        min(voffset) + (plot_height) + y_frame_gap + [0, 0],
-        color=col,
-    )
-
-    col = frame_color if frame_bot else [1, 1, 1, 0]
-    ax.plot(
-        [0, plot_width],
-        min(voffset) - y_frame_gap + [0, 0],
-        color=col,
-    )
 
     # complete plot
     ax.axis("off")
