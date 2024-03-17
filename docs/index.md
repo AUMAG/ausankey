@@ -192,5 +192,5 @@ sky.sankey( data,
             label_gap   = 0.02,
             title_gap   = 0.1 ,
           )
- ```
+```
 ![Image with options](fruits_spacing.png)
