@@ -152,9 +152,20 @@ def sankey(
     weight_sum = np.empty(num_side)
     num_uniq = np.empty(num_side)
     col_hgt = np.empty(num_side)
+    nodes_uniq = {}
     for ii in range(num_side):
-        weight_sum[ii] = data[2 * ii + 1].sum()
-        num_uniq[ii] = len(pd.Series(data[2 * ii]).unique())
+        nodes_uniq[ii] = pd.Series(data[2 * ii]).unique()
+        num_uniq[ii] = len(nodes_uniq[ii])
+
+    for ii in range(num_side):
+        if ii == 0:
+            weight_sum[ii] = data[2 * ii + 1].sum()
+        elif ii == num_side-1:
+            weight_sum[ii] = data[2 * ii + 1].sum()
+        else:
+            # this is an overestimate, should be trimmed of entries that terminate but overlap
+            weight_sum[ii] = data[2 * ii + 1].sum()
+            
 
     for ii in range(num_side):
         col_hgt[ii] = weight_sum[ii] + (num_uniq[ii] - 1) * bar_gap * max(weight_sum)
@@ -282,7 +293,10 @@ def _sankey(
     labelind = 2 * ii
     weightind = 2 * ii + 1
 
-    labels_lr = [pd.Series(data[labelind]), pd.Series(data[labelind + 2])]
+    labels_lr = [
+        pd.Series(data[labelind]),
+        pd.Series(data[labelind + 2]),
+    ]
     weights_lr = [
         pd.Series(data[weightind]),
         pd.Series(data[weightind + 2]),
@@ -352,9 +366,9 @@ def _sankey(
 
     # Draw bars and their labels
 
-    def draw_bar(x, y, dy, label):
+    def draw_bar(x, dx, y, dy, label):
         ax.fill_between(
-            [x, x + x_bar_width],
+            [x, x + dx],
             y,
             y + dy,
             color=color_dict[label],
@@ -363,12 +377,12 @@ def _sankey(
             snap=True,
         )
 
-    if ii == 0:  # first time
-        for label in bar_lr[0]:
-            lbot = barpos[0][label]["bot"]
-            lll = barpos[0][label]["tot"]
-            draw_bar(x_left - x_bar_width, lbot, lll, label)
+    for label in bar_lr[0]:
+        lbot = barpos[0][label]["bot"]
+        lll = barpos[0][label]["tot"]
 
+        if ii == 0:  # first label
+            wd = 2
             ax.text(
                 x_left - x_label_gap - x_bar_width,
                 lbot + lll / 2,
@@ -376,20 +390,33 @@ def _sankey(
                 {"ha": "right", "va": "center"},
                 fontsize=fontsize,
             )
+        elif ii > 0:  # inside labels
+            wd = 1
+            ax.text(
+                x_left + x_label_gap,
+                lbot + lll / 2,
+                label_dict.get(label, label),
+                {"ha": "left", "va": "center"},
+                fontsize=fontsize,
+            )
+
+        draw_bar(x_left - wd*x_bar_width/2, wd*x_bar_width/2, lbot, lll, label)
+
     for label in bar_lr[1]:
         rbot = barpos[1][label]["bot"]
         rrr = barpos[1][label]["tot"]
-        draw_bar(x_right, rbot, rrr, label)
 
         if ii < num_flow - 1:  # inside labels
+            wd = 1
             ax.text(
-                x_right + x_label_gap + x_bar_width,
+                x_right - x_label_gap,
                 rbot + rrr / 2,
                 label_dict.get(label, label),
-                {"ha": "left", "va": "center"},
+                {"ha": "right", "va": "center"},
                 fontsize=fontsize,
             )
         if ii == num_flow - 1:  # last time
+            wd = 2
             ax.text(
                 x_right + x_label_gap + x_bar_width,
                 rbot + rrr / 2,
@@ -397,6 +424,8 @@ def _sankey(
                 {"ha": "left", "va": "center"},
                 fontsize=fontsize,
             )
+    
+        draw_bar(x_right, wd*x_bar_width/2, rbot, rrr, label)
 
     # "titles"
     if titles is not None:
