@@ -47,7 +47,7 @@ def sankey(
     title_gap=0.05,
     title_side="top",  # "bottom", "both"
     title_loc="inner",  # "outer"
-    sort="bottom", # "top", "bottom", "none"
+    sort="bottom",  # "top", "bottom", "none"
     valign="bottom",  # "top","center"
 ):
     """Make Sankey Diagram with left-right flow
@@ -162,7 +162,7 @@ def sankey(
             ind_prev = data[2 * ii + 1].notnull()
             ind_this = data[2 * ii + 1].notnull()
             ind_next = data[2 * ii + 3].notnull()
-        elif ii == num_side-1:
+        elif ii == num_side - 1:
             ind_prev = data[2 * ii - 1].notnull()
             ind_this = data[2 * ii + 1].notnull()
             ind_next = data[2 * ii + 1].notnull()
@@ -175,7 +175,7 @@ def sankey(
         weight_only = data[2 * ii + 1][ind_this & ~ind_prev & ~ind_next].sum()
         weight_stop = data[2 * ii + 1][ind_this & ind_prev & ~ind_next].sum()
         weight_strt = data[2 * ii + 1][ind_this & ~ind_prev & ind_next].sum()
-        
+
         weight_sum[ii] = weight_cont + weight_only + max(weight_stop, weight_strt)
 
     for ii in range(num_side):
@@ -412,7 +412,7 @@ def _sankey(
                 fontsize=fontsize,
             )
 
-        draw_bar(x_left - wd*x_bar_width/2, wd*x_bar_width/2, lbot, lll, label)
+        draw_bar(x_left - wd * x_bar_width / 2, wd * x_bar_width / 2, lbot, lll, label)
 
     for label in bar_lr[1]:
         rbot = barpos[1][label]["bot"]
@@ -436,8 +436,8 @@ def _sankey(
                 {"ha": "left", "va": "center"},
                 fontsize=fontsize,
             )
-    
-        draw_bar(x_right, wd*x_bar_width/2, rbot, rrr, label)
+
+        draw_bar(x_right, wd * x_bar_width / 2, rbot, rrr, label)
 
     # "titles"
     if titles is not None:
@@ -546,12 +546,12 @@ def weighted_sort(lbl, wgt, sorting):
     )
 
     sorted_labels = list(dict(sort_arr))
-    
+
     if sorting == "center":
         # this kinda works but i dont think it's a good idea because you lose perception of relative sizes
         # probably has an off-by-one even/odd error
         sorted_labels = sorted_labels[1::2] + sorted_labels[-1::-2]
-    
+
     return sorted_labels
 
 
