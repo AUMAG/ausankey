@@ -533,7 +533,7 @@ def weighted_sort(lbl, wgt, sorting):
     elif sorting == "center":
         s = 1
     else:
-        s = o
+        s = 0
 
     arr = {}
     for uniq in lbl.unique():
