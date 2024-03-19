@@ -45,14 +45,19 @@ plt.show()
 plt.savefig("fruits_alpha.png")
 
 plt.figure()
-sky.sankey(data, sorting=1)
+sky.sankey(data, sort="top")
 plt.show()
-plt.savefig("fruits_sort_p1.png")
+plt.savefig("fruits_sort_top.png")
 
 plt.figure()
-sky.sankey(data, sorting=-1)
+sky.sankey(data, sort="bottom")
 plt.show()
-plt.savefig("fruits_sort_n1.png")
+plt.savefig("fruits_sort_bot.png")
+
+plt.figure()
+sky.sankey(data, sort="none")
+plt.show()
+plt.savefig("fruits_sort_none.png")
 
 plt.figure()
 sky.sankey(data, titles=["Summer", "Winter"])
@@ -101,7 +106,7 @@ sky.sankey(
     titles=["Summer", "Winter"],
     title_side="both",
     frame_side="both",
-    sorting=-1,
+    sort="top",
     valign="center",
     # spacing parameters:
     bar_gap=0.01,

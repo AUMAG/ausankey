@@ -92,16 +92,21 @@ The order of the entries is top to bottom corresponding to first to last in the 
 
 The entries can be sorted highest to lowest:
 ```
-sky.sankey(data,sorting=1)
+sky.sankey(data,sort=“top”)
 ```
-![Image with options](fruits_sort_p1.png)
+![Image with options](fruits_sort_top.png)
 
 Or lowest to highest:
 ```
-sky.sankey(data,sorting=-1)
+sky.sankey(data,sorting=“bottom”)
 ```
-![Image with options](fruits_sort_n1.png)
+![Image with options](fruits_sort_bot.png)
 
+Or left in the order listed in the data:
+```
+sky.sankey(data,sorting=“none”)
+```
+![Image with options](fruits_sort_none.png)
 
 ## Labels
 
@@ -182,7 +187,7 @@ sky.sankey( data,
             titles = [“Summer”,”Winter”],
             title_side  = “both”,
             frame_side  = “both”,
-            sorting     = -1,
+            sorting     = “top”,
             valign      = “center”,
             # spacing parameters:
             bar_gap     = 0.01 ,

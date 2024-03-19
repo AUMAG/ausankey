@@ -47,7 +47,7 @@ def sankey(
     title_gap=0.05,
     title_side="top",  # "bottom", "both"
     title_loc="inner",  # "outer"
-    sorting=0,
+    sort="bottom", # "top", "bottom", "none"
     valign="bottom",  # "top","center"
 ):
     """Make Sankey Diagram with left-right flow
@@ -110,7 +110,7 @@ def sankey(
         plot edges and the label
         (1.0 = 100% of plot width)
 
-    sorting : int
+    sort : int
         Parity bit for how to sort the display of the data.
         `0` is unsorted — display data in order it appears in the DataFrame.
         `1` and `-1` sort high to low or vice versa.
@@ -176,7 +176,6 @@ def sankey(
         weight_stop = data[2 * ii + 1][ind_this & ind_prev & ~ind_next].sum()
         weight_strt = data[2 * ii + 1][ind_this & ~ind_prev & ind_next].sum()
         
-        weight_next = data[2 * ii + 1][ind_next].sum()
         weight_sum[ii] = weight_cont + weight_only + max(weight_stop, weight_strt)
 
     for ii in range(num_side):
@@ -263,7 +262,7 @@ def sankey(
             plot_height=plot_height,
             alpha=alpha,
             voffset=voffset,
-            sorting=sorting,
+            sorting=sort,
             ax=ax,
         )
 
@@ -527,17 +526,33 @@ def _sankey(
 def weighted_sort(lbl, wgt, sorting):
     """creates a sorted list of labels by their summed weights"""
 
+    if sorting == "top":
+        s = 1
+    elif sorting == "bottom":
+        s = -1
+    elif sorting == "center":
+        s = 1
+    else:
+        s = o
+
     arr = {}
     for uniq in lbl.unique():
         arr[uniq] = wgt[lbl == uniq].sum()
 
     sort_arr = sorted(
         arr.items(),
-        key=lambda item: sorting * item[1],
+        key=lambda item: s * item[1],
         # sorting = 0,1,-1 affects this
     )
 
-    return list(dict(sort_arr))
+    sorted_labels = list(dict(sort_arr))
+    
+    if sorting == "center":
+        # this kinda works but i dont think it's a good idea because you lose perception of relative sizes
+        # probably has an off-by-one even/odd error
+        sorted_labels = sorted_labels[1::2] + sorted_labels[-1::-2]
+    
+    return sorted_labels
 
 
 ###########################################

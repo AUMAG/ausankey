@@ -12,10 +12,13 @@ class TestFruitDefault(TestFruit):
 
     def test_fruits_sorting(self):
         plt.figure(dpi=150)
-        sky.sankey(self.data, sorting=1)
+        sky.sankey(self.data, sort="bottom")
 
         plt.figure(dpi=150)
-        sky.sankey(self.data, sorting=-1)
+        sky.sankey(self.data, sort="top")
+
+        plt.figure(dpi=150)
+        sky.sankey(self.data, sort="none")
 
     def test_fruits_colormap(self):
         plt.figure(dpi=150)
