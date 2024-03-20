@@ -305,7 +305,7 @@ def _sankey(
     labelind = 2 * ii
     weightind = 2 * ii + 1
 
-    if ii < num_flow-1:
+    if ii < num_flow - 1:
         labels_lr = [
             pd.Series(data[labelind]),
             pd.Series(data[labelind + 2]),
