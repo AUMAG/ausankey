@@ -320,7 +320,7 @@ def _sankey(
     labelind = 2 * ii
     weightind = 2 * ii + 1
 
-    if ii < num_flow - 1:
+    if ii < num_flow-1:
         labels_lr = [
             pd.Series(data[labelind]),
             pd.Series(data[labelind + 2]),
@@ -512,57 +512,52 @@ def _sankey(
                 )
 
     # Plot flows
-    for lbl_l in bar_lr[0]:
-        for lbl_r in bar_lr[1]:
-            lind = labels_lr[0] == lbl_l
-            rind = labels_lr[1] == lbl_r
+    for i,lbl_l in enumerate(bar_lr[0]):
+        lbl_r = bar_lr[1][i]
 
-            if not any(lind & rind):
-                continue
+        lbot = barpos[0][lbl_l]["bot"]
+        rbot = barpos[1][lbl_r]["bot"]
+        lbar = barsize[0][lbl_l][lbl_r]
+        rbar = barsize[1][lbl_l][lbl_r]
 
-            lbot = barpos[0][lbl_l]["bot"]
-            rbot = barpos[1][lbl_r]["bot"]
-            lbar = barsize[0][lbl_l][lbl_r]
-            rbar = barsize[1][lbl_l][lbl_r]
+        ys_d = create_curve(lbot, rbot)
+        ys_u = create_curve(lbot + lbar, rbot + rbar)
 
-            ys_d = create_curve(lbot, rbot)
-            ys_u = create_curve(lbot + lbar, rbot + rbar)
+        # Update bottom edges at each label
+        # so next strip starts at the right place
+        barpos[0][lbl_l]["bot"] += lbar
+        barpos[1][lbl_r]["bot"] += rbar
 
-            # Update bottom edges at each label
-            # so next strip starts at the right place
-            barpos[0][lbl_l]["bot"] += lbar
-            barpos[1][lbl_r]["bot"] += rbar
+        xx = np.linspace(x_left, x_right, len(ys_d))
+        cc = combine_colours(color_dict[lbl_l], color_dict[lbl_r], len(ys_d))
 
-            xx = np.linspace(x_left, x_right, len(ys_d))
-            cc = combine_colours(color_dict[lbl_l], color_dict[lbl_r], len(ys_d))
-
-            for jj in range(len(ys_d) - 1):
-                ax.fill_between(
-                    xx[[jj, jj + 1]],
-                    ys_d[[jj, jj + 1]],
-                    ys_u[[jj, jj + 1]],
-                    color=cc[:, jj],
-                    alpha=alpha,
-                    lw=0,
-                    edgecolor="none",
-                    snap=True,
-                )
-                ax.plot(
-                    xx[[jj, jj + 1]],
-                    ys_d[[jj, jj + 1]],
-                    color=cc[:, jj],
-                    alpha=edge_alpha,
-                    lw=edge_lw,
-                    snap=True,
-                )
-                ax.plot(
-                    xx[[jj, jj + 1]],
-                    ys_u[[jj, jj + 1]],
-                    color=cc[:, jj],
-                    alpha=edge_alpha,
-                    lw=edge_lw,
-                    snap=True,
-                )
+        for jj in range(len(ys_d) - 1):
+            ax.fill_between(
+                xx[[jj, jj + 1]],
+                ys_d[[jj, jj + 1]],
+                ys_u[[jj, jj + 1]],
+                color=cc[:, jj],
+                alpha=alpha,
+                lw=0,
+                edgecolor="none",
+                snap=True,
+            )
+            ax.plot(
+                xx[[jj, jj + 1]],
+                ys_d[[jj, jj + 1]],
+                color=cc[:, jj],
+                alpha=edge_alpha,
+                lw=edge_lw,
+                snap=True,
+            )
+            ax.plot(
+                xx[[jj, jj + 1]],
+                ys_u[[jj, jj + 1]],
+                color=cc[:, jj],
+                alpha=edge_alpha,
+                lw=edge_lw,
+                snap=True,
+            )
 
 
 ###########################################
