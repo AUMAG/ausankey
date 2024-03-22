@@ -389,6 +389,10 @@ def _sankey(
             weighted_sort(labels_lr[0], weights_lr[0], sorting),
             weighted_sort(labels_lr[1], weights_lr[1], sorting),
         ]
+        nodes_lr = [
+            sort_nodes(labels_lr[0],node_sizes[ii]),
+            sort_nodes(labels_lr[1],node_sizes[ii+1]),
+        ]
 
     # check labels
     check_data_matches_labels(bar_lr[0], labels_lr[0], "left")
@@ -589,9 +593,55 @@ def _sankey(
                     snap=True,
                 )
 
-
 ###########################################
 
+def sort_nodes(lbl, node_sizes):
+    """creates a sorted list of labels by their summed weights"""
+
+    arr = {}
+    for uniq in lbl.unique():
+        arr[uniq] = True
+
+    sort_arr = sorted(
+        arr.items(),
+        key=lambda item: list(node_sizes).index(item[0]),
+        # sorting = 0,1,-1 affects this
+    )
+
+    return list(dict(sort_arr).keys())
+    
+###########################################
+
+def sort_dict(lbl, sorting):
+    """creates a sorted list of labels by their summed weights"""
+
+    if sorting == "top":
+        s = 1
+    elif sorting == "bottom":
+        s = -1
+    elif sorting == "center":
+        s = 1
+    else:
+        s = 0
+
+        
+    sort_arr = sorted(
+        list(lbl.items()),
+        key=lambda item: s * item[1],
+        # sorting = 0,1,-1 affects this
+    )
+
+    sorted_labels = list(dict(sort_arr))
+
+    if sorting == "center":
+        # this kinda works but i dont think it's a good idea because you lose perception of relative sizes
+        # probably has an off-by-one even/odd error
+        sorted_labels = sorted_labels[1::2] + sorted_labels[-1::-2]
+
+    return sorted_labels
+
+
+###########################################
 
 def weighted_sort(lbl, wgt, sorting):
     """creates a sorted list of labels by their summed weights"""
@@ -605,10 +655,12 @@ def weighted_sort(lbl, wgt, sorting):
     else:
         s = 0
 
+    arr = {}
     for uniq in lbl.unique():
         arr[uniq] = wgt[lbl == uniq].sum()
 
     sort_arr = sorted(
+        list(arr.items()),
         key=lambda item: s * item[1],
         # sorting = 0,1,-1 affects this
     )
