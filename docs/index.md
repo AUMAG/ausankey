@@ -123,7 +123,26 @@ sky.sankey(data,label_dict=label_dict)
 ```
 ![Image with options](fruits_labeldict.png)
 
-Note that the dictionary does not need to contain an entry for each label. 
+Note that the dictionary does not need to contain an entry for each label.
+
+The locations of the labels can be specified according to whether they correspond to the nodes in the first, middle, or right of the diagram:
+
+    label_loc = [ <loc_l> , <loc_m>, <loc_r> ]
+
+The default settings are:
+
+    label_loc = [ “left”, “none”, “right” ]
+
+Allowable values for `<loc_l>` and `<loc_r>` are `”left”`, `”right”`, or `”none”`.
+`<loc_m>` also allows `”both”`.
+
+```
+sky.sankey(
+    data,
+    labels_loc=[“right”,”right”,”left”],
+)
+```
+![Image with options](frame3_labels.png)
 
 
 ## Titles

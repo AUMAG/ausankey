@@ -168,6 +168,16 @@ sky.sankey(
 )
 plt.savefig("frame3_pretty.png")
 
+
+plt.figure(dpi=600)
+sky.sankey(
+    data,
+    labels_loc=["right","right","left"],
+)
+plt.savefig("frame3_labels.png")
+
+
+
 plt.figure(dpi=600)
 
 sky.sankey(
