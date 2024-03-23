@@ -18,7 +18,7 @@ data = pd.DataFrame(
 plt.figure()
 sky.sankey(
     data,
-    sorting=-1,
+    sort="top",
     titles=["Stage 1", "Stage 2", "Stage 3"],
     valign="center",
 )

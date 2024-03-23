@@ -132,7 +132,7 @@ data = pd.DataFrame(
 )
 
 plt.figure()
-sky.sankey(data, sorting=-1, colormap="jet", aspect=0.5)
+sky.sankey(data, sort="top", colormap="jet", aspect=0.5)
 plt.savefig("frame2_sort_n1.png")
 
 
@@ -162,7 +162,7 @@ data = pd.DataFrame(
 plt.figure(dpi=600)
 sky.sankey(
     data,
-    sorting=-1,
+    sort="bottom",
     titles=["Stage 1", "Stage 2", "Stage 3"],
     valign="center",
 )
@@ -182,7 +182,7 @@ plt.figure(dpi=600)
 
 sky.sankey(
     data,
-    sorting=-1,
+    sort="top",
     color_dict=color_dict,
     label_width=0.1,
     label_gap=0.02,

@@ -98,13 +98,13 @@ sky.sankey(data,sort=“top”)
 
 Or lowest to highest:
 ```
-sky.sankey(data,sorting=“bottom”)
+sky.sankey(data,sort=“bottom”)
 ```
 ![Image with options](fruits_sort_bot.png)
 
 Or left in the order listed in the data:
 ```
-sky.sankey(data,sorting=“none”)
+sky.sankey(data,sort=“none”)
 ```
 ![Image with options](fruits_sort_none.png)
 
@@ -205,7 +205,7 @@ sky.sankey( data,
             titles = [“Summer”,”Winter”],
             title_side  = “both”,
             frame_side  = “both”,
-            sorting     = “top”,
+            sort        = “top”,
             valign      = “center”,
             # spacing parameters:
             bar_gap     = 0.01 ,
