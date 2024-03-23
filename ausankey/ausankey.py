@@ -559,7 +559,6 @@ def _sankey(
 
     # Place "titles"
     if titles is not None:
-
         last_label = [lbl_l, lbl_r]
 
         y_title_gap = title_gap * plot_height
