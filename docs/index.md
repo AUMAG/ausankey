@@ -151,7 +151,7 @@ Allowable values for `<loc_l>` and `<loc_r>` are `"left"`, `"right"`, or `"none"
 
 ```
 sky.sankey(
-    data,
+    data3,
     label_loc=["right","right","left"],
 )
 ```
