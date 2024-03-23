@@ -293,6 +293,7 @@ def sankey(
             alpha=alpha,
             voffset=voffset,
             sorting=sort,
+            valign=valign,
             ax=ax,
         )
 
@@ -326,6 +327,7 @@ def _sankey(
     bar_gap=None,
     alpha=None,
     voffset=None,
+    valign=None,
     sorting=None,
     ax=None,
 ):
@@ -415,12 +417,26 @@ def _sankey(
     # Determine vertical positions of nodes
     y_bar_gap = bar_gap * plot_height
 
+    if valign == "top":
+        vscale = 1
+    elif valign == "center":
+        vscale = 0.5
+    else:  # bottom, or undefined
+        vscale = 0
+
     barpos = [{}, {}]
+    node_voffset = [{},{}]
     for lr in [0, 1]:
         for i, label in enumerate(bar_lr[lr]):
             barpos[lr][label] = {}
-            barpos[lr][label]["bot"] = voffset[ii + lr] if i == 0 else barpos[lr][bar_lr[lr][i - 1]]["top"] + y_bar_gap
-            barpos[lr][label]["top"] = barpos[lr][label]["bot"] + node_sizes[ii + lr][label]
+            node_height = node_sizes[ii + lr][label]
+            this_side_height = weights_lr[lr][labels_lr[lr] == label].sum()
+            node_voffset[lr][label] = vscale * (node_height - this_side_height)
+            if i > 0:
+                next_bot = barpos[lr][bar_lr[lr][i - 1]]["top"] + y_bar_gap
+
+            barpos[lr][label]["bot"] = voffset[ii + lr] if i == 0 else next_bot
+            barpos[lr][label]["top"] = barpos[lr][label]["bot"] + node_height
 
     # horizontal positions of nodes
     x_bar_width = bar_width * sub_width
@@ -544,14 +560,14 @@ def _sankey(
             if not any(lind & rind):
                 continue
 
-            lbot = barpos[0][lbl_l]["bot"]
-            rbot = barpos[1][lbl_r]["bot"]
+            lbot = node_voffset[0][lbl_l] + barpos[0][lbl_l]["bot"]
+            rbot = node_voffset[1][lbl_r] + barpos[1][lbl_r]["bot"]
             lbar = barsize[0][lbl_l][lbl_r]
             rbar = barsize[1][lbl_l][lbl_r]
-    
+
             ys_d = create_curve(lbot, rbot)
             ys_u = create_curve(lbot + lbar, rbot + rbar)
-    
+
             # Update bottom edges at each label
             # so next strip starts at the right place
             barpos[0][lbl_l]["bot"] += lbar
