@@ -18,9 +18,13 @@
 
 ::: ausankey.combine_colours
 
-### weighted_sort
+### sort_dict
 
-::: ausankey.weighted_sort
+::: ausankey.sort_dict
+
+### sort_nodes
+
+::: ausankey.sort_nodes
 
 ### check_data_matches_labels
 
