@@ -394,8 +394,8 @@ def _sankey(
     check_data_matches_labels(bar_lr[0], labels_lr[0], "left")
     check_data_matches_labels(bar_lr[1], labels_lr[1], "right")
 
-    # check colours 
-    check_colors_match_labels(labels_lr, color_dict)                                    
+    # check colours
+    check_colors_match_labels(labels_lr, color_dict)
 
     # Determine sizes of individual subflows
     barsize = [{}, {}]
@@ -682,20 +682,22 @@ def check_data_matches_labels(labels, data, side):
 
 ###########################################
 
+
 def check_colors_match_labels(labels_lr, color_dict):
-    """Check that all labels in labels_lr are in color_dict
-    """
-    
+    """Check that all labels in labels_lr are in color_dict"""
+
     all_labels = pd.Series([*labels_lr[0], *labels_lr[1]]).unique()
-    
+
     missing = [label for label in all_labels if label not in color_dict]
-    
+
     if missing:
         msg = "The color_dict parameter is missing " "values for the following labels: "
         msg += "{}".format(", ".join(missing))
         raise ValueError(msg)
 
+
 ###########################################
+
 
 def create_curve(lpoint, rpoint):
     """Create array of y values for each strip"""
