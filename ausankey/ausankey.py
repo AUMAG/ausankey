@@ -40,7 +40,6 @@ def sankey(
     frame_side="none",
     frame_gap=0.1,
     frame_color=None,
-    label_order=None,
     label_dict=None,
     label_width=0,
     label_gap=0.01,
@@ -285,7 +284,6 @@ def sankey(
             title_gap=title_gap,
             title_side=title_side,
             title_loc=title_loc,
-            label_order=label_order,
             color_dict=color_dict_new,
             fontsize=fontsize,
             flow_edge=flow_edge or False,
@@ -316,7 +314,6 @@ def _sankey(
     num_flow,
     data,
     color_dict=None,
-    label_order=None,
     flow_edge=None,
     fontsize=None,
     frame_gap=None,
@@ -355,49 +352,43 @@ def _sankey(
     weightind = 2 * ii + 1
 
     if ii < num_flow - 1:
-        labels_lr = [
+        labels_all_lr = [
             pd.Series(data[labelind]),
             pd.Series(data[labelind + 2]),
             pd.Series(data[labelind + 4]),
         ]
-        weights_lr = [
+        weights_all_lr = [
             pd.Series(data[weightind]),
             pd.Series(data[weightind + 2]),
             pd.Series(data[weightind + 4]),
         ]
     else:
-        labels_lr = [
+        labels_all_lr = [
             pd.Series(data[labelind]),
             pd.Series(data[labelind + 2]),
             pd.Series(data[labelind + 2]),
         ]
-        weights_lr = [
+        weights_all_lr = [
             pd.Series(data[weightind]),
             pd.Series(data[weightind + 2]),
             pd.Series(data[weightind + 2]),
         ]
 
-    notnull = labels_lr[0].notnull() & labels_lr[1].notnull() & labels_lr[2].notnull()
-    labels_lr[0] = labels_lr[0][notnull]
-    labels_lr[1] = labels_lr[1][notnull]
-    weights_lr[0] = weights_lr[0][notnull]
-    weights_lr[1] = weights_lr[1][notnull]
+    notnull = labels_all_lr[0].notnull() & labels_all_lr[1].notnull() & labels_all_lr[2].notnull()
+    labels_lr = [{}, {}]
+    weights_lr = [{}, {}]
+    labels_lr[0] = labels_all_lr[0][notnull]
+    labels_lr[1] = labels_all_lr[1][notnull]
+    weights_lr[0] = weights_all_lr[0][notnull]
+    weights_lr[1] = weights_all_lr[1][notnull]
 
     if any(weights_lr[0].isnull()) | any(weights_lr[1].isnull()):
         raise NullsInFrameError
 
-    # label order / sorting
-
-    if label_order is not None:
-        bar_lr = [
-            list(label_order[ii]),
-            list(label_order[ii + 1]),
-        ]
-    else:
-        bar_lr = [
-            sort_nodes(labels_lr[0], node_sizes[ii]),
-            sort_nodes(labels_lr[1], node_sizes[ii + 1]),
-        ]
+    bar_lr = [
+        sort_nodes(labels_lr[0], node_sizes[ii]),
+        sort_nodes(labels_lr[1], node_sizes[ii + 1]),
+    ]
 
     # check labels
     check_data_matches_labels(bar_lr[0], labels_lr[0], "left")
