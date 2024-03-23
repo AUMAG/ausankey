@@ -36,7 +36,8 @@ def sankey(
     color_dict=None,
     colormap="viridis",
     flow_edge=None,
-    fontsize=14,
+    fontsize=12,
+    fontfamily="sans-serif",
     frame_side="none",
     frame_gap=0.1,
     frame_color=None,
@@ -48,6 +49,11 @@ def sankey(
     title_gap=0.05,
     title_side="top",  # "bottom", "both"
     title_loc="inner",  # "outer"
+    title_fontsize=None,
+    title_fontweight=None,
+    title_fontcolor=None,
+    title_fontfamily=None,
+    title_fontstyle=None, 
     sort="bottom",  # "top", "bottom", "none"
     valign="bottom",  # "top","center"
 ):
@@ -284,8 +290,13 @@ def sankey(
             title_gap=title_gap,
             title_side=title_side,
             title_loc=title_loc,
-            color_dict=color_dict_new,
+            title_fontweight=title_fontweight or "bold",
+            title_fontsize=title_fontsize or fontsize or 14,
+            title_fontcolor=title_fontcolor or "black",
+            title_fontfamily=title_fontfamily or fontfamily or "sans-serif",
+            title_fontstyle=title_fontstyle or "normal",
             fontsize=fontsize,
+            color_dict=color_dict_new,
             flow_edge=flow_edge or False,
             frame_gap=frame_gap,
             label_dict=label_dict or {},
@@ -322,6 +333,11 @@ def _sankey(
     title_gap=None,
     title_side=None,
     title_loc=None,
+    title_fontweight=None,
+    title_fontsize=None,
+    title_fontcolor=None,
+    title_fontfamily=None,
+    title_fontstyle=None,
     plot_height=None,
     sub_width=None,
     label_dict=None,
@@ -587,7 +603,11 @@ def _sankey(
                     yt,
                     titles[ii + lr],
                     {"ha": "center", "va": "bottom"},
-                    fontsize=fontsize,
+                    fontweight=title_fontweight,
+                    fontstyle=title_fontstyle,
+                    fontfamily=title_fontfamily,
+                    fontsize=title_fontsize,
+                    color=title_fontcolor,
                 )
 
             if title_side in ("bottom", "both"):
@@ -600,7 +620,11 @@ def _sankey(
                     yt,
                     titles[ii + lr],
                     {"ha": "center", "va": "top"},
-                    fontsize=fontsize,
+                    fontweight=title_fontweight,
+                    fontstyle=title_fontstyle,
+                    fontfamily=title_fontfamily,
+                    fontsize=title_fontsize,
+                    color=title_fontcolor,
                 )
 
 
