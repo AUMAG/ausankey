@@ -423,8 +423,8 @@ def _sankey(
         vscale = 0
 
     node_voffset = [{}, {}]
-    node_pos_bot = [{},{}]
-    node_pos_top = [{},{}]
+    node_pos_bot = [{}, {}]
+    node_pos_top = [{}, {}]
 
     for lr in [0, 1]:
         for i, label in enumerate(bar_lr[lr]):
