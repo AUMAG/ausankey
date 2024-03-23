@@ -42,6 +42,20 @@ data = pd.DataFrame([
 ```
 Note that there can be as many columns as you like and they are always presented in pairs of “label” then “weight”. (Unweighted diagrams – currently – would require you to simple put a weight of 1.0 for each label.)
 
+A three column dataset might look like:
+```
+data3 = pd.DataFrame(
+    [
+        (“a”, 1.0, “ab”, 2.0, “a” , 1.0),
+        (“a”, 1.0, “ba”, 0.8, “ba”, 0.4),
+        (“c”, 1.5, “cd”, 0.5, “d” , 2.0),
+        (“b”, 0.5, “ba”, 0.8, “ba”, 0.4),
+        (“b”, 0.5, “ab”, 0.8, “a” , 1.0),
+        (“d”, 2.0, “cd”, 0.4, “d” , 1.0),
+        (“e”, 1.0, “e” , 1.0, “e” , 3.0),
+    ]
+)
+```
 Rather than manually typing out the dataFrame, you can also import it from a CSV file or similar:
 ```
 import pandas as pd
@@ -127,18 +141,18 @@ Note that the dictionary does not need to contain an entry for each label.
 
 The locations of the labels can be specified according to whether they correspond to the nodes in the first, middle, or right of the diagram:
 
-    labels_loc = [ <loc_l> , <loc_m>, <loc_r> ]
+    label_loc = [ <loc_l> , <loc_m>, <loc_r> ]
 
 Allowable values for `<loc_l>` and `<loc_r>` are `"left"`, `"right"`, or `"none"`.
 `<loc_m>` also allows `"both"`. The default settings are:
 
-    labels_loc = [ "left", "none", "right" ]
+    label_loc = [ "left", "none", "right" ]
 
 
 ```
 sky.sankey(
     data,
-    labels_loc=["right","right","left"],
+    label_loc=["right","right","left"],
 )
 ```
 ![Image with options](frame3_labels.png)

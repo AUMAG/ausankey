@@ -115,6 +115,12 @@ def sankey(
         Normalised horizontal gap between the left/right of the
         plot edges and the label
         (1.0 = 100% of plot width)
+        
+    label_loc : [str1, str2, str3]
+        Position to place labels next to the nodes.
+        * `str1`: position of first labels (`"left"`, `"right"`, or `"none"`)
+        * `str2`: position of middle labels (`"left"`, `"right"`, `"both"`, or `"none"`)
+        * `str3`: position of last labels (`"left"`, `"right"`, or `"none"`)
 
     sort : int
         Parity bit for how to sort the display of the data.

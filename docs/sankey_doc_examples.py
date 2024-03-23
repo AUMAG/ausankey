@@ -147,21 +147,21 @@ color_dict = {
     "e": "#f78c1b",
 }
 
-data = pd.DataFrame(
+data3 = pd.DataFrame(
     [
-        ("a", 1.0, "ab", 2.0, "a", 1.0),
+        ("a", 1.0, "ab", 2.0, "a" , 1.0),
         ("a", 1.0, "ba", 0.8, "ba", 0.4),
-        ("c", 1.5, "cd", 0.5, "d", 2.0),
+        ("c", 1.5, "cd", 0.5, "d" , 2.0),
         ("b", 0.5, "ba", 0.8, "ba", 0.4),
-        ("b", 0.5, "ab", 0.8, "a", 1.0),
-        ("d", 2.0, "cd", 0.4, "d", 1.0),
-        ("e", 1.0, "e", 1.0, "e", 3.0),
+        ("b", 0.5, "ab", 0.8, "a" , 1.0),
+        ("d", 2.0, "cd", 0.4, "d" , 1.0),
+        ("e", 1.0, "e" , 1.0, "e" , 3.0),
     ]
 )
 
 plt.figure(dpi=600)
 sky.sankey(
-    data,
+    data3,
     sort="bottom",
     titles=["Stage 1", "Stage 2", "Stage 3"],
     valign="center",
@@ -171,8 +171,8 @@ plt.savefig("frame3_pretty.png")
 
 plt.figure(dpi=600)
 sky.sankey(
-    data,
-    labels_loc=["right","right","left"],
+    data3,
+    label_loc=["right","right","left"],
 )
 plt.savefig("frame3_labels.png")
 
@@ -181,7 +181,7 @@ plt.savefig("frame3_labels.png")
 plt.figure(dpi=600)
 
 sky.sankey(
-    data,
+    data3,
     sort="top",
     color_dict=color_dict,
     label_width=0.1,
