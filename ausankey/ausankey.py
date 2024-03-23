@@ -419,9 +419,8 @@ def _sankey(
     for lr in [0, 1]:
         for i, label in enumerate(bar_lr[lr]):
             barpos[lr][label] = {}
-            barpos[lr][label]["tot"] = weights_lr[lr][labels_lr[lr] == label].sum()
             barpos[lr][label]["bot"] = voffset[ii + lr] if i == 0 else barpos[lr][bar_lr[lr][i - 1]]["top"] + y_bar_gap
-            barpos[lr][label]["top"] = barpos[lr][label]["bot"] + barpos[lr][label]["tot"]
+            barpos[lr][label]["top"] = barpos[lr][label]["bot"] + node_sizes[ii + lr][label]
 
     # horizontal positions of nodes
     x_bar_width = bar_width * sub_width
@@ -445,7 +444,7 @@ def _sankey(
 
     for label in bar_lr[0]:
         lbot = barpos[0][label]["bot"]
-        lll = barpos[0][label]["tot"]
+        lll = node_sizes[ii][label]
 
         if ii == 0:  # first label
             wd = 2
@@ -470,7 +469,7 @@ def _sankey(
 
     for label in bar_lr[1]:
         rbot = barpos[1][label]["bot"]
-        rrr = barpos[1][label]["tot"]
+        rrr = node_sizes[ii + 1][label]
 
         if ii < num_flow - 1:  # inside labels
             wd = 1
@@ -537,8 +536,8 @@ def _sankey(
                 )
 
     # Plot flows
-    for i,lbl_l in enumerate(bar_lr[0]):
-        for j,lbl_r in enumerate(bar_lr[1]):
+    for lbl_l in bar_lr[0]:
+        for lbl_r in bar_lr[1]:
             
             lind = labels_lr[0] == lbl_l
             rind = labels_lr[1] == lbl_r
@@ -627,7 +626,7 @@ def sort_dict(lbl, sorting):
         # sorting = 0,1,-1 affects this
     )
 
-    sorted_labels = list(dict(sort_arr))
+    sorted_labels = dict(sort_arr)
 
     if sorting == "center":
         # this kinda works but i dont think it's a good idea because you lose perception of relative sizes
