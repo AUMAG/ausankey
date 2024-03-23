@@ -422,19 +422,22 @@ def _sankey(
     else:  # bottom, or undefined
         vscale = 0
 
-    barpos = [{}, {}]
+<<    barpos = [{}, {}]
     node_voffset = [{}, {}]
-    for lr in [0, 1]:
+>>>>>>>-main
+=====
+      node_voffset = [{},{}]
+    node_pos_bot = [{},{}]
+    node_pos_top = [{},{}]
+>>>>>>>+5ce63aa
+  for lr in [0, 1]:
         for i, label in enumerate(bar_lr[lr]):
-            barpos[lr][label] = {}
             node_height = node_sizes[ii + lr][label]
             this_side_height = weights_lr[lr][labels_lr[lr] == label].sum()
             node_voffset[lr][label] = vscale * (node_height - this_side_height)
-            if i > 0:
-                next_bot = barpos[lr][bar_lr[lr][i - 1]]["top"] + y_bar_gap
-
-            barpos[lr][label]["bot"] = voffset[ii + lr] if i == 0 else next_bot
-            barpos[lr][label]["top"] = barpos[lr][label]["bot"] + node_height
+            next_bot = node_pos_top[lr][bar_lr[lr][i - 1]] + y_bar_gap if i > 0 else 0
+            node_pos_bot[lr][label] = voffset[ii + lr] if i == 0 else next_bot
+            node_pos_top[lr][label] = node_pos_bot[lr][label] + node_height
 
     # horizontal positions of nodes
     x_bar_width = bar_width * sub_width
@@ -457,7 +460,7 @@ def _sankey(
         )
 
     for label in bar_lr[0]:
-        lbot = barpos[0][label]["bot"]
+        lbot = node_pos_bot[0][label]
         lll = node_sizes[ii][label]
 
         if ii == 0:  # first label
@@ -482,7 +485,7 @@ def _sankey(
         draw_bar(x_left - wd * x_bar_width / 2, wd * x_bar_width / 2, lbot, lll, label)
 
     for label in bar_lr[1]:
-        rbot = barpos[1][label]["bot"]
+        rbot = node_pos_bot[1][label]
         rrr = node_sizes[ii + 1][label]
 
         if ii < num_flow - 1:  # inside labels
@@ -514,8 +517,8 @@ def _sankey(
             if not any(lind & rind):
                 continue
 
-            lbot = node_voffset[0][lbl_l] + barpos[0][lbl_l]["bot"]
-            rbot = node_voffset[1][lbl_r] + barpos[1][lbl_r]["bot"]
+            lbot = node_voffset[0][lbl_l] + node_pos_bot[0][lbl_l]
+            rbot = node_voffset[1][lbl_r] + node_pos_bot[1][lbl_r]
             lbar = barsize[0][lbl_l][lbl_r]
             rbar = barsize[1][lbl_l][lbl_r]
 
@@ -524,10 +527,16 @@ def _sankey(
 
             # Update bottom edges at each label
             # so next strip starts at the right place
-            barpos[0][lbl_l]["bot"] += lbar
+<<            barpos[0][lbl_l]["bot"] += lbar
             barpos[1][lbl_r]["bot"] += rbar
 
-            xx = np.linspace(x_left, x_right, len(ys_d))
+>>>>>>>-main
+=====
+              node_pos_bot[0][lbl_l] += lbar
+            node_pos_bot[1][lbl_r] += rbar
+    
+>>>>>>>+5ce63aa
+          xx = np.linspace(x_left, x_right, len(ys_d))
             cc = combine_colours(color_dict[lbl_l], color_dict[lbl_r], len(ys_d))
 
             for jj in range(len(ys_d) - 1):
@@ -568,8 +577,8 @@ def _sankey(
             x_right + x_bar_width / 2,
         ]
         top_y = [
-            barpos[0][lbl_l]["top"],
-            barpos[1][lbl_r]["top"],
+            node_pos_top[0][lbl_l],
+            node_pos_top[1][lbl_r],
         ]
         # leftmost title
         title_lr = [0, 1] if ii == 0 else [1]
