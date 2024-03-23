@@ -53,7 +53,7 @@ def sankey(
     title_fontweight=None,
     title_fontcolor=None,
     title_fontfamily=None,
-    title_fontstyle=None, 
+    title_fontstyle=None,
     sort="bottom",  # "top", "bottom", "none"
     valign="bottom",  # "top","center"
 ):
