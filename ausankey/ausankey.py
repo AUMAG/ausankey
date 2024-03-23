@@ -35,7 +35,7 @@ def sankey(
     bar_gap=0.05,
     color_dict=None,
     colormap="viridis",
-    flow_edge=True,
+    flow_edge=None,
     fontsize=14,
     frame_side="none",
     frame_gap=0.1,
@@ -281,7 +281,7 @@ def sankey(
             label_order=label_order,
             color_dict=color_dict_new,
             fontsize=fontsize,
-            flow_edge=flow_edge,
+            flow_edge=flow_edge or False,
             frame_gap=frame_gap,
             label_dict=label_dict or {},
             label_width=label_width,
@@ -292,7 +292,6 @@ def sankey(
             plot_height=plot_height,
             alpha=alpha,
             voffset=voffset,
-            sorting=sort,
             valign=valign,
             ax=ax,
         )
@@ -328,7 +327,6 @@ def _sankey(
     alpha=None,
     voffset=None,
     valign=None,
-    sorting=None,
     ax=None,
 ):
     """Subroutine for plotting horizontal sections of the Sankey plot
@@ -508,49 +506,6 @@ def _sankey(
 
         draw_bar(x_right, wd * x_bar_width / 2, rbot, rrr, label)
 
-    # "titles"
-    if titles is not None:
-        y_title_gap = title_gap * plot_height
-        y_frame_gap = frame_gap * plot_height
-
-        title_x = [
-            x_left - x_bar_width / 2,
-            x_right + x_bar_width / 2,
-        ]
-        top_y = [
-            barpos[0][lbl_l]["top"],
-            barpos[1][lbl_r]["top"],
-        ]
-        # leftmost title
-        title_lr = [0, 1] if ii == 0 else [1]
-
-        for lr in title_lr:
-            if title_side in ("top", "both"):
-                if title_loc == "outer":
-                    yt = min(voffset) + y_title_gap + y_frame_gap + plot_height
-                elif title_loc == "inner":
-                    yt = y_title_gap + top_y[lr]
-                ax.text(
-                    title_x[lr],
-                    yt,
-                    titles[ii + lr],
-                    {"ha": "center", "va": "bottom"},
-                    fontsize=fontsize,
-                )
-
-            if title_side in ("bottom", "both"):
-                if title_loc == "outer":
-                    yt = min(voffset) - y_title_gap - y_frame_gap
-                elif title_loc == "inner":
-                    yt = voffset[ii + lr] - y_title_gap
-                ax.text(
-                    title_x[lr],
-                    yt,
-                    titles[ii + lr],
-                    {"ha": "center", "va": "top"},
-                    fontsize=fontsize,
-                )
-
     # Plot flows
     for lbl_l in bar_lr[0]:
         for lbl_r in bar_lr[1]:
@@ -604,6 +559,49 @@ def _sankey(
                     snap=True,
                 )
 
+    # Place "titles"
+    if titles is not None:
+        y_title_gap = title_gap * plot_height
+        y_frame_gap = frame_gap * plot_height
+
+        title_x = [
+            x_left - x_bar_width / 2,
+            x_right + x_bar_width / 2,
+        ]
+        top_y = [
+            barpos[0][lbl_l]["top"],
+            barpos[1][lbl_r]["top"],
+        ]
+        # leftmost title
+        title_lr = [0, 1] if ii == 0 else [1]
+
+        for lr in title_lr:
+            if title_side in ("top", "both"):
+                if title_loc == "outer":
+                    yt = min(voffset) + y_title_gap + y_frame_gap + plot_height
+                elif title_loc == "inner":
+                    yt = y_title_gap + top_y[lr]
+                ax.text(
+                    title_x[lr],
+                    yt,
+                    titles[ii + lr],
+                    {"ha": "center", "va": "bottom"},
+                    fontsize=fontsize,
+                )
+
+            if title_side in ("bottom", "both"):
+                if title_loc == "outer":
+                    yt = min(voffset) - y_title_gap - y_frame_gap
+                elif title_loc == "inner":
+                    yt = voffset[ii + lr] - y_title_gap
+                ax.text(
+                    title_x[lr],
+                    yt,
+                    titles[ii + lr],
+                    {"ha": "center", "va": "top"},
+                    fontsize=fontsize,
+                )
+
 ###########################################
 
 def sort_nodes(lbl, node_sizes):
@@ -637,7 +635,7 @@ def sort_dict(lbl, sorting):
 
         
     sort_arr = sorted(
-        list(lbl.items()),
+        lbl.items(),
         key=lambda item: s * item[1],
         # sorting = 0,1,-1 affects this
     )
