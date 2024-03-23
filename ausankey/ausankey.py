@@ -287,7 +287,7 @@ def sankey(
             label_dict=label_dict or {},
             label_width=label_width,
             label_gap=label_gap,
-            label_loc=label_loc or ["left","none","right"],
+            label_loc=label_loc or ["left", "none", "right"],
             bar_width=bar_width,
             bar_gap=bar_gap,
             sub_width=sub_width,
@@ -462,7 +462,7 @@ def _sankey(
         lbot = node_pos_bot[0][label]
         lll = node_sizes[ii][label]
 
-        if ii == 0 and not(label_loc[0]=="none"):  # first label
+        if ii == 0 and label_loc[0] != "none":  # first label
             if label_loc[0] in ("left"):
                 xx = x_left - x_label_gap - x_bar_width
                 ha = "right"
@@ -499,7 +499,7 @@ def _sankey(
                 {"ha": "right", "va": "center"},
                 fontsize=fontsize,
             )
-        if ii == num_flow - 1 and not(label_loc[2]=="none"):  # last time
+        if ii == num_flow - 1 and label_loc[2] != "none":  # last time
             if label_loc[2] in ("left"):
                 xx = x_right - x_label_gap
                 ha = "right"
@@ -514,7 +514,7 @@ def _sankey(
                 fontsize=fontsize,
             )
 
-        wd = 2 if ii == num_flow-1 else 1
+        wd = 2 if ii == num_flow - 1 else 1
         draw_bar(x_right, wd * x_bar_width / 2, rbot, rrr, label)
 
     # Plot flows
