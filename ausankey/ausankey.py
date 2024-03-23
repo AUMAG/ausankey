@@ -44,6 +44,7 @@ def sankey(
     label_dict=None,
     label_width=0,
     label_gap=0.01,
+    label_loc=None,
     titles=None,
     title_gap=0.05,
     title_side="top",  # "bottom", "both"
@@ -286,6 +287,7 @@ def sankey(
             label_dict=label_dict or {},
             label_width=label_width,
             label_gap=label_gap,
+            label_loc=label_loc or ["left","none","right"],
             bar_width=bar_width,
             bar_gap=bar_gap,
             sub_width=sub_width,
@@ -322,6 +324,7 @@ def _sankey(
     label_dict=None,
     label_width=None,
     label_gap=None,
+    label_loc=None,
     bar_width=None,
     bar_gap=None,
     alpha=None,
@@ -459,17 +462,21 @@ def _sankey(
         lbot = node_pos_bot[0][label]
         lll = node_sizes[ii][label]
 
-        if ii == 0:  # first label
-            wd = 2
+        if ii == 0 and not(label_loc[0]=="none"):  # first label
+            if label_loc[0] in ("left"):
+                xx = x_left - x_label_gap - x_bar_width
+                ha = "right"
+            elif label_loc[0] in ("right"):
+                xx = x_left + x_label_gap
+                ha = "left"
             ax.text(
-                x_left - x_label_gap - x_bar_width,
+                xx,
                 lbot + lll / 2,
                 label_dict.get(label, label),
-                {"ha": "right", "va": "center"},
+                {"ha": ha, "va": "center"},
                 fontsize=fontsize,
             )
-        elif ii > 0:  # inside labels
-            wd = 1
+        elif ii > 0 and label_loc[1] in ("left", "both"):  # inside labels
             ax.text(
                 x_left + x_label_gap,
                 lbot + lll / 2,
@@ -477,15 +484,14 @@ def _sankey(
                 {"ha": "left", "va": "center"},
                 fontsize=fontsize,
             )
-
+        wd = 2 if ii == 0 else 1
         draw_bar(x_left - wd * x_bar_width / 2, wd * x_bar_width / 2, lbot, lll, label)
 
     for label in bar_lr[1]:
         rbot = node_pos_bot[1][label]
         rrr = node_sizes[ii + 1][label]
 
-        if ii < num_flow - 1:  # inside labels
-            wd = 1
+        if ii < num_flow - 1 and label_loc[1] in ("right", "both"):  # inside labels
             ax.text(
                 x_right - x_label_gap,
                 rbot + rrr / 2,
@@ -493,16 +499,22 @@ def _sankey(
                 {"ha": "right", "va": "center"},
                 fontsize=fontsize,
             )
-        if ii == num_flow - 1:  # last time
-            wd = 2
+        if ii == num_flow - 1 and not(label_loc[2]=="none"):  # last time
+            if label_loc[2] in ("left"):
+                xx = x_right - x_label_gap
+                ha = "right"
+            elif label_loc[2] in ("right"):
+                xx = x_right + x_label_gap + x_bar_width
+                ha = "left"
             ax.text(
-                x_right + x_label_gap + x_bar_width,
+                xx,
                 rbot + rrr / 2,
                 label_dict.get(label, label),
-                {"ha": "left", "va": "center"},
+                {"ha": ha, "va": "center"},
                 fontsize=fontsize,
             )
 
+        wd = 2 if ii == num_flow-1 else 1
         draw_bar(x_right, wd * x_bar_width / 2, rbot, rrr, label)
 
     # Plot flows
