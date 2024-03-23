@@ -559,6 +559,9 @@ def _sankey(
 
     # Place "titles"
     if titles is not None:
+
+        last_label = [lbl_l, lbl_r]
+
         y_title_gap = title_gap * plot_height
         y_frame_gap = frame_gap * plot_height
 
@@ -566,10 +569,7 @@ def _sankey(
             x_left - x_bar_width / 2,
             x_right + x_bar_width / 2,
         ]
-        top_y = [
-            node_pos_top[0][lbl_l],
-            node_pos_top[1][lbl_r],
-        ]
+
         # leftmost title
         title_lr = [0, 1] if ii == 0 else [1]
 
@@ -578,7 +578,7 @@ def _sankey(
                 if title_loc == "outer":
                     yt = min(voffset) + y_title_gap + y_frame_gap + plot_height
                 elif title_loc == "inner":
-                    yt = y_title_gap + top_y[lr]
+                    yt = y_title_gap + node_pos_top[lr][last_label[lr]]
                 ax.text(
                     title_x[lr],
                     yt,
