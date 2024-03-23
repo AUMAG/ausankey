@@ -422,15 +422,11 @@ def _sankey(
     else:  # bottom, or undefined
         vscale = 0
 
-<<    barpos = [{}, {}]
     node_voffset = [{}, {}]
->>>>>>>-main
-=====
-      node_voffset = [{},{}]
     node_pos_bot = [{},{}]
     node_pos_top = [{},{}]
->>>>>>>+5ce63aa
-  for lr in [0, 1]:
+
+    for lr in [0, 1]:
         for i, label in enumerate(bar_lr[lr]):
             node_height = node_sizes[ii + lr][label]
             this_side_height = weights_lr[lr][labels_lr[lr] == label].sum()
@@ -527,16 +523,10 @@ def _sankey(
 
             # Update bottom edges at each label
             # so next strip starts at the right place
-<<            barpos[0][lbl_l]["bot"] += lbar
-            barpos[1][lbl_r]["bot"] += rbar
-
->>>>>>>-main
-=====
-              node_pos_bot[0][lbl_l] += lbar
+            node_pos_bot[0][lbl_l] += lbar
             node_pos_bot[1][lbl_r] += rbar
-    
->>>>>>>+5ce63aa
-          xx = np.linspace(x_left, x_right, len(ys_d))
+
+            xx = np.linspace(x_left, x_right, len(ys_d))
             cc = combine_colours(color_dict[lbl_l], color_dict[lbl_r], len(ys_d))
 
             for jj in range(len(ys_d) - 1):
