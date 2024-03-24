@@ -38,6 +38,7 @@ def sankey(
     flow_edge=None,
     fontsize=12,
     fontfamily="sans-serif",
+    fontcolor="black",
     frame_side="none",
     frame_gap=0.1,
     frame_color=None,
@@ -45,15 +46,20 @@ def sankey(
     label_width=0,
     label_gap=0.01,
     label_loc=None,
+    label_fontsize=None,
+    label_fontweight="normal",
+    label_fontcolor=None,
+    label_fontfamily=None,
+    label_fontstyle="normal", 
     titles=None,
     title_gap=0.05,
     title_side="top",  # "bottom", "both"
     title_loc="inner",  # "outer"
     title_fontsize=None,
-    title_fontweight=None,
+    title_fontweight="bold",
     title_fontcolor=None,
     title_fontfamily=None,
-    title_fontstyle=None,
+    title_fontstyle="normal", 
     sort="bottom",  # "top", "bottom", "none"
     valign="bottom",  # "top","center"
 ):
@@ -127,6 +133,26 @@ def sankey(
         * `str2`: position of middle labels (`"left"`, `"right"`, `"both"`, or `"none"`)
         * `str3`: position of last labels (`"left"`, `"right"`, or `"none"`)
 
+    label_fontfamily: str
+        Font family of the node labels. Passed through to Matplotlib's text 
+        option `fontfamily`.
+
+    label_fontweight: str
+        Font weight of the node labels. Passed through to Matplotlib's text 
+        option `fontweight`.
+
+    label_fontstyle: str
+        Font style of the node labels. Passed through to Matplotlib's text 
+        option `fontstyle`.
+
+    label_fontsize: float
+        Font size of the node labels. Passed through to Matplotlib's text 
+        option `fontsize`.
+
+    label_fontcolor: color
+        Font colour of the node labels. Passed through to Matplotlib's text 
+        option `color`.
+
     sort : int
         Parity bit for how to sort the display of the data.
         `0` is unsorted — display data in order it appears in the DataFrame.
@@ -147,6 +173,26 @@ def sankey(
         Whether to place the titles next to each bar of the plot
         or outside the frame.
         Allowed values: `"inner"` or `"outer"`
+
+    title_fontfamily: str
+        Font family of the titles. Passed through to Matplotlib's text 
+        option `fontfamily`.
+
+    title_fontweight: str
+        Font weight of the titles. Passed through to Matplotlib's text 
+        option `fontweight`.
+
+    title_fontstyle: str
+        Font style of the titles. Passed through to Matplotlib's text 
+        option `fontstyle`.
+
+    title_fontsize: float
+        Font size of the titles. Passed through to Matplotlib's text 
+        option `fontsize`.
+
+    title_fontcolor: color
+        Font colour of the titles. Passed through to Matplotlib's text 
+        option `color`.
 
     valign : str
         Vertical alignment of the data bars at each stage,
@@ -290,11 +336,11 @@ def sankey(
             title_gap=title_gap,
             title_side=title_side,
             title_loc=title_loc,
-            title_fontweight=title_fontweight or "bold",
+            title_fontweight=title_fontweight,
             title_fontsize=title_fontsize or fontsize or 14,
-            title_fontcolor=title_fontcolor or "black",
+            title_fontcolor=title_fontcolor or fontcolor or "black",
             title_fontfamily=title_fontfamily or fontfamily or "sans-serif",
-            title_fontstyle=title_fontstyle or "normal",
+            title_fontstyle=title_fontstyle,
             fontsize=fontsize,
             color_dict=color_dict_new,
             flow_edge=flow_edge or False,
@@ -303,6 +349,11 @@ def sankey(
             label_width=label_width,
             label_gap=label_gap,
             label_loc=label_loc or ["left", "none", "right"],
+            label_fontsize=label_fontsize or fontsize or 12,
+            label_fontweight=label_fontweight,
+            label_fontcolor=label_fontcolor or fontcolor or "black",
+            label_fontfamily=label_fontfamily or fontfamily or "sans-serif",
+            label_fontstyle=label_fontstyle, 
             bar_width=bar_width,
             bar_gap=bar_gap,
             sub_width=sub_width,
@@ -344,6 +395,11 @@ def _sankey(
     label_width=None,
     label_gap=None,
     label_loc=None,
+    label_fontsize=None,
+    label_fontweight=None,
+    label_fontcolor=None,
+    label_fontfamily=None,
+    label_fontstyle=None, 
     bar_width=None,
     bar_gap=None,
     alpha=None,
