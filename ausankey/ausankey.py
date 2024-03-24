@@ -17,16 +17,6 @@ class SankeyError(Exception):
     pass
 
 
-class NullsInFrameError(SankeyError):
-    def __init__(self):
-        super().__init__("Sankey graph does not support null values.")
-
-
-class LabelMismatchError(SankeyError):
-    def __init__(self, side, msg):
-        super().__init__(f"{side} labels and data do not match.{msg}")
-
-
 def sankey(
     data,
     aspect=4,
@@ -463,33 +453,13 @@ def _sankey(
             pd.Series(data[weightind + 2]),
         ]
 
-    notnull = labels_all_lr[0].notnull() & labels_all_lr[1].notnull() & labels_all_lr[2].notnull()
-    labels_lr = [{}, {}]
-    weights_lr = [{}, {}]
-    labels_lr[0] = labels_all_lr[0][notnull]
-    labels_lr[1] = labels_all_lr[1][notnull]
-    weights_lr[0] = weights_all_lr[0][notnull]
-    weights_lr[1] = weights_all_lr[1][notnull]
-
-    if any(weights_lr[0].isnull()) | any(weights_lr[1].isnull()):
-        raise NullsInFrameError
-
-    bar_lr = [
-        sort_nodes(labels_lr[0], node_sizes[ii]),
-        sort_nodes(labels_lr[1], node_sizes[ii + 1]),
-    ]
-
     nodes_all_lr = [
         sort_nodes(labels_all_lr[0], node_sizes[ii]),
         sort_nodes(labels_all_lr[1], node_sizes[ii + 1]),
     ]
 
-    # check labels
-    check_data_matches_labels(bar_lr[0], labels_lr[0], "left")
-    check_data_matches_labels(bar_lr[1], labels_lr[1], "right")
-
     # check colours
-    check_colors_match_labels(labels_lr, color_dict)
+    check_colors_match_labels(labels_all_lr, color_dict)
 
     # Determine sizes of individual subflows
     barsize = [{}, {}]
@@ -604,10 +574,10 @@ def _sankey(
         draw_bar(x_right, wd * x_bar_width / 2, rbot, rrr, label)
 
     # Plot flows
-    for lbl_l in bar_lr[0]:
-        for lbl_r in bar_lr[1]:
-            lind = labels_lr[0] == lbl_l
-            rind = labels_lr[1] == lbl_r
+    for lbl_l in nodes_all_lr[0]:
+        for lbl_r in nodes_all_lr[1]:
+            lind = labels_all_lr[0] == lbl_l
+            rind = labels_all_lr[1] == lbl_r
             if not any(lind & rind):
                 continue
 
@@ -755,32 +725,6 @@ def sort_dict(lbl, sorting):
         sorted_labels = sorted_labels[1::2] + sorted_labels[-1::-2]
 
     return sorted_labels
-
-
-###########################################
-
-
-def check_data_matches_labels(labels, data, side):
-    """Consistency check of label data.
-
-    Ensures after filtering and sorting,
-    or manually specifying the label order,
-    that the order of labels is still consistent
-    with the labels in the data.
-    """
-
-    if len(labels) == 0:
-        msg = "Length of labels equals zero?"
-        raise LabelMismatchError(side, msg)
-
-    if set(labels) != set(data):
-        msg = "\n"
-        maxlen = 20
-        if len(labels) <= maxlen:
-            msg += "Labels: " + ",".join(labels) + "\n"
-        if len(data) < maxlen:
-            msg += "Data: " + ",".join(data)
-        raise LabelMismatchError(side, msg)
 
 
 ###########################################
