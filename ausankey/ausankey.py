@@ -10,6 +10,7 @@ Forked from: Anneya Golob & marcomanz & pierre-sassoulas & jorwoods
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
+import pprint
 
 
 class SankeyError(Exception):
@@ -478,6 +479,11 @@ def _sankey(
         sort_nodes(labels_lr[1], node_sizes[ii + 1]),
     ]
 
+    nodes_all_lr = [
+        sort_nodes(labels_all_lr[0], node_sizes[ii]),
+        sort_nodes(labels_all_lr[1], node_sizes[ii + 1]),
+    ]
+
     # check labels
     check_data_matches_labels(bar_lr[0], labels_lr[0], "left")
     check_data_matches_labels(bar_lr[1], labels_lr[1], "right")
@@ -487,13 +493,13 @@ def _sankey(
 
     # Determine sizes of individual subflows
     barsize = [{}, {}]
-    for lbl_l in bar_lr[0]:
+    for lbl_l in nodes_all_lr[0]:
         barsize[0][lbl_l] = {}
         barsize[1][lbl_l] = {}
-        for lbl_r in bar_lr[1]:
-            ind = (labels_lr[0] == lbl_l) & (labels_lr[1] == lbl_r)
-            barsize[0][lbl_l][lbl_r] = weights_lr[0][ind].sum()
-            barsize[1][lbl_l][lbl_r] = weights_lr[1][ind].sum()
+        for lbl_r in nodes_all_lr[1]:
+            ind = (labels_all_lr[0] == lbl_l) & (labels_all_lr[1] == lbl_r)
+            barsize[0][lbl_l][lbl_r] = weights_all_lr[0][ind].sum()
+            barsize[1][lbl_l][lbl_r] = weights_all_lr[1][ind].sum()
 
     # Determine vertical positions of nodes
     y_bar_gap = bar_gap * plot_height
@@ -510,11 +516,11 @@ def _sankey(
     node_pos_top = [{}, {}]
 
     for lr in [0, 1]:
-        for i, label in enumerate(bar_lr[lr]):
+        for i, label in enumerate(nodes_all_lr[lr]):
             node_height = node_sizes[ii + lr][label]
-            this_side_height = weights_lr[lr][labels_lr[lr] == label].sum()
+            this_side_height = weights_all_lr[lr][labels_all_lr[lr] == label].sum()
             node_voffset[lr][label] = vscale * (node_height - this_side_height)
-            next_bot = node_pos_top[lr][bar_lr[lr][i - 1]] + y_bar_gap if i > 0 else 0
+            next_bot = node_pos_top[lr][nodes_all_lr[lr][i - 1]] + y_bar_gap if i > 0 else 0
             node_pos_bot[lr][label] = voffset[ii + lr] if i == 0 else next_bot
             node_pos_top[lr][label] = node_pos_bot[lr][label] + node_height
 
@@ -538,7 +544,7 @@ def _sankey(
             snap=True,
         )
 
-    for label in bar_lr[0]:
+    for label in nodes_all_lr[0]:
         lbot = node_pos_bot[0][label]
         lll = node_sizes[ii][label]
 
@@ -567,7 +573,7 @@ def _sankey(
         wd = 2 if ii == 0 else 1
         draw_bar(x_left - wd * x_bar_width / 2, wd * x_bar_width / 2, lbot, lll, label)
 
-    for label in bar_lr[1]:
+    for label in nodes_all_lr[1]:
         rbot = node_pos_bot[1][label]
         rrr = node_sizes[ii + 1][label]
 
@@ -708,7 +714,8 @@ def sort_nodes(lbl, node_sizes):
 
     arr = {}
     for uniq in lbl.unique():
-        arr[uniq] = True
+        if uniq is not None:
+            arr[uniq] = True
 
     sort_arr = sorted(
         arr.items(),
