@@ -25,8 +25,3 @@
 ### sort_nodes
 
 ::: ausankey.sort_nodes
-
-### check_data_matches_labels
-
-::: ausankey.check_data_matches_labels
-
