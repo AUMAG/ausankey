@@ -10,7 +10,6 @@ Forked from: Anneya Golob & marcomanz & pierre-sassoulas & jorwoods
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
-import pprint
 
 
 class SankeyError(Exception):
@@ -86,15 +85,15 @@ def sankey(
         `color_dict` can overide these on an individual basis if needed
 
     fontsize : int
-        Font size of the node labels and titles. Passed through to Matplotlib's text 
+        Font size of the node labels and titles. Passed through to Matplotlib's text
         option `fontsize`.
 
     fontfamily: str
-        Font family of the node labels and titles. Passed through to Matplotlib's text 
+        Font family of the node labels and titles. Passed through to Matplotlib's text
         option `fontfamily`.
 
     fontcolor: color
-        Font colour of the node labels and titles. Passed through to Matplotlib's text 
+        Font colour of the node labels and titles. Passed through to Matplotlib's text
         option `color`.
 
     flow_edge : bool
@@ -157,7 +156,7 @@ def sankey(
         Passed through to Matplotlib's text option `color`.
 
     sort : int
-        Sorting routine to use for the data. 
+        Sorting routine to use for the data.
         * `"top"`: data is sorted with largest entries on top
         * `"bottom"`: data is sorted with largest entries on bottom
         * `"none"`: data is presented in the same order as it appears in the DataFrame
@@ -359,7 +358,7 @@ def sankey(
             label_fontweight=label_fontweight,
             label_fontcolor=label_fontcolor or fontcolor or "black",
             label_fontfamily=label_fontfamily or fontfamily or "sans-serif",
-            label_fontstyle=label_fontstyle, 
+            label_fontstyle=label_fontstyle,
             bar_width=bar_width,
             bar_gap=bar_gap,
             sub_width=sub_width,
@@ -404,7 +403,7 @@ def _sankey(
     label_fontweight=None,
     label_fontcolor=None,
     label_fontfamily=None,
-    label_fontstyle=None, 
+    label_fontstyle=None,
     bar_width=None,
     bar_gap=None,
     alpha=None,
@@ -511,7 +510,8 @@ def _sankey(
             lw=edge_lw,
             snap=True,
         )
-    def draw_label(x,y,label,ha,va):
+
+    def draw_label(x, y, label, ha, va):
         ax.text(
             x,
             y,
