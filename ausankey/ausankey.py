@@ -248,31 +248,10 @@ def sankey(
             weight_strt = data[2 * ii + 1][ind_this & ~ind_prev & ind_next].sum()
             node_sizes[ii][lbl] = weight_cont + weight_only + max(weight_stop, weight_strt)
         node_sizes[ii] = sort_dict(node_sizes[ii], sort)
-
-    for ii in range(num_side):
-        if ii == 0:
-            ind_prev = data[2 * ii + 1].notnull()
-            ind_this = data[2 * ii + 1].notnull()
-            ind_next = data[2 * ii + 3].notnull()
-        elif ii == num_side - 1:
-            ind_prev = data[2 * ii - 1].notnull()
-            ind_this = data[2 * ii + 1].notnull()
-            ind_next = data[2 * ii + 1].notnull()
-        else:
-            ind_prev = data[2 * ii - 1].notnull()
-            ind_this = data[2 * ii + 1].notnull()
-            ind_next = data[2 * ii + 3].notnull()
-
-        weight_cont = data[2 * ii + 1][ind_this & ind_prev & ind_next].sum()
-        weight_only = data[2 * ii + 1][ind_this & ~ind_prev & ~ind_next].sum()
-        weight_stop = data[2 * ii + 1][ind_this & ind_prev & ~ind_next].sum()
-        weight_strt = data[2 * ii + 1][ind_this & ~ind_prev & ind_next].sum()
-
-        weight_sum[ii] = weight_cont + weight_only + max(weight_stop, weight_strt)
+        weight_sum[ii] = pd.Series(node_sizes[ii].values()).sum()
 
     for ii in range(num_side):
         col_hgt[ii] = weight_sum[ii] + (num_uniq[ii] - 1) * bar_gap * max(weight_sum)
-    # need to count the nodes actually used rather than the maximum
 
     # overall dimensions
     plot_height = max(col_hgt)
