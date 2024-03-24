@@ -36,20 +36,12 @@ def sankey(
     label_width=0,
     label_gap=0.01,
     label_loc=None,
-    label_fontcolor=None,
-    label_fontfamily=None,
-    label_fontsize=None,
-    label_fontstyle="normal",
-    label_fontweight="normal",
+    label_font=None,
     titles=None,
     title_gap=0.05,
     title_side="top",  # "bottom", "both"
     title_loc="inner",  # "outer"
-    title_fontcolor=None,
-    title_fontfamily=None,
-    title_fontsize=None,
-    title_fontstyle="normal",
-    title_fontweight="bold",
+    title_font=None,
     sort="bottom",  # "top", "bottom", "none"
     valign="bottom",  # "top","center"
 ):
@@ -132,29 +124,6 @@ def sankey(
         * `str2`: position of middle labels (`"left"`, `"right"`, `"both"`, or `"none"`)
         * `str3`: position of last labels (`"left"`, `"right"`, or `"none"`)
 
-    label_fontfamily: str
-        Font family of the node labels.
-        If not set inherits from option `fontfamily`.
-        Passed through to Matplotlib's text option `fontfamily`.
-
-    label_fontweight: str
-        Font weight of the node labels.
-        Passed through to Matplotlib's text option `fontweight`.
-
-    label_fontstyle: str
-        Font style of the node labels.
-        Passed through to Matplotlib's text option `fontstyle`.
-
-    label_fontsize: float
-        Font size of the node labels.
-        If not set inherits from option `fontsize`.
-        Passed through to Matplotlib's text option `fontsize`.
-
-    label_fontcolor: color
-        Font colour of the node labels.
-        If not set inherits from option `fontcolor`.
-        Passed through to Matplotlib's text option `color`.
-
     sort : int
         Sorting routine to use for the data.
         * `"top"`: data is sorted with largest entries on top
@@ -176,29 +145,6 @@ def sankey(
         Whether to place the titles next to each node of the plot
         or outside the frame.
         Allowed values: `"inner"` or `"outer"`
-
-    title_fontfamily: str
-        Font family of the titles.
-        If not set inherits from option `fontfamily`.
-        Passed through to Matplotlib's text option `fontfamily`.
-
-    title_fontweight: str
-        Font weight of the titles.
-        Passed through to Matplotlib's text option `fontweight`.
-
-    title_fontstyle: str
-        Font style of the titles.
-        Passed through to Matplotlib's text option `fontstyle`.
-
-    title_fontsize: float
-        Font size of the titles.
-        If not set inherits from option `fontsize`.
-        Passed through to Matplotlib's text option `fontsize`.
-
-    title_fontcolor: color
-        Font colour of the titles.
-        If not set inherits from option `fontcolor`.
-        Passed through to Matplotlib's text option `color`.
 
     valign : str
         Vertical alignment of the data bars at each stage,
@@ -316,36 +262,31 @@ def sankey(
             ii,
             num_flow,
             data,
-            node_sizes=node_sizes,
-            titles=titles,
-            title_gap=title_gap,
-            title_side=title_side,
-            title_loc=title_loc,
-            title_fontweight=title_fontweight,
-            title_fontsize=title_fontsize or fontsize or 14,
-            title_fontcolor=title_fontcolor or fontcolor or "black",
-            title_fontfamily=title_fontfamily or fontfamily or "sans-serif",
-            title_fontstyle=title_fontstyle,
+            alpha=alpha,
+            ax=ax,
             color_dict=color_dict_new,
             flow_edge=flow_edge or False,
             frame_gap=frame_gap,
+            fontcolor=fontcolor,
+            fontfamily=fontfamily,
+            fontsize=fontsize,
             label_dict=label_dict or {},
             label_width=label_width,
             label_gap=label_gap,
             label_loc=label_loc or ["left", "none", "right"],
-            label_fontsize=label_fontsize or fontsize or 12,
-            label_fontweight=label_fontweight,
-            label_fontcolor=label_fontcolor or fontcolor or "black",
-            label_fontfamily=label_fontfamily or fontfamily or "sans-serif",
-            label_fontstyle=label_fontstyle,
+            label_font=label_font or {},
             node_width=node_width,
+            node_sizes=node_sizes,
             node_gap=node_gap,
-            sub_width=sub_width,
             plot_height=plot_height,
-            alpha=alpha,
+            sub_width=sub_width,
+            titles=titles,
+            title_gap=title_gap,
+            title_side=title_side,
+            title_loc=title_loc,
+            title_font=title_font or {"fontweight": "bold"},
             voffset=voffset,
             valign=valign,
-            ax=ax,
         )
 
     # complete plot
@@ -359,36 +300,31 @@ def _sankey(
     ii,
     num_flow,
     data,
+    alpha=None,
+    ax=None,
     color_dict=None,
     flow_edge=None,
+    fontcolor=None,
+    fontsize=None,
+    fontfamily=None,
     frame_gap=None,
-    node_sizes=None,
-    titles=None,
-    title_gap=None,
-    title_side=None,
-    title_loc=None,
-    title_fontweight=None,
-    title_fontsize=None,
-    title_fontcolor=None,
-    title_fontfamily=None,
-    title_fontstyle=None,
-    plot_height=None,
-    sub_width=None,
     label_dict=None,
     label_width=None,
     label_gap=None,
     label_loc=None,
-    label_fontsize=None,
-    label_fontweight=None,
-    label_fontcolor=None,
-    label_fontfamily=None,
-    label_fontstyle=None,
+    label_font=None,
     node_width=None,
+    node_sizes=None,
     node_gap=None,
-    alpha=None,
+    plot_height=None,
+    sub_width=None,
+    titles=None,
+    title_gap=None,
+    title_side=None,
+    title_loc=None,
+    title_font=None,
     voffset=None,
     valign=None,
-    ax=None,
 ):
     """Subroutine for plotting horizontal sections of the Sankey plot
 
@@ -495,12 +431,14 @@ def _sankey(
             x,
             y,
             label_dict.get(label, label),
-            {"ha": ha, "va": va},
-            fontweight=label_fontweight,
-            fontstyle=label_fontstyle,
-            fontfamily=label_fontfamily,
-            fontsize=label_fontsize,
-            color=label_fontcolor,
+            {
+                "ha": ha,
+                "va": va,
+                "fontfamily": fontfamily,
+                "fontsize": fontsize,
+                "color": fontcolor,
+                **label_font,
+            },
         )
 
     for label in nodes_lr[0]:
@@ -626,6 +564,21 @@ def _sankey(
             x_right + x_node_width / 2,
         ]
 
+        def draw_title(x, y, label, va):
+            ax.text(
+                x,
+                y,
+                label,
+                {
+                    "ha": "center",
+                    "va": va,
+                    "fontfamily": fontfamily,
+                    "fontsize": fontsize,
+                    "color": fontcolor,
+                    **title_font,
+                },
+            )
+
         # leftmost title
         title_lr = [0, 1] if ii == 0 else [1]
 
@@ -635,34 +588,14 @@ def _sankey(
                     yt = min(voffset) + y_title_gap + y_frame_gap + plot_height
                 elif title_loc == "inner":
                     yt = y_title_gap + node_pos_top[lr][last_label[lr]]
-                ax.text(
-                    title_x[lr],
-                    yt,
-                    titles[ii + lr],
-                    {"ha": "center", "va": "bottom"},
-                    fontweight=title_fontweight,
-                    fontstyle=title_fontstyle,
-                    fontfamily=title_fontfamily,
-                    fontsize=title_fontsize,
-                    color=title_fontcolor,
-                )
+                draw_title(title_x[lr], yt, titles[ii + lr], "bottom")
 
             if title_side in ("bottom", "both"):
                 if title_loc == "outer":
                     yt = min(voffset) - y_title_gap - y_frame_gap
                 elif title_loc == "inner":
                     yt = voffset[ii + lr] - y_title_gap
-                ax.text(
-                    title_x[lr],
-                    yt,
-                    titles[ii + lr],
-                    {"ha": "center", "va": "top"},
-                    fontweight=title_fontweight,
-                    fontstyle=title_fontstyle,
-                    fontfamily=title_fontfamily,
-                    fontsize=title_fontsize,
-                    color=title_fontcolor,
-                )
+                draw_title(title_x[lr], yt, titles[ii + lr], "top")
 
 
 ###########################################
