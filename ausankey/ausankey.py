@@ -21,8 +21,8 @@ def sankey(
     aspect=4,
     alpha=0.65,
     ax=None,
-    bar_width=0.02,
-    bar_gap=0.05,
+    node_width=0.02,
+    node_gap=0.05,
     color_dict=None,
     colormap="viridis",
     flow_edge=None,
@@ -69,11 +69,11 @@ def sankey(
     ax : Axis
         Matplotlib plot axis to use
 
-    bar_width : float
+    node_width : float
         Normalised horizontal width of the data bars
         (1.0 = 100% of plot width)
 
-    bar_gap : float
+    node_gap : float
         Normalised vertical gap between successive data bars
         (1.0 = 100% of nominal plot height).
 
@@ -173,7 +173,7 @@ def sankey(
         Allowed values: `"top"`, `"bottom"`, or `"both"`
 
     title_loc : str
-        Whether to place the titles next to each bar of the plot
+        Whether to place the titles next to each node of the plot
         or outside the frame.
         Allowed values: `"inner"` or `"outer"`
 
@@ -251,13 +251,13 @@ def sankey(
         weight_sum[ii] = pd.Series(node_sizes[ii].values()).sum()
 
     for ii in range(num_side):
-        col_hgt[ii] = weight_sum[ii] + (num_uniq[ii] - 1) * bar_gap * max(weight_sum)
+        col_hgt[ii] = weight_sum[ii] + (num_uniq[ii] - 1) * node_gap * max(weight_sum)
 
     # overall dimensions
     plot_height = max(col_hgt)
     sub_width = plot_height / aspect
     plot_width = (
-        (num_side - 1) * sub_width + 2 * sub_width * (label_gap + label_width) + num_side * sub_width * bar_width
+        (num_side - 1) * sub_width + 2 * sub_width * (label_gap + label_width) + num_side * sub_width * node_width
     )
 
     # offsets for alignment
@@ -338,8 +338,8 @@ def sankey(
             label_fontcolor=label_fontcolor or fontcolor or "black",
             label_fontfamily=label_fontfamily or fontfamily or "sans-serif",
             label_fontstyle=label_fontstyle,
-            bar_width=bar_width,
-            bar_gap=bar_gap,
+            node_width=node_width,
+            node_gap=node_gap,
             sub_width=sub_width,
             plot_height=plot_height,
             alpha=alpha,
@@ -383,8 +383,8 @@ def _sankey(
     label_fontcolor=None,
     label_fontfamily=None,
     label_fontstyle=None,
-    bar_width=None,
-    bar_gap=None,
+    node_width=None,
+    node_gap=None,
     alpha=None,
     voffset=None,
     valign=None,
@@ -407,48 +407,48 @@ def _sankey(
     weightind = 2 * ii + 1
 
     if ii < num_flow - 1:
-        labels_all_lr = [
+        labels_lr = [
             pd.Series(data[labelind]),
             pd.Series(data[labelind + 2]),
             pd.Series(data[labelind + 4]),
         ]
-        weights_all_lr = [
+        weights_lr = [
             pd.Series(data[weightind]),
             pd.Series(data[weightind + 2]),
             pd.Series(data[weightind + 4]),
         ]
     else:
-        labels_all_lr = [
+        labels_lr = [
             pd.Series(data[labelind]),
             pd.Series(data[labelind + 2]),
             pd.Series(data[labelind + 2]),
         ]
-        weights_all_lr = [
+        weights_lr = [
             pd.Series(data[weightind]),
             pd.Series(data[weightind + 2]),
             pd.Series(data[weightind + 2]),
         ]
 
-    nodes_all_lr = [
-        sort_nodes(labels_all_lr[0], node_sizes[ii]),
-        sort_nodes(labels_all_lr[1], node_sizes[ii + 1]),
+    nodes_lr = [
+        sort_nodes(labels_lr[0], node_sizes[ii]),
+        sort_nodes(labels_lr[1], node_sizes[ii + 1]),
     ]
 
     # check colours
-    check_colors_match_labels(labels_all_lr, color_dict)
+    check_colors_match_labels(labels_lr, color_dict)
 
     # Determine sizes of individual subflows
-    barsize = [{}, {}]
-    for lbl_l in nodes_all_lr[0]:
-        barsize[0][lbl_l] = {}
-        barsize[1][lbl_l] = {}
-        for lbl_r in nodes_all_lr[1]:
-            ind = (labels_all_lr[0] == lbl_l) & (labels_all_lr[1] == lbl_r)
-            barsize[0][lbl_l][lbl_r] = weights_all_lr[0][ind].sum()
-            barsize[1][lbl_l][lbl_r] = weights_all_lr[1][ind].sum()
+    nodesize = [{}, {}]
+    for lbl_l in nodes_lr[0]:
+        nodesize[0][lbl_l] = {}
+        nodesize[1][lbl_l] = {}
+        for lbl_r in nodes_lr[1]:
+            ind = (labels_lr[0] == lbl_l) & (labels_lr[1] == lbl_r)
+            nodesize[0][lbl_l][lbl_r] = weights_lr[0][ind].sum()
+            nodesize[1][lbl_l][lbl_r] = weights_lr[1][ind].sum()
 
     # Determine vertical positions of nodes
-    y_bar_gap = bar_gap * plot_height
+    y_node_gap = node_gap * plot_height
 
     if valign == "top":
         vscale = 1
@@ -462,24 +462,24 @@ def _sankey(
     node_pos_top = [{}, {}]
 
     for lr in [0, 1]:
-        for i, label in enumerate(nodes_all_lr[lr]):
+        for i, label in enumerate(nodes_lr[lr]):
             node_height = node_sizes[ii + lr][label]
-            this_side_height = weights_all_lr[lr][labels_all_lr[lr] == label].sum()
+            this_side_height = weights_lr[lr][labels_lr[lr] == label].sum()
             node_voffset[lr][label] = vscale * (node_height - this_side_height)
-            next_bot = node_pos_top[lr][nodes_all_lr[lr][i - 1]] + y_bar_gap if i > 0 else 0
+            next_bot = node_pos_top[lr][nodes_lr[lr][i - 1]] + y_node_gap if i > 0 else 0
             node_pos_bot[lr][label] = voffset[ii + lr] if i == 0 else next_bot
             node_pos_top[lr][label] = node_pos_bot[lr][label] + node_height
 
     # horizontal positions of nodes
-    x_bar_width = bar_width * sub_width
+    x_node_width = node_width * sub_width
     x_label_width = label_width * sub_width
     x_label_gap = label_gap * sub_width
-    x_left = x_bar_width + x_label_gap + x_label_width + ii * (sub_width + x_bar_width)
+    x_left = x_node_width + x_label_gap + x_label_width + ii * (sub_width + x_node_width)
     x_right = x_left + sub_width
 
-    # Draw bars and their labels
+    # Draw nodes and their labels
 
-    def draw_bar(x, dx, y, dy, label):
+    def draw_node(x, dx, y, dy, label):
         ax.fill_between(
             [x, x + dx],
             y,
@@ -503,13 +503,13 @@ def _sankey(
             color=label_fontcolor,
         )
 
-    for label in nodes_all_lr[0]:
+    for label in nodes_lr[0]:
         lbot = node_pos_bot[0][label]
         lll = node_sizes[ii][label]
 
         if ii == 0 and label_loc[0] != "none":  # first label
             if label_loc[0] in ("left"):
-                xx = x_left - x_label_gap - x_bar_width
+                xx = x_left - x_label_gap - x_node_width
                 ha = "right"
             elif label_loc[0] in ("right"):
                 xx = x_left + x_label_gap
@@ -530,9 +530,9 @@ def _sankey(
                 "center",
             )
         wd = 2 if ii == 0 else 1
-        draw_bar(x_left - wd * x_bar_width / 2, wd * x_bar_width / 2, lbot, lll, label)
+        draw_node(x_left - wd * x_node_width / 2, wd * x_node_width / 2, lbot, lll, label)
 
-    for label in nodes_all_lr[1]:
+    for label in nodes_lr[1]:
         rbot = node_pos_bot[1][label]
         rrr = node_sizes[ii + 1][label]
 
@@ -549,7 +549,7 @@ def _sankey(
                 xx = x_right - x_label_gap
                 ha = "right"
             elif label_loc[2] in ("right"):
-                xx = x_right + x_label_gap + x_bar_width
+                xx = x_right + x_label_gap + x_node_width
                 ha = "left"
             draw_label(
                 xx,
@@ -560,28 +560,28 @@ def _sankey(
             )
 
         wd = 2 if ii == num_flow - 1 else 1
-        draw_bar(x_right, wd * x_bar_width / 2, rbot, rrr, label)
+        draw_node(x_right, wd * x_node_width / 2, rbot, rrr, label)
 
     # Plot flows
-    for lbl_l in nodes_all_lr[0]:
-        for lbl_r in nodes_all_lr[1]:
-            lind = labels_all_lr[0] == lbl_l
-            rind = labels_all_lr[1] == lbl_r
+    for lbl_l in nodes_lr[0]:
+        for lbl_r in nodes_lr[1]:
+            lind = labels_lr[0] == lbl_l
+            rind = labels_lr[1] == lbl_r
             if not any(lind & rind):
                 continue
 
             lbot = node_voffset[0][lbl_l] + node_pos_bot[0][lbl_l]
             rbot = node_voffset[1][lbl_r] + node_pos_bot[1][lbl_r]
-            lbar = barsize[0][lbl_l][lbl_r]
-            rbar = barsize[1][lbl_l][lbl_r]
+            lnode = nodesize[0][lbl_l][lbl_r]
+            rnode = nodesize[1][lbl_l][lbl_r]
 
             ys_d = create_curve(lbot, rbot)
-            ys_u = create_curve(lbot + lbar, rbot + rbar)
+            ys_u = create_curve(lbot + lnode, rbot + rnode)
 
             # Update bottom edges at each label
             # so next strip starts at the right place
-            node_pos_bot[0][lbl_l] += lbar
-            node_pos_bot[1][lbl_r] += rbar
+            node_pos_bot[0][lbl_l] += lnode
+            node_pos_bot[1][lbl_r] += rnode
 
             xx = np.linspace(x_left, x_right, len(ys_d))
             cc = combine_colours(color_dict[lbl_l], color_dict[lbl_r], len(ys_d))
@@ -622,8 +622,8 @@ def _sankey(
         y_frame_gap = frame_gap * plot_height
 
         title_x = [
-            x_left - x_bar_width / 2,
-            x_right + x_bar_width / 2,
+            x_left - x_node_width / 2,
+            x_right + x_node_width / 2,
         ]
 
         # leftmost title
