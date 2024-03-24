@@ -36,9 +36,9 @@ def sankey(
     color_dict=None,
     colormap="viridis",
     flow_edge=None,
-    fontsize=12,
-    fontfamily="sans-serif",
     fontcolor="black",
+    fontfamily="sans-serif",
+    fontsize=12,
     frame_side="none",
     frame_gap=0.1,
     frame_color=None,
@@ -46,20 +46,20 @@ def sankey(
     label_width=0,
     label_gap=0.01,
     label_loc=None,
-    label_fontsize=None,
-    label_fontweight="normal",
     label_fontcolor=None,
     label_fontfamily=None,
-    label_fontstyle="normal", 
+    label_fontsize=None,
+    label_fontstyle="normal",
+    label_fontweight="normal",
     titles=None,
     title_gap=0.05,
     title_side="top",  # "bottom", "both"
     title_loc="inner",  # "outer"
-    title_fontsize=None,
-    title_fontweight="bold",
     title_fontcolor=None,
     title_fontfamily=None,
-    title_fontstyle="normal", 
+    title_fontsize=None,
+    title_fontstyle="normal",
+    title_fontweight="bold",
     sort="bottom",  # "top", "bottom", "none"
     valign="bottom",  # "top","center"
 ):
@@ -95,7 +95,16 @@ def sankey(
         `color_dict` can overide these on an individual basis if needed
 
     fontsize : int
-        Font size of labels
+        Font size of the node labels and titles. Passed through to Matplotlib's text 
+        option `fontsize`.
+
+    fontfamily: str
+        Font family of the node labels and titles. Passed through to Matplotlib's text 
+        option `fontfamily`.
+
+    fontcolor: color
+        Font colour of the node labels and titles. Passed through to Matplotlib's text 
+        option `color`.
 
     flow_edge : bool
         Whether to draw an edge to the flows.
@@ -112,7 +121,7 @@ def sankey(
     frame_color : color
         Color of frame
 
-        label_dict : dict
+    label_dict : dict
         Dictionary of labels to optionally replace the labels in the data
         (e.g., to provide abbreviations or human readable alternatives).
         Format: `{'orig_label': 'printed_label'}`
@@ -134,29 +143,33 @@ def sankey(
         * `str3`: position of last labels (`"left"`, `"right"`, or `"none"`)
 
     label_fontfamily: str
-        Font family of the node labels. Passed through to Matplotlib's text 
-        option `fontfamily`.
+        Font family of the node labels.
+        If not set inherits from option `fontfamily`.
+        Passed through to Matplotlib's text option `fontfamily`.
 
     label_fontweight: str
-        Font weight of the node labels. Passed through to Matplotlib's text 
-        option `fontweight`.
+        Font weight of the node labels.
+        Passed through to Matplotlib's text option `fontweight`.
 
     label_fontstyle: str
-        Font style of the node labels. Passed through to Matplotlib's text 
-        option `fontstyle`.
+        Font style of the node labels.
+        Passed through to Matplotlib's text option `fontstyle`.
 
     label_fontsize: float
-        Font size of the node labels. Passed through to Matplotlib's text 
-        option `fontsize`.
+        Font size of the node labels.
+        If not set inherits from option `fontsize`.
+        Passed through to Matplotlib's text option `fontsize`.
 
     label_fontcolor: color
-        Font colour of the node labels. Passed through to Matplotlib's text 
-        option `color`.
+        Font colour of the node labels.
+        If not set inherits from option `fontcolor`.
+        Passed through to Matplotlib's text option `color`.
 
     sort : int
-        Parity bit for how to sort the display of the data.
-        `0` is unsorted — display data in order it appears in the DataFrame.
-        `1` and `-1` sort high to low or vice versa.
+        Sorting routine to use for the data. 
+        * `"top"`: data is sorted with largest entries on top
+        * `"bottom"`: data is sorted with largest entries on bottom
+        * `"none"`: data is presented in the same order as it appears in the DataFrame
 
     titles : list of str
         Array of title strings for each columns
@@ -175,24 +188,27 @@ def sankey(
         Allowed values: `"inner"` or `"outer"`
 
     title_fontfamily: str
-        Font family of the titles. Passed through to Matplotlib's text 
-        option `fontfamily`.
+        Font family of the titles.
+        If not set inherits from option `fontfamily`.
+        Passed through to Matplotlib's text option `fontfamily`.
 
     title_fontweight: str
-        Font weight of the titles. Passed through to Matplotlib's text 
-        option `fontweight`.
+        Font weight of the titles.
+        Passed through to Matplotlib's text option `fontweight`.
 
     title_fontstyle: str
-        Font style of the titles. Passed through to Matplotlib's text 
-        option `fontstyle`.
+        Font style of the titles.
+        Passed through to Matplotlib's text option `fontstyle`.
 
     title_fontsize: float
-        Font size of the titles. Passed through to Matplotlib's text 
-        option `fontsize`.
+        Font size of the titles.
+        If not set inherits from option `fontsize`.
+        Passed through to Matplotlib's text option `fontsize`.
 
     title_fontcolor: color
-        Font colour of the titles. Passed through to Matplotlib's text 
-        option `color`.
+        Font colour of the titles.
+        If not set inherits from option `fontcolor`.
+        Passed through to Matplotlib's text option `color`.
 
     valign : str
         Vertical alignment of the data bars at each stage,
