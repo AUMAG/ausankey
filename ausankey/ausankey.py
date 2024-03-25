@@ -426,7 +426,7 @@ def _sankey(
             snap=True,
         )
 
-    for lr in ([0, 1] if ii==0 else [1]):
+    for lr in [0, 1] if ii == 0 else [1]:
         for label in nodes_lr[lr]:
             draw_node(
                 x_lr[lr] - x_node_width * (1 - lr),
@@ -455,7 +455,6 @@ def _sankey(
 
     lr = 0
     for label in nodes_lr[lr]:
-
         if ii == 0 and label_loc[lr] != "none":  # first label
             if label_loc[lr] in ("left"):
                 xx = x_lr[lr] - x_label_gap - x_node_width
@@ -479,7 +478,6 @@ def _sankey(
 
     lr = 1
     for label in nodes_lr[lr]:
-
         if ii < num_flow - 1 and label_loc[lr] in ("right", "both"):  # inside labels
             draw_label(
                 x_lr[lr] - x_label_gap,
