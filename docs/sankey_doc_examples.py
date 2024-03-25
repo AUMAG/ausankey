@@ -40,7 +40,7 @@ plt.show()
 plt.savefig("fruits_labeldict.png")
 
 plt.figure()
-sky.sankey(data, alpha=0.3)
+sky.sankey(data, flow_alpha=0.3)
 plt.show()
 plt.savefig("fruits_alpha.png")
 

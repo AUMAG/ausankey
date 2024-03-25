@@ -95,7 +95,7 @@ sky.sankey(data,color_dict=color_dict)
 
 The opacity of the flows can be customised:
 ```
-sky.sankey(data,alpha=0.3)
+sky.sankey(data,flow_alpha=0.3)
 ```
 ![Image with options](fruits_alpha.png)
 
