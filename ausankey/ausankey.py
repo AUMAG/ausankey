@@ -19,13 +19,14 @@ class SankeyError(Exception):
 def sankey(
     data,
     aspect=4,
-    alpha=0.65,
     ax=None,
     node_width=0.02,
     node_gap=0.05,
+    node_alpha=1,
     color_dict=None,
     colormap="viridis",
     flow_edge=None,
+    flow_alpha=0.6,
     fontcolor="black",
     fontfamily="sans-serif",
     fontsize=12,
@@ -52,9 +53,6 @@ def sankey(
     data : DataFrame
         pandas dataframe of labels and weights in alternating columns
 
-    alpha : float
-        Opacity of the flows (`0.0` = transparent, `1.0` = opaque)
-
     aspect : float
         vertical extent of the diagram in units of horizontal extent
 
@@ -68,6 +66,9 @@ def sankey(
     node_gap : float
         Normalised vertical gap between successive data bars
         (1.0 = 100% of nominal plot height).
+
+    node_alpha : float
+        Opacity of the nodes (`0.0` = transparent, `1.0` = opaque).
 
     color_dict : dict
         Dictionary of colors to use for each label `{'label': 'color'}`
@@ -91,6 +92,9 @@ def sankey(
     flow_edge : bool
         Whether to draw an edge to the flows.
         Doesn't always look great when there is lots of branching and overlap.
+
+    flow_alpha : float
+        Opacity of the flows (`0.0` = transparent, `1.0` = opaque)
 
     frame_side : str
         Whether to place a frame (horizontal rule) above or below the plot.
@@ -262,10 +266,10 @@ def sankey(
             ii,
             num_flow,
             data,
-            alpha=alpha,
             ax=ax,
             color_dict=color_dict_new,
             flow_edge=flow_edge or False,
+            flow_alpha=flow_alpha,
             frame_gap=frame_gap,
             fontcolor=fontcolor,
             fontfamily=fontfamily,
@@ -275,6 +279,7 @@ def sankey(
             label_gap=label_gap,
             label_loc=label_loc or ["left", "none", "right"],
             label_font=label_font or {},
+            node_alpha=node_alpha,
             node_width=node_width,
             node_sizes=node_sizes,
             node_gap=node_gap,
@@ -300,10 +305,10 @@ def _sankey(
     ii,
     num_flow,
     data,
-    alpha=None,
     ax=None,
     color_dict=None,
     flow_edge=None,
+    flow_alpha=None,
     fontcolor=None,
     fontsize=None,
     fontfamily=None,
@@ -316,6 +321,7 @@ def _sankey(
     node_width=None,
     node_sizes=None,
     node_gap=None,
+    node_alpha=None,
     plot_height=None,
     sub_width=None,
     titles=None,
@@ -336,7 +342,7 @@ def _sankey(
         edge_alpha = 1
         edge_lw = 1
     else:
-        edge_alpha = alpha
+        edge_alpha = flow_alpha
         edge_lw = 0
 
     labelind = 2 * ii
@@ -415,16 +421,34 @@ def _sankey(
 
     # Draw nodes
 
+    if flow_edge:
+        edge_alpha = 1
+        edge_lw = 1
+    else:
+        edge_alpha = flow_alpha
+        edge_lw = 0
+
     def draw_node(x, dx, y, dy, label):
         ax.fill_between(
             [x, x + dx],
             y,
             y + dy,
-            color=color_dict[label],
-            alpha=1,
+            facecolor=color_dict[label],
+            alpha=node_alpha,
             lw=edge_lw,
             snap=True,
         )
+        if flow_edge:
+            ax.fill_between(
+                [x, x + dx],
+                y,
+                y + dy,
+                edgecolor=color_dict[label],
+                facecolor="none",
+                alpha=1,
+                lw=edge_lw,
+                snap=True,
+            )
 
     for lr in [0, 1] if ii == 0 else [1]:
         for label in nodes_lr[lr]:
@@ -529,7 +553,7 @@ def _sankey(
                     ys_d[[jj, jj + 1]],
                     ys_u[[jj, jj + 1]],
                     color=cc[:, jj],
-                    alpha=alpha,
+                    alpha=flow_alpha,
                     lw=0,
                     edgecolor="none",
                     snap=True,
