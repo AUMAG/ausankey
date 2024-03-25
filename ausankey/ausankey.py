@@ -411,9 +411,9 @@ def _sankey(
     x_label_width = label_width * sub_width
     x_label_gap = label_gap * sub_width
     x_left = x_node_width + x_label_gap + x_label_width + ii * (sub_width + x_node_width)
-    x_right = x_left + sub_width
+    x_lr = [x_left, x_left + sub_width]
 
-    # Draw nodes and their labels
+    # Draw nodes
 
     def draw_node(x, dx, y, dy, label):
         ax.fill_between(
@@ -426,14 +426,26 @@ def _sankey(
             snap=True,
         )
 
-    def draw_label(x, y, label, ha, va):
+    for lr in ([0, 1] if ii==0 else [1]):
+        for label in nodes_lr[lr]:
+            draw_node(
+                x_lr[lr] - x_node_width * (1 - lr),
+                x_node_width,
+                node_pos_bot[lr][label],
+                node_sizes[ii + lr][label],
+                label,
+            )
+
+    # Draw node labels
+
+    def draw_label(x, y, label, ha):
         ax.text(
             x,
             y,
             label_dict.get(label, label),
             {
                 "ha": ha,
-                "va": va,
+                "va": "center",
                 "fontfamily": fontfamily,
                 "fontsize": fontsize,
                 "color": fontcolor,
@@ -441,64 +453,53 @@ def _sankey(
             },
         )
 
-    for label in nodes_lr[0]:
-        lbot = node_pos_bot[0][label]
-        lll = node_sizes[ii][label]
+    lr = 0
+    for label in nodes_lr[lr]:
 
-        if ii == 0 and label_loc[0] != "none":  # first label
-            if label_loc[0] in ("left"):
-                xx = x_left - x_label_gap - x_node_width
+        if ii == 0 and label_loc[lr] != "none":  # first label
+            if label_loc[lr] in ("left"):
+                xx = x_lr[lr] - x_label_gap - x_node_width
                 ha = "right"
-            elif label_loc[0] in ("right"):
-                xx = x_left + x_label_gap
+            elif label_loc[lr] in ("right"):
+                xx = x_lr[lr] + x_label_gap
                 ha = "left"
             draw_label(
                 xx,
-                lbot + lll / 2,
+                node_pos_bot[lr][label] + node_sizes[ii + lr][label] / 2,
                 label,
                 ha,
-                "center",
             )
-        elif ii > 0 and label_loc[1] in ("left", "both"):  # inside labels
+        elif ii > 0 and label_loc[lr + 1] in ("left", "both"):  # inside labels
             draw_label(
-                x_left + x_label_gap,
-                lbot + lll / 2,
+                x_lr[lr] + x_label_gap,
+                node_pos_bot[lr][label] + node_sizes[ii + lr][label] / 2,
                 label,
                 "left",
-                "center",
             )
-        wd = 2 if ii == 0 else 1
-        draw_node(x_left - wd * x_node_width / 2, wd * x_node_width / 2, lbot, lll, label)
 
-    for label in nodes_lr[1]:
-        rbot = node_pos_bot[1][label]
-        rrr = node_sizes[ii + 1][label]
+    lr = 1
+    for label in nodes_lr[lr]:
 
-        if ii < num_flow - 1 and label_loc[1] in ("right", "both"):  # inside labels
+        if ii < num_flow - 1 and label_loc[lr] in ("right", "both"):  # inside labels
             draw_label(
-                x_right - x_label_gap,
-                rbot + rrr / 2,
+                x_lr[lr] - x_label_gap,
+                node_pos_bot[1][label] + node_sizes[ii + 1][label] / 2,
                 label,
                 "right",
-                "center",
             )
-        if ii == num_flow - 1 and label_loc[2] != "none":  # last time
+        if ii == num_flow - 1 and label_loc[lr + 1] != "none":  # last time
             if label_loc[2] in ("left"):
-                xx = x_right - x_label_gap
+                xx = x_lr[lr] - x_label_gap
                 ha = "right"
             elif label_loc[2] in ("right"):
-                xx = x_right + x_label_gap + x_node_width
+                xx = x_lr[lr] + x_label_gap + x_node_width
                 ha = "left"
             draw_label(
                 xx,
-                rbot + rrr / 2,
+                node_pos_bot[lr][label] + node_sizes[ii + lr][label] / 2,
                 label,
                 ha,
-                "center",
             )
-
-        wd = 2 if ii == num_flow - 1 else 1
-        draw_node(x_right, wd * x_node_width / 2, rbot, rrr, label)
 
     # Plot flows
     for lbl_l in nodes_lr[0]:
@@ -521,7 +522,7 @@ def _sankey(
             node_pos_bot[0][lbl_l] += lnode
             node_pos_bot[1][lbl_r] += rnode
 
-            xx = np.linspace(x_left, x_right, len(ys_d))
+            xx = np.linspace(x_lr[0], x_lr[1], len(ys_d))
             cc = combine_colours(color_dict[lbl_l], color_dict[lbl_r], len(ys_d))
 
             for jj in range(len(ys_d) - 1):
@@ -560,8 +561,8 @@ def _sankey(
         y_frame_gap = frame_gap * plot_height
 
         title_x = [
-            x_left - x_node_width / 2,
-            x_right + x_node_width / 2,
+            x_lr[0] - x_node_width / 2,
+            x_lr[1] + x_node_width / 2,
         ]
 
         def draw_title(x, y, label, va):
