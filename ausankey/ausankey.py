@@ -36,7 +36,7 @@ def sankey(
     frame_color=None,
     label_dict=None,
     label_width=0,
-    label_gap=0.01,
+    label_gap=0.02,
     label_loc=None,
     label_font=None,
     flow_lw=1,

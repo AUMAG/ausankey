@@ -83,6 +83,30 @@ plt.show()
 plt.savefig("fruits_titles_outer.png")
 
 plt.figure()
+sky.sankey(data,
+    titles=["Summer", "Winter"],
+    fontsize=15,
+    fontfamily="serif",
+    fontcolor="red",
+)
+plt.show()
+plt.savefig("fruits_fonts.png")
+
+plt.figure(dpi=600)
+sky.sankey(
+  data3,
+  titles    = ["Stage 0","Stage 1","Stage 2"],
+  title_font = {
+      "color": "red", 
+      "fontsize": 14, 
+      "fontweight": "bold",
+  },
+  label_font = {"color": "blue"},
+)
+plt.show()
+plt.savefig("data3_fonts_fancy.png")
+
+plt.figure()
 sky.sankey(data, valign="center")
 plt.show()
 plt.savefig("fruits_valign.png")
@@ -198,3 +222,16 @@ sky.sankey(
 )
 
 plt.savefig("frame3_many.png")
+
+
+plt.figure(dpi=600)
+sky.sankey(data3,
+    node_width = 0.1,
+    node_alpha = 0.6,
+    flow_alpha = 0.3,
+    node_edge = True,
+    flow_edge = True,
+    node_lw = 2,
+    flow_lw = 1,
+    )
+plt.savefig("frame3_edge.png")

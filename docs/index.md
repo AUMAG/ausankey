@@ -93,7 +93,7 @@ sky.sankey(data,color_dict=color_dict)
 ```
 ![Image with options](fruits_colordict.png)
 
-The opacity of the flows can be customised:
+The opacity of the flows and nodes can be customised with `flow_alpha` and `node_alpha` respectively:
 ```
 sky.sankey(data,flow_alpha=0.3)
 ```
@@ -121,6 +121,7 @@ Or left in the order listed in the data:
 sky.sankey(data,sort=“none”)
 ```
 ![Image with options](fruits_sort_none.png)
+
 
 ## Labels
 
@@ -185,6 +186,41 @@ sky.sankey(data,
 ```
 ![Image with options](fruits_titles_outer.png)
 
+
+## Fonts
+
+The font family, font colour, and font size can be set globally:
+```
+sky.sankey(data,
+    titles=[“Summer”, “Winter”],
+    fontsize=15,
+    fontfamily=“serif”,
+    fontcolor=“red”,
+)
+```
+![Image with options](fruits_fonts.png)
+
+These options do not use `snake_case` for consistency with their underlying Matplotlib options.
+Further font options can be passed through directly via the `label_font` and `title_font` options, which override the settings above.
+
+For example:
+```
+sky.sankey(
+  data3,
+  titles    = [“Stage 0”,”Stage 1”,”Stage 2”],
+  title_font = {
+      “color”: “red”, 
+      “fontsize”: 14, 
+      “fontweight”: “bold”,
+  },
+  label_font = {“color”: “blue”},
+)
+```
+![Image with options](data3_fonts_fancy.png)
+
+Refer to [Matplotlib documentation](https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.text.html) for available options.
+
+
 ## Vertical Alignment
 
 The vertical alignment of the diagram can be  `"top"`, `"bottom"`, or `"center"`:
@@ -210,6 +246,24 @@ sky.sankey(data,
  )
 ```
 ![Image with options](fruits_frame_color.png)
+
+
+## Edges
+
+Lines around the edges of the nodes and/or flows can be specified as follows. 
+```
+sky.sankey(data3,
+    node_width = 0.1,
+    node_alpha = 0.6,
+    flow_alpha = 0.3,
+    node_edge = True,
+    flow_edge = True,
+    node_lw = 2,
+    flow_lw = 1,
+    )
+```
+![Image with options](frame3_edge.png)
+
 
 ## Spacing
 
