@@ -2,6 +2,13 @@
 
 ## 2024-03-25 v1.2
 
+* Label alignment bug fix (not sure how it slipped through).
+* Fixing it involved some nice tidy-up of the code. 
+* Took the opportunity to flesh out the documentation a little.
+
+
+## 2024-03-25 v1.2
+
 * Many more configuration options. (E.g., edges around flows/nodes, transparency of nodes, properties of label and title text, alignment of labels, …)
 * Now allows flows that start and stop (which work with sorting).
 * Reference documentation added to supplement the user documentation.
