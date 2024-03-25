@@ -9,6 +9,7 @@ plt.figure()
 sky.sankey(data)
 plt.show()
 plt.savefig("fruits_default.png")
+plt.close()
 
 data = pd.DataFrame(
     [
@@ -36,6 +37,7 @@ plt.figure()
 sky.sankey(data, colormap="jet")
 plt.show()
 plt.savefig("fruits_jet.png")
+plt.close()
 
 color_dict = {"apple": "#f71b1b", "blueberry": "#1b7ef7", "banana": "#f3f71b", "lime": "#12e23f", "orange": "#f78c1b"}
 
@@ -43,6 +45,7 @@ plt.figure()
 sky.sankey(data, color_dict=color_dict)
 plt.show()
 plt.savefig("fruits_colordict.png")
+plt.close()
 
 label_dict = {"apple": "Apple", "blueberry": "B'berry", "banana": "Banana", "lime": "Lime", "orange": "Orange"}
 
@@ -50,31 +53,38 @@ plt.figure()
 sky.sankey(data, label_dict=label_dict)
 plt.show()
 plt.savefig("fruits_labeldict.png")
+plt.close()
+
 
 plt.figure()
 sky.sankey(data, flow_alpha=0.3)
 plt.show()
 plt.savefig("fruits_alpha.png")
+plt.close()
 
 plt.figure()
 sky.sankey(data, sort="top")
 plt.show()
 plt.savefig("fruits_sort_top.png")
+plt.close()
 
 plt.figure()
 sky.sankey(data, sort="bottom")
 plt.show()
 plt.savefig("fruits_sort_bot.png")
+plt.close()
 
 plt.figure()
 sky.sankey(data, sort="none")
 plt.show()
 plt.savefig("fruits_sort_none.png")
+plt.close()
 
 plt.figure()
 sky.sankey(data, titles=["Summer", "Winter"])
 plt.show()
 plt.savefig("fruits_titles.png")
+plt.close()
 
 plt.figure()
 sky.sankey(
@@ -84,6 +94,7 @@ sky.sankey(
 )
 plt.show()
 plt.savefig("fruits_titles_bottom.png")
+plt.close()
 
 plt.figure()
 sky.sankey(data,
@@ -93,6 +104,7 @@ sky.sankey(data,
 )
 plt.show()
 plt.savefig("fruits_titles_outer.png")
+plt.close()
 
 plt.figure()
 sky.sankey(data,
@@ -103,6 +115,7 @@ sky.sankey(data,
 )
 plt.show()
 plt.savefig("fruits_fonts.png")
+plt.close()
 
 plt.figure(dpi=600)
 sky.sankey(
@@ -117,16 +130,19 @@ sky.sankey(
 )
 plt.show()
 plt.savefig("data3_fonts_fancy.png")
+plt.close()
 
 plt.figure()
 sky.sankey(data, valign="center")
 plt.show()
 plt.savefig("fruits_valign.png")
+plt.close()
 
 plt.figure()
 sky.sankey(data, frame_side="both")
 plt.show()
 plt.savefig("fruits_frame.png")
+plt.close()
 
 plt.figure()
 sky.sankey(data,
@@ -135,6 +151,7 @@ sky.sankey(data,
  )
 plt.show()
 plt.savefig("fruits_frame_color.png")
+plt.close()
 
 plt.figure()
 sky.sankey(
@@ -154,6 +171,7 @@ sky.sankey(
 )
 plt.show()
 plt.savefig("fruits_spacing.png")
+plt.close()
 
 data = pd.DataFrame(
     [
@@ -170,7 +188,7 @@ data = pd.DataFrame(
 plt.figure()
 sky.sankey(data, sort="top", colormap="jet", aspect=0.5)
 plt.savefig("frame2_sort_n1.png")
-
+plt.close()
 
 color_dict = {
     "a": "#f71b1b",
@@ -191,7 +209,7 @@ sky.sankey(
     valign="center",
 )
 plt.savefig("frame3_pretty.png")
-
+plt.close()
 
 plt.figure(dpi=600)
 sky.sankey(
@@ -199,7 +217,7 @@ sky.sankey(
     label_loc=["right","right","left"],
 )
 plt.savefig("frame3_labels.png")
-
+plt.close()
 
 
 plt.figure(dpi=600)
@@ -212,7 +230,7 @@ sky.sankey(
     label_gap=0.02,
     node_width=0.05,
     node_gap=0.02,
-    alpha=0.3,
+    flow_alpha=0.3,
     titles=["Stage 1", "Stage 2", "Stage 3"],
     title_gap=0.05,
     title_side="both",
@@ -222,7 +240,7 @@ sky.sankey(
 )
 
 plt.savefig("frame3_many.png")
-
+plt.close()
 
 plt.figure(dpi=600)
 sky.sankey(data3,
@@ -235,3 +253,9 @@ sky.sankey(data3,
     flow_lw = 1,
     )
 plt.savefig("frame3_edge.png")
+plt.close()
+
+
+
+
+
