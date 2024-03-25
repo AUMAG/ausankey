@@ -527,7 +527,7 @@ def _sankey(
                 label,
                 ha,
             )
- 
+
         if ii == num_flow - 1 and label_loc[2] != "none":  # last time
             if label_loc[2] in ("left"):
                 xx = x_lr[lr] - x_label_gap
