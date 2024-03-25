@@ -143,7 +143,7 @@ The locations of the labels can be specified according to whether they correspon
 
     label_loc = [ <loc_l> , <loc_m>, <loc_r> ]
 
-Allowable values for `<loc_l>` and `<loc_r>` are `"left"`, `"right"`, or `"none"`.
+Allowable values for `<loc_l>` and `<loc_r>` are `"left"`, `"right"`,  `"center"`, or `"none"`.
 `<loc_m>` also allows `"both"`. The default settings are:
 
     label_loc = [ "left", "none", "right" ]

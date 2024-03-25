@@ -115,7 +115,7 @@ def sankey(
     label_width : float
         Normalised horizontal space to reserve outside the plot
         on the left and the right for labels
-        (1.0 = 100% of plot height)
+        (1.0 = 100% of plot width)
 
     label_gap : float
         Normalised horizontal gap between the left/right of the
@@ -124,15 +124,15 @@ def sankey(
 
     label_loc : [str1, str2, str3]
         Position to place labels next to the nodes.
-        * `str1`: position of first labels (`"left"`, `"right"`, or `"none"`)
-        * `str2`: position of middle labels (`"left"`, `"right"`, `"both"`, or `"none"`)
-        * `str3`: position of last labels (`"left"`, `"right"`, or `"none"`)
+        * `str1`: position of first labels (`"left"`, `"right"`, `"center"`, or `"none"`)
+        * `str2`: position of middle labels (`"left"`, `"right"`, `"both"`, `"center"`, or `"none"`)
+        * `str3`: position of last labels (`"left"`, `"right"`, `"center"`, or `"none"`)
 
     sort : int
         Sorting routine to use for the data.
         * `"top"`: data is sorted with largest entries on top
         * `"bottom"`: data is sorted with largest entries on bottom
-        * `"none"`: data is presented in the same order as it appears in the DataFrame
+        * `"none"`: data is presented in the same order as it (first) appears in the DataFrame
 
     titles : list of str
         Array of title strings for each columns
@@ -486,6 +486,9 @@ def _sankey(
             elif label_loc[lr] in ("right"):
                 xx = x_lr[lr] + x_label_gap
                 ha = "left"
+            elif label_loc[lr] in ("center"):
+                xx = x_lr[lr] - x_node_width / 2
+                ha = "center"
             draw_label(
                 xx,
                 node_pos_bot[lr][label] + node_sizes[ii + lr][label] / 2,
@@ -501,13 +504,19 @@ def _sankey(
             )
 
     lr = 1
-    for label in nodes_lr[lr]:
-        if ii < num_flow - 1 and label_loc[lr] in ("right", "both"):  # inside labels
+    for label in nodes_lr[lr]:  # inside labels
+        if ii < num_flow - 1:
+            if label_loc[lr] in ("right", "both"):
+                xx = x_lr[lr] - x_label_gap
+                ha = "right"
+            if label_loc[lr] in ("center"):
+                xx = x_lr[lr] + x_node_width / 2
+                ha = "center"
             draw_label(
-                x_lr[lr] - x_label_gap,
+                xx,
                 node_pos_bot[1][label] + node_sizes[ii + 1][label] / 2,
                 label,
-                "right",
+                ha,
             )
         if ii == num_flow - 1 and label_loc[lr + 1] != "none":  # last time
             if label_loc[2] in ("left"):
@@ -516,6 +525,9 @@ def _sankey(
             elif label_loc[2] in ("right"):
                 xx = x_lr[lr] + x_label_gap + x_node_width
                 ha = "left"
+            elif label_loc[2] in ("center"):
+                xx = x_lr[lr] + x_node_width / 2
+                ha = "center"
             draw_label(
                 xx,
                 node_pos_bot[lr][label] + node_sizes[ii + lr][label] / 2,
