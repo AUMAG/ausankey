@@ -48,14 +48,3 @@ plt.show()
 * numpy
 * pandas
 
-
-## Package development
-
-### Testing
-
-	python -m pytest 
-
-### Coverage
-
-	coverage run -m pytest
-
