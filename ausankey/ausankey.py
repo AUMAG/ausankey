@@ -529,24 +529,9 @@ def _sankey(
             xx = x_lr[lr] - x_label_gap
         elif label_loc[2] in ("right"):
             xx = x_lr[lr] + x_label_gap + x_node_width
-            ha = "left"
-            draw_label(
-                xx,
-                node_pos_bot[lr][label] + node_sizes[ii + lr][label] / 2,
-                label,
-                ha,
-            )
-
-        if ii == num_flow - 1 and label_loc[2] != "none":  # last time
-            if label_loc[2] in ("left"):
-                xx = x_lr[lr] - x_label_gap
-                ha = "right"
-            elif label_loc[2] in ("right"):
-                xx = x_lr[lr] + x_label_gap + x_node_width
-                ha = "left"
-            elif label_loc[2] in ("center"):
-                xx = x_lr[lr] + x_node_width / 2
-                ha = "center"
+        elif label_loc[2] in ("center"):
+            xx = x_lr[lr] + x_node_width / 2
+        for label in nodes_lr[lr]:
             draw_label(
                 xx,
                 node_pos_bot[lr][label] + node_sizes[ii + lr][label] / 2,
