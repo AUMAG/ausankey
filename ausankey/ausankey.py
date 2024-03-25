@@ -481,44 +481,53 @@ def _sankey(
             },
         )
 
+    # first row of labels
     lr = 0
-    for label in nodes_lr[lr]:
-        if ii == 0 and label_loc[0] != "none":  # first label
-            if label_loc[0] in ("left"):
-                xx = x_lr[lr] - x_label_gap - x_node_width
-                ha = "right"
-            elif label_loc[0] in ("right"):
-                xx = x_lr[lr] + x_label_gap
-                ha = "left"
-            elif label_loc[0] in ("center"):
-                xx = x_lr[lr] - x_node_width / 2
-                ha = "center"
-            draw_label(
-                xx,
-                node_pos_bot[lr][label] + node_sizes[ii + lr][label] / 2,
-                label,
-                ha,
-            )
+    if ii == 0 and label_loc[0] != "none":
+        if label_loc[0] in ("left"):
+            xx = x_lr[lr] - x_label_gap - x_node_width
+            ha = "right"
+        elif label_loc[0] in ("right"):
+            xx = x_lr[lr] + x_label_gap
+            ha = "left"
+        elif label_loc[0] in ("center"):
+            xx = x_lr[lr] - x_node_width / 2
+            ha = "center"
+        for label in nodes_lr[lr]:
+            yy = node_pos_bot[lr][label] + node_sizes[ii + lr][label] / 2
+            draw_label(xx, yy, label, ha)
 
+    # inside labels, left
     lr = 1
-    for label in nodes_lr[lr]:
-        # inside labels, right or center
-        if ii < num_flow - 1 and label_loc[1] in ("left", "both", "center"):
-            if label_loc[1] in ("left", "both"):
-                xx = x_lr[lr] - x_label_gap
-                ha = "right"
-            if label_loc[1] in ("center"):
-                xx = x_lr[lr] + x_node_width / 2
-                ha = "center"
-            draw_label(
-                xx,
-                node_pos_bot[lr][label] + node_sizes[ii + lr][label] / 2,
-                label,
-                ha,
-            )
+    if ii < num_flow - 1 and label_loc[1] in ("left", "both"):
+        xx = x_lr[lr] - x_label_gap
+        ha = "right"
+        for label in nodes_lr[lr]:
+            yy = node_pos_bot[lr][label] + node_sizes[ii + lr][label] / 2
+            draw_label(xx, yy, label, ha)
 
-        # inside labels, left
-        if ii < num_flow - 1 and label_loc[1] in ("right", "both"):
+    # inside labels, center
+    if ii < num_flow - 1 and label_loc[1] in ("center"):
+        xx = x_lr[lr] + x_node_width / 2
+        ha = "center"
+        for label in nodes_lr[lr]:
+            yy = node_pos_bot[lr][label] + node_sizes[ii + lr][label] / 2
+            draw_label(xx, yy, label, ha)
+
+    # inside labels, right
+    if ii < num_flow - 1 and label_loc[1] in ("right", "both"):
+        xx = x_lr[lr] + x_label_gap + x_node_width
+        ha = "left"
+        for label in nodes_lr[lr]:
+            yy = node_pos_bot[lr][label] + node_sizes[ii + lr][label] / 2
+            draw_label(xx, yy, label, ha)
+
+    # last row of labels
+    ha_dict = {"left": "right", "right": "left", "center": "center"}
+    if ii == num_flow - 1 and label_loc[2] != "none":
+        if label_loc[2] in ("left"):
+            xx = x_lr[lr] - x_label_gap
+        elif label_loc[2] in ("right"):
             xx = x_lr[lr] + x_label_gap + x_node_width
             ha = "left"
             draw_label(
@@ -542,7 +551,7 @@ def _sankey(
                 xx,
                 node_pos_bot[lr][label] + node_sizes[ii + lr][label] / 2,
                 label,
-                ha,
+                ha_dict[label_loc[2]],
             )
 
     if flow_edge:
