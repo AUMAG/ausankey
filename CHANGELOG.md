@@ -1,6 +1,6 @@
 # Changelog for ausankey
 
-## 2024-03-25 v1.2
+## 2024-03-25 v1.2.1
 
 * Label alignment bug fix (not sure how it slipped through).
 * Fixing it involved some nice tidy-up of the code. 
