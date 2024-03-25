@@ -23,6 +23,7 @@ def sankey(
     node_width=0.02,
     node_gap=0.05,
     node_alpha=1,
+    node_edge=None,
     color_dict=None,
     colormap="viridis",
     flow_edge=None,
@@ -38,6 +39,8 @@ def sankey(
     label_gap=0.01,
     label_loc=None,
     label_font=None,
+    flow_lw=1,
+    node_lw=1,
     titles=None,
     title_gap=0.05,
     title_side="top",  # "bottom", "both"
@@ -58,6 +61,12 @@ def sankey(
 
     ax : Axis
         Matplotlib plot axis to use
+
+    node_edges: bool
+        Whether to plot edges around each node.
+
+    node_lw : float
+        Linewidth for node edges.
 
     node_width : float
         Normalised horizontal width of the data bars
@@ -92,6 +101,9 @@ def sankey(
     flow_edge : bool
         Whether to draw an edge to the flows.
         Doesn't always look great when there is lots of branching and overlap.
+
+    flow_lw : float
+        Linewidth for flow edges.
 
     flow_alpha : float
         Opacity of the flows (`0.0` = transparent, `1.0` = opaque)
@@ -279,10 +291,13 @@ def sankey(
             label_gap=label_gap,
             label_loc=label_loc or ["left", "none", "right"],
             label_font=label_font or {},
+            flow_lw=flow_lw,
+            node_lw=node_lw,
             node_alpha=node_alpha,
             node_width=node_width,
             node_sizes=node_sizes,
             node_gap=node_gap,
+            node_edge=node_edge or False,
             plot_height=plot_height,
             sub_width=sub_width,
             titles=titles,
@@ -318,10 +333,13 @@ def _sankey(
     label_gap=None,
     label_loc=None,
     label_font=None,
+    flow_lw=None,
+    node_lw=None,
     node_width=None,
     node_sizes=None,
     node_gap=None,
     node_alpha=None,
+    node_edge=None,
     plot_height=None,
     sub_width=None,
     titles=None,
@@ -337,13 +355,6 @@ def _sankey(
     Some special-casing is used for plotting/labelling differently
     for the first and last cases.
     """
-
-    if flow_edge:
-        edge_alpha = 1
-        edge_lw = 1
-    else:
-        edge_alpha = flow_alpha
-        edge_lw = 0
 
     labelind = 2 * ii
     weightind = 2 * ii + 1
@@ -421,14 +432,8 @@ def _sankey(
 
     # Draw nodes
 
-    if flow_edge:
-        edge_alpha = 1
-        edge_lw = 1
-    else:
-        edge_alpha = flow_alpha
-        edge_lw = 0
-
     def draw_node(x, dx, y, dy, label):
+        edge_lw = node_lw if node_edge else 0
         ax.fill_between(
             [x, x + dx],
             y,
@@ -438,14 +443,13 @@ def _sankey(
             lw=edge_lw,
             snap=True,
         )
-        if flow_edge:
+        if node_edge:
             ax.fill_between(
                 [x, x + dx],
                 y,
                 y + dy,
                 edgecolor=color_dict[label],
                 facecolor="none",
-                alpha=1,
                 lw=edge_lw,
                 snap=True,
             )
@@ -534,6 +538,13 @@ def _sankey(
                 label,
                 ha,
             )
+
+    if flow_edge:
+        edge_lw = flow_lw
+        edge_alpha = 1
+    else:
+        edge_alpha = flow_alpha
+        edge_lw = 0
 
     # Plot flows
     for lbl_l in nodes_lr[0]:
