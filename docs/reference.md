@@ -1,5 +1,9 @@
 # Reference
 
+## The `Sankey` class
+
+::: ausankey.Sankey
+
 ## The `sankey` user function
 
 ::: ausankey.sankey

@@ -16,6 +16,199 @@ class SankeyError(Exception):
     pass
 
 
+class Sankey():
+    """Sankey Diagram
+
+    Parameters
+    ----------
+    data : DataFrame
+        pandas dataframe of labels and weights in alternating columns
+
+    aspect : float
+        vertical extent of the diagram in units of horizontal extent
+
+    ax : Axis
+        Matplotlib plot axis to use
+
+    node_edges: bool
+        Whether to plot edges around each node.
+
+    node_lw : float
+        Linewidth for node edges.
+
+    node_width : float
+        Normalised horizontal width of the data bars
+        (1.0 = 100% of plot width)
+
+    node_gap : float
+        Normalised vertical gap between successive data bars
+        (1.0 = 100% of nominal plot height).
+
+    node_alpha : float
+        Opacity of the nodes (`0.0` = transparent, `1.0` = opaque).
+
+    color_dict : dict
+        Dictionary of colors to use for each label `{'label': 'color'}`
+
+    colormap : str
+        Matplotlib colormap name to automatically assign colours.
+        `color_dict` can overide these on an individual basis if needed
+
+    fontsize : int
+        Font size of the node labels and titles. Passed through to Matplotlib's text
+        option `fontsize`.
+
+    fontfamily: str
+        Font family of the node labels and titles. Passed through to Matplotlib's text
+        option `fontfamily`.
+
+    fontcolor: color
+        Font colour of the node labels and titles. Passed through to Matplotlib's text
+        option `color`.
+
+    flow_edge : bool
+        Whether to draw an edge to the flows.
+        Doesn't always look great when there is lots of branching and overlap.
+
+    flow_lw : float
+        Linewidth for flow edges.
+
+    flow_alpha : float
+        Opacity of the flows (`0.0` = transparent, `1.0` = opaque)
+
+    frame_side : str
+        Whether to place a frame (horizontal rule) above or below the plot.
+        Allowed values: `"none"`, `"top"`, `"bottom"`, or `"both"`
+
+    frame_gap : str
+        Normalised vertical gap between the top/bottom of the plot and the frame
+        (1.0 = 100% of plot height)
+
+    frame_color : color
+        Color of frame
+
+    label_dict : dict
+        Dictionary of labels to optionally replace the labels in the data
+        (e.g., to provide abbreviations or human readable alternatives).
+        Format: `{'orig_label': 'printed_label'}`
+
+    label_width : float
+        Normalised horizontal space to reserve outside the plot
+        on the left and the right for labels
+        (1.0 = 100% of plot width)
+
+    label_gap : float
+        Normalised horizontal gap between the left/right of the
+        plot edges and the label
+        (1.0 = 100% of plot width)
+
+    label_loc : [str1, str2, str3]
+        Position to place labels next to the nodes.
+        * `str1`: position of first labels (`"left"`, `"right"`, `"center"`, or `"none"`)
+        * `str2`: position of middle labels (`"left"`, `"right"`, `"both"`, `"center"`, or `"none"`)
+        * `str3`: position of last labels (`"left"`, `"right"`, `"center"`, or `"none"`)
+
+    sort : int
+        Sorting routine to use for the data.
+        * `"top"`: data is sorted with largest entries on top
+        * `"bottom"`: data is sorted with largest entries on bottom
+        * `"none"`: data is presented in the same order as it (first) appears in the DataFrame
+
+    titles : list of str
+        Array of title strings for each columns
+
+    title_gap : float
+        Normalised vertical gap between the column and the title string
+        (1.0 = 100% of plot height)
+
+    title_side : str
+        Whether to place the titles above or below the plot.
+        Allowed values: `"top"`, `"bottom"`, or `"both"`
+
+    title_loc : str
+        Whether to place the titles next to each node of the plot
+        or outside the frame.
+        Allowed values: `"inner"` or `"outer"`
+
+    valign : str
+        Vertical alignment of the data bars at each stage,
+        with respect to the whole plot.
+        Allowed values: `"top"`, `"bottom"`, or `"center"`
+"""
+  
+    def __init__(
+        self,
+        data, 
+        aspect=4,
+        ax=None,
+        node_width=0.02,
+        node_gap=0.05,
+        node_alpha=1,
+        node_edge=None,
+        color_dict=None,
+        colormap="viridis",
+        flow_edge=None,
+        flow_alpha=0.6,
+        fontcolor="black",
+        fontfamily="sans-serif",
+        fontsize=12,
+        frame_side="none",
+        frame_gap=0.1,
+        frame_color=None,
+        label_dict=None,
+        label_width=0,
+        label_gap=0.02,
+        label_loc=None,
+        label_font=None,
+        flow_lw=1,
+        node_lw=1,
+        frame_lw=1,
+        titles=None,
+        title_gap=0.05,
+        title_side="top",  # "bottom", "both"
+        title_loc="inner",  # "outer"
+        title_font=None,
+        sort="bottom",  # "top", "bottom", "none"
+        valign="bottom",  # "top","center"
+    ):
+        self.data = data
+        self.aspect = aspect
+        self.ax = ax
+        self.node_width = node_width
+        self.node_gap = node_gap
+        self.node_alpha = node_alpha
+        self.node_edge = node_edge
+        self.color_dict = color_dict
+        self.colormap = colormap
+        self.flow_edge = flow_edge
+        self.flow_alpha = flow_alpha
+        self.fontcolor=fontcolor
+        self.fontsize=fontsize
+        self.fontfamily=fontfamily
+        self.frame_side=frame_side
+        self.frame_gap=frame_gap
+        self.frame_color=frame_color
+        self.label_dict=color_dict
+        self.label_width=label_width
+        self.label_gap=label_gap
+        self.label_loc=label_loc
+        self.label_font=label_font
+        self.flow_lw=flow_lw
+        self.node_lw=node_lw
+        self.frame_lw=frame_lw
+        self.titles=titles
+        self.title_font=title_font
+        self.title_gap=title_gap
+        self.title_loc=title_loc
+        self.title_side=title_side
+        self.sort=sort
+        self.valign=valign
+
+
+
+
+
+
 def sankey(
     data,
     aspect=4,
