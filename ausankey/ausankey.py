@@ -31,7 +31,7 @@ def sankey(data,**kwargs):
 
     # draw each segment
     for ii in range(opt.num_flow):
-        opt._sankey(ii, data, opt)
+        opt.subplot(ii, data, opt)
 
 
 class SankeyError(Exception):
@@ -269,7 +269,9 @@ class Sankey():
         opt.plot_height = max(col_hgt)
         opt.sub_width = opt.plot_height / opt.aspect
         plot_width = (
-            (num_side - 1) * opt.sub_width + 2 * opt.sub_width * (opt.label_gap + opt.label_width) + num_side * opt.sub_width * opt.node_width
+            (num_side - 1) * opt.sub_width
+            + 2 * opt.sub_width * (opt.label_gap + opt.label_width)
+            + num_side * opt.sub_width * opt.node_width
         )
     
         # offsets for alignment
@@ -342,7 +344,7 @@ class Sankey():
         return opt
 
 
-    def _sankey(self,ii, data, opt):
+    def subplot(self,ii, data, opt):
         """Subroutine for plotting horizontal sections of the Sankey plot
     
         Some special-casing is used for plotting/labelling differently
