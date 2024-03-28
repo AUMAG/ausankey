@@ -201,9 +201,127 @@ class Sankey():
         self.sort = sort
         self.valign = valign
 
+    def setup(self, data, opt):
+        num_col = len(data.columns)
+        data.columns = range(num_col)  # force numeric column headings
+        num_side = int(num_col / 2)  # number of stages
+        opt.num_flow = num_side - 1
+    
+        # sizes
+        weight_sum = np.empty(num_side)
+        num_uniq = np.empty(num_side)
+        col_hgt = np.empty(num_side)
+        opt.node_sizes = {}
+        nodes_uniq = {}
+        for ii in range(num_side):
+            nodes_uniq[ii] = pd.Series(data[2 * ii]).unique()
+            num_uniq[ii] = len(nodes_uniq[ii])
+    
+        for ii in range(num_side):
+            opt.node_sizes[ii] = {}
+            for lbl in nodes_uniq[ii]:
+                if ii == 0:
+                    ind_prev = data[2 * ii + 0] == lbl
+                    ind_this = data[2 * ii + 0] == lbl
+                    ind_next = data[2 * ii + 2] == lbl
+                elif ii == opt.num_flow:
+                    ind_prev = data[2 * ii - 2] == lbl
+                    ind_this = data[2 * ii + 0] == lbl
+                    ind_next = data[2 * ii + 0] == lbl
+                else:
+                    ind_prev = data[2 * ii - 2] == lbl
+                    ind_this = data[2 * ii + 0] == lbl
+                    ind_next = data[2 * ii + 2] == lbl
+                weight_cont = data[2 * ii + 1][ind_this & ind_prev & ind_next].sum()
+                weight_only = data[2 * ii + 1][ind_this & ~ind_prev & ~ind_next].sum()
+                weight_stop = data[2 * ii + 1][ind_this & ind_prev & ~ind_next].sum()
+                weight_strt = data[2 * ii + 1][ind_this & ~ind_prev & ind_next].sum()
+                opt.node_sizes[ii][lbl] = weight_cont + weight_only + max(weight_stop, weight_strt)
+            opt.node_sizes[ii] = sort_dict(opt.node_sizes[ii], opt.sort)
+            weight_sum[ii] = pd.Series(opt.node_sizes[ii].values()).sum()
+    
+        for ii in range(num_side):
+            col_hgt[ii] = weight_sum[ii] + (num_uniq[ii] - 1) * opt.node_gap * max(weight_sum)
+    
+        # overall dimensions
+        opt.plot_height = max(col_hgt)
+        opt.sub_width = opt.plot_height / opt.aspect
+        plot_width = (
+            (num_side - 1) * opt.sub_width + 2 * opt.sub_width * (opt.label_gap + opt.label_width) + num_side * opt.sub_width * opt.node_width
+        )
+    
+        # offsets for alignment
+        opt.voffset = np.empty(num_side)
+        if opt.valign == "top":
+            vscale = 1
+        elif opt.valign == "center":
+            vscale = 0.5
+        else:  # bottom, or undefined
+            vscale = 0
+    
+        for ii in range(num_side):
+            opt.voffset[ii] = vscale * (col_hgt[1] - col_hgt[ii])
+    
+        # labels
+        label_record = data[range(0, 2 * num_side, 2)].to_records(index=False)
+        flattened = [item for sublist in label_record for item in sublist]
+        flatcat = pd.Series(flattened).unique()
+    
+        # If no color_dict given, make one
+        color_dict_orig = opt.color_dict or {}
+        color_dict_new = {}
+        cmap = plt.cm.get_cmap(opt.colormap)
+        color_palette = cmap(np.linspace(0, 1, len(flatcat)))
+        for i, label in enumerate(flatcat):
+            color_dict_new[label] = color_dict_orig.get(label, color_palette[i])
+        opt.color_dict = color_dict_new
+    
+        # initialise plot
+        opt.ax = opt.ax or plt.gca()
+        opt.ax.axis("off")
+
+        # frame on top/bottom edge
+        frame_top = opt.frame_side in ("top", "both")
+        frame_bot = opt.frame_side in ("bottom", "both")
+    
+        frame_color = opt.frame_color or [0, 0, 0, 1]
+    
+        y_frame_gap = opt.frame_gap * opt.plot_height
+    
+        col = frame_color if frame_top else [1, 1, 1, 0]
+        opt.ax.plot(
+            [0, plot_width],
+            min(opt.voffset) + (opt.plot_height) + y_frame_gap + [0, 0],
+            color=col,
+            lw=opt.frame_lw,
+        )
+    
+        col = frame_color if frame_bot else [1, 1, 1, 0]
+        opt.ax.plot(
+            [0, plot_width],
+            min(opt.voffset) - y_frame_gap + [0, 0],
+            color=col,
+            lw=opt.frame_lw,
+        )
+        
+        if opt.label_loc is None:
+            opt.label_loc = ["left", "none", "right"]
+        if opt.node_edge is None:
+            opt.node_edge = False
+        if opt.flow_edge is None:
+            opt.flow_edge = False
+        if opt.title_font is None:
+            opt.title_font = {"fontweight": "bold"}
+        if opt.label_dict is None:
+            opt.label_dict = {}
+        if opt.label_font is None:
+            opt.label_font = {}
+        
+        return opt
+
 
 def sankey(data,**kwargs):
-    """Make Sankey Diagram with left-right flow
+    """Make Sankey Diagram
 
     Parameters
     ----------
@@ -217,127 +335,12 @@ def sankey(data,**kwargs):
     """
 
     opt = Sankey(**kwargs)
-    
-    num_col = len(data.columns)
-    data.columns = range(num_col)  # force numeric column headings
-    num_side = int(num_col / 2)  # number of stages
-    opt.num_flow = num_side - 1
-
-    # sizes
-    weight_sum = np.empty(num_side)
-    num_uniq = np.empty(num_side)
-    col_hgt = np.empty(num_side)
-    opt.node_sizes = {}
-    nodes_uniq = {}
-    for ii in range(num_side):
-        nodes_uniq[ii] = pd.Series(data[2 * ii]).unique()
-        num_uniq[ii] = len(nodes_uniq[ii])
-
-    for ii in range(num_side):
-        opt.node_sizes[ii] = {}
-        for lbl in nodes_uniq[ii]:
-            if ii == 0:
-                ind_prev = data[2 * ii + 0] == lbl
-                ind_this = data[2 * ii + 0] == lbl
-                ind_next = data[2 * ii + 2] == lbl
-            elif ii == opt.num_flow:
-                ind_prev = data[2 * ii - 2] == lbl
-                ind_this = data[2 * ii + 0] == lbl
-                ind_next = data[2 * ii + 0] == lbl
-            else:
-                ind_prev = data[2 * ii - 2] == lbl
-                ind_this = data[2 * ii + 0] == lbl
-                ind_next = data[2 * ii + 2] == lbl
-            weight_cont = data[2 * ii + 1][ind_this & ind_prev & ind_next].sum()
-            weight_only = data[2 * ii + 1][ind_this & ~ind_prev & ~ind_next].sum()
-            weight_stop = data[2 * ii + 1][ind_this & ind_prev & ~ind_next].sum()
-            weight_strt = data[2 * ii + 1][ind_this & ~ind_prev & ind_next].sum()
-            opt.node_sizes[ii][lbl] = weight_cont + weight_only + max(weight_stop, weight_strt)
-        opt.node_sizes[ii] = sort_dict(opt.node_sizes[ii], opt.sort)
-        weight_sum[ii] = pd.Series(opt.node_sizes[ii].values()).sum()
-
-    for ii in range(num_side):
-        col_hgt[ii] = weight_sum[ii] + (num_uniq[ii] - 1) * opt.node_gap * max(weight_sum)
-
-    # overall dimensions
-    opt.plot_height = max(col_hgt)
-    opt.sub_width = opt.plot_height / opt.aspect
-    plot_width = (
-        (num_side - 1) * opt.sub_width + 2 * opt.sub_width * (opt.label_gap + opt.label_width) + num_side * opt.sub_width * opt.node_width
-    )
-
-    # offsets for alignment
-    opt.voffset = np.empty(num_side)
-    if opt.valign == "top":
-        vscale = 1
-    elif opt.valign == "center":
-        vscale = 0.5
-    else:  # bottom, or undefined
-        vscale = 0
-
-    for ii in range(num_side):
-        opt.voffset[ii] = vscale * (col_hgt[1] - col_hgt[ii])
-
-    # labels
-    label_record = data[range(0, 2 * num_side, 2)].to_records(index=False)
-    flattened = [item for sublist in label_record for item in sublist]
-    flatcat = pd.Series(flattened).unique()
-
-    # If no color_dict given, make one
-    color_dict_orig = opt.color_dict or {}
-    color_dict_new = {}
-    cmap = plt.cm.get_cmap(opt.colormap)
-    color_palette = cmap(np.linspace(0, 1, len(flatcat)))
-    for i, label in enumerate(flatcat):
-        color_dict_new[label] = color_dict_orig.get(label, color_palette[i])
-    opt.color_dict = color_dict_new
-
-    # initialise plot
-    opt.ax = opt.ax or plt.gca()
-
-    # frame on top/bottom edge
-    frame_top = opt.frame_side in ("top", "both")
-    frame_bot = opt.frame_side in ("bottom", "both")
-
-    frame_color = opt.frame_color or [0, 0, 0, 1]
-
-    y_frame_gap = opt.frame_gap * opt.plot_height
-
-    col = frame_color if frame_top else [1, 1, 1, 0]
-    opt.ax.plot(
-        [0, plot_width],
-        min(opt.voffset) + (opt.plot_height) + y_frame_gap + [0, 0],
-        color=col,
-        lw=opt.frame_lw,
-    )
-
-    col = frame_color if frame_bot else [1, 1, 1, 0]
-    opt.ax.plot(
-        [0, plot_width],
-        min(opt.voffset) - y_frame_gap + [0, 0],
-        color=col,
-        lw=opt.frame_lw,
-    )
-    
-    if opt.label_loc is None:
-        opt.label_loc = ["left", "none", "right"]
-    if opt.node_edge is None:
-        opt.node_edge = False
-    if opt.flow_edge is None:
-        opt.flow_edge = False
-    if opt.title_font is None:
-        opt.title_font = {"fontweight": "bold"}
-    if opt.label_dict is None:
-        opt.label_dict = {}
-    if opt.label_font is None:
-        opt.label_font = {}
+    opt = opt.setup(data,opt)
 
     # draw each segment
     for ii in range(opt.num_flow):
         _sankey(ii, data, opt)
 
-    # complete plot
-    opt.ax.axis("off")
 
 
 ###########################################
