@@ -188,7 +188,7 @@ class Sankey():
         self.frame_side=frame_side
         self.frame_gap=frame_gap
         self.frame_color=frame_color
-        self.label_dict=color_dict
+        self.label_dict=label_dict
         self.label_width=label_width
         self.label_gap=label_gap
         self.label_loc=label_loc
@@ -244,127 +244,15 @@ def sankey(
 ):
     """Make Sankey Diagram with left-right flow
 
-    Parameters
+    Parameters                                                                                                                                                      
     ----------
-    data : DataFrame
-        pandas dataframe of labels and weights in alternating columns
-
-    aspect : float
-        vertical extent of the diagram in units of horizontal extent
-
-    ax : Axis
-        Matplotlib plot axis to use
-
-    node_edges: bool
-        Whether to plot edges around each node.
-
-    node_lw : float
-        Linewidth for node edges.
-
-    node_width : float
-        Normalised horizontal width of the data bars
-        (1.0 = 100% of plot width)
-
-    node_gap : float
-        Normalised vertical gap between successive data bars
-        (1.0 = 100% of nominal plot height).
-
-    node_alpha : float
-        Opacity of the nodes (`0.0` = transparent, `1.0` = opaque).
-
-    color_dict : dict
-        Dictionary of colors to use for each label `{'label': 'color'}`
-
-    colormap : str
-        Matplotlib colormap name to automatically assign colours.
-        `color_dict` can overide these on an individual basis if needed
-
-    fontsize : int
-        Font size of the node labels and titles. Passed through to Matplotlib's text
-        option `fontsize`.
-
-    fontfamily: str
-        Font family of the node labels and titles. Passed through to Matplotlib's text
-        option `fontfamily`.
-
-    fontcolor: color
-        Font colour of the node labels and titles. Passed through to Matplotlib's text
-        option `color`.
-
-    flow_edge : bool
-        Whether to draw an edge to the flows.
-        Doesn't always look great when there is lots of branching and overlap.
-
-    flow_lw : float
-        Linewidth for flow edges.
-
-    flow_alpha : float
-        Opacity of the flows (`0.0` = transparent, `1.0` = opaque)
-
-    frame_side : str
-        Whether to place a frame (horizontal rule) above or below the plot.
-        Allowed values: `"none"`, `"top"`, `"bottom"`, or `"both"`
-
-    frame_gap : str
-        Normalised vertical gap between the top/bottom of the plot and the frame
-        (1.0 = 100% of plot height)
-
-    frame_color : color
-        Color of frame
-
-    label_dict : dict
-        Dictionary of labels to optionally replace the labels in the data
-        (e.g., to provide abbreviations or human readable alternatives).
-        Format: `{'orig_label': 'printed_label'}`
-
-    label_width : float
-        Normalised horizontal space to reserve outside the plot
-        on the left and the right for labels
-        (1.0 = 100% of plot width)
-
-    label_gap : float
-        Normalised horizontal gap between the left/right of the
-        plot edges and the label
-        (1.0 = 100% of plot width)
-
-    label_loc : [str1, str2, str3]
-        Position to place labels next to the nodes.
-        * `str1`: position of first labels (`"left"`, `"right"`, `"center"`, or `"none"`)
-        * `str2`: position of middle labels (`"left"`, `"right"`, `"both"`, `"center"`, or `"none"`)
-        * `str3`: position of last labels (`"left"`, `"right"`, `"center"`, or `"none"`)
-
-    sort : int
-        Sorting routine to use for the data.
-        * `"top"`: data is sorted with largest entries on top
-        * `"bottom"`: data is sorted with largest entries on bottom
-        * `"none"`: data is presented in the same order as it (first) appears in the DataFrame
-
-    titles : list of str
-        Array of title strings for each columns
-
-    title_gap : float
-        Normalised vertical gap between the column and the title string
-        (1.0 = 100% of plot height)
-
-    title_side : str
-        Whether to place the titles above or below the plot.
-        Allowed values: `"top"`, `"bottom"`, or `"both"`
-
-    title_loc : str
-        Whether to place the titles next to each node of the plot
-        or outside the frame.
-        Allowed values: `"inner"` or `"outer"`
-
-    valign : str
-        Vertical alignment of the data bars at each stage,
-        with respect to the whole plot.
-        Allowed values: `"top"`, `"bottom"`, or `"center"`
-
+    **kwargs : function arguments
+        See the Sankey class for complete list of arguments.
 
     Returns
     -------
 
-    None
+    None (yet)
     """
 
     num_col = len(data.columns)
