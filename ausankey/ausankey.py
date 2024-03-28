@@ -224,9 +224,7 @@ class Sankey:
         self.sort = sort
         self.valign = valign
 
-
     def setup(self, data):
-
         num_col = len(data.columns)
         data.columns = range(num_col)  # force numeric column headings
         num_side = int(num_col / 2)  # number of stages
@@ -320,7 +318,6 @@ class Sankey:
         if self.label_font is None:
             self.label_font = {}
 
-
     def plot_frame(self):
         """Plot frame on top/bottom edges"""
 
@@ -346,7 +343,6 @@ class Sankey:
             color=col,
             lw=self.frame_lw,
         )
-
 
     def subplot(self, ii, data):
         """Subroutine for plotting horizontal sections of the Sankey plot
