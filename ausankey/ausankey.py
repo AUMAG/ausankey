@@ -16,7 +16,7 @@ class SankeyError(Exception):
     pass
 
 
-class Sankey():
+class Sankey:
     """Sankey Diagram
 
     Parameters
@@ -133,12 +133,11 @@ class Sankey():
     valign : str
         Vertical alignment of the data bars at each stage,
         with respect to the whole plot.
-        Allowed values: `"top"`, `"bottom"`, or `"center"`
-"""
-  
+        Allowed values: `"top"`, `"bottom"`, or `"center"`"""
+
     def __init__(
         self,
-        data, 
+        data,
         aspect=4,
         ax=None,
         node_width=0.02,
@@ -182,31 +181,27 @@ class Sankey():
         self.colormap = colormap
         self.flow_edge = flow_edge
         self.flow_alpha = flow_alpha
-        self.fontcolor=fontcolor
-        self.fontsize=fontsize
-        self.fontfamily=fontfamily
-        self.frame_side=frame_side
-        self.frame_gap=frame_gap
-        self.frame_color=frame_color
-        self.label_dict=label_dict
-        self.label_width=label_width
-        self.label_gap=label_gap
-        self.label_loc=label_loc
-        self.label_font=label_font
-        self.flow_lw=flow_lw
-        self.node_lw=node_lw
-        self.frame_lw=frame_lw
-        self.titles=titles
-        self.title_font=title_font
-        self.title_gap=title_gap
-        self.title_loc=title_loc
-        self.title_side=title_side
-        self.sort=sort
-        self.valign=valign
-
-
-
-
+        self.fontcolor = fontcolor
+        self.fontsize = fontsize
+        self.fontfamily = fontfamily
+        self.frame_side = frame_side
+        self.frame_gap = frame_gap
+        self.frame_color = frame_color
+        self.label_dict = label_dict
+        self.label_width = label_width
+        self.label_gap = label_gap
+        self.label_loc = label_loc
+        self.label_font = label_font
+        self.flow_lw = flow_lw
+        self.node_lw = node_lw
+        self.frame_lw = frame_lw
+        self.titles = titles
+        self.title_font = title_font
+        self.title_gap = title_gap
+        self.title_loc = title_loc
+        self.title_side = title_side
+        self.sort = sort
+        self.valign = valign
 
 
 def sankey(
@@ -244,7 +239,7 @@ def sankey(
 ):
     """Make Sankey Diagram with left-right flow
 
-    Parameters                                                                                                                                                      
+    Parameters
     ----------
     **kwargs : function arguments
         See the Sankey class for complete list of arguments.
