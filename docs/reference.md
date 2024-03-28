@@ -10,10 +10,6 @@
 
 ## Internal/private functions
 
-### _sankey
-
-::: ausankey._sankey
-
 ### create_curve
 
 ::: ausankey.create_curve
