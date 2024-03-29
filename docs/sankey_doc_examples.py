@@ -148,7 +148,7 @@ plt.figure()
 sky.sankey(data,
     frame_side="both",
     frame_color="#62dcbe",
- )
+)
 plt.show()
 plt.savefig("fruits_frame_color.png")
 plt.close()
@@ -218,6 +218,16 @@ sky.sankey(
 )
 plt.savefig("frame3_labels.png")
 plt.close()
+
+plt.figure(dpi=600)
+sky.sankey(
+    data3,
+    label_loc=["right","right","left"],
+    label_duplicate=False,
+)
+plt.savefig("frame3_labels_dup.png")
+plt.close()
+
 
 
 plt.figure(dpi=600)

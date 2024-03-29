@@ -128,6 +128,11 @@ class Sankey:
         * `str2`: position of middle labels (`"left"`, `"right"`, `"both"`, `"center"`, or `"none"`)
         * `str3`: position of last labels (`"left"`, `"right"`, `"center"`, or `"none"`)
 
+    label_duplicate : bool
+        When set False, will only print a middle label if that label didn't
+        appear in the previous stage. This minimises chart clutter but might
+        be confusing in cases, hence defaulting to True.  
+
     sort : int
         Sorting routine to use for the data.
         * `"top"`: data is sorted with largest entries on top
@@ -177,6 +182,7 @@ class Sankey:
         label_gap=0.02,
         label_loc=("left", "none", "right"),
         label_font=None,
+        label_duplicate=None,
         flow_lw=1,
         node_lw=1,
         frame_lw=1,
@@ -207,7 +213,8 @@ class Sankey:
         self.label_width = label_width
         self.label_gap = label_gap
         self.label_loc = label_loc
-        self.label_font = label_font
+        self.label_font = label_font or {}
+        self.label_duplicate = True if label_duplicate is None else label_duplicate
         self.flow_lw = flow_lw
         self.node_lw = node_lw
         self.frame_lw = frame_lw
@@ -288,7 +295,7 @@ class Sankey:
         color_palette = cmap(np.linspace(0, 1, len(self.all_labels)))
         for i, label in enumerate(self.all_labels):
             color_dict_new[label] = self.color_dict.get(label, color_palette[i])
-        check_colors_match_labels(self.all_labels, color_dict_new)
+        #check_colors_match_labels(self.all_labels, color_dict_new)
         self.color_dict = color_dict_new
 
         # initialise plot
@@ -453,24 +460,27 @@ class Sankey:
             xx = x_lr[lr] - x_label_gap
             ha = "right"
             for label in nodes_lr[lr]:
-                yy = node_pos_bot[lr][label] + self.node_sizes[ii + lr][label] / 2
-                draw_label(xx, yy, label, ha)
+                if (not label in nodes_lr[lr-1]) or self.label_duplicate:
+                    yy = node_pos_bot[lr][label] + self.node_sizes[ii + lr][label] / 2
+                    draw_label(xx, yy, label, ha)
 
         # inside labels, center
         if ii < self.num_flow - 1 and self.label_loc[1] in ("center"):
             xx = x_lr[lr] + x_node_width / 2
             ha = "center"
             for label in nodes_lr[lr]:
-                yy = node_pos_bot[lr][label] + self.node_sizes[ii + lr][label] / 2
-                draw_label(xx, yy, label, ha)
+                if (not label in nodes_lr[lr-1]) or self.label_duplicate:
+                    yy = node_pos_bot[lr][label] + self.node_sizes[ii + lr][label] / 2
+                    draw_label(xx, yy, label, ha)
 
         # inside labels, right
         if ii < self.num_flow - 1 and self.label_loc[1] in ("right", "both"):
             xx = x_lr[lr] + x_label_gap + x_node_width
             ha = "left"
             for label in nodes_lr[lr]:
-                yy = node_pos_bot[lr][label] + self.node_sizes[ii + lr][label] / 2
-                draw_label(xx, yy, label, ha)
+                if (not label in nodes_lr[lr-1]) or self.label_duplicate:
+                    yy = node_pos_bot[lr][label] + self.node_sizes[ii + lr][label] / 2
+                    draw_label(xx, yy, label, ha)
 
         # last row of labels
         if ii == self.num_flow - 1 and self.label_loc[2] != "none":

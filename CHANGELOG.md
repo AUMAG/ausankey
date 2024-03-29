@@ -1,5 +1,11 @@
 # Changelog for ausankey
 
+## 2024-99-99 v1.3
+
+* Add `label_duplicate` switch to avoid printing redundant labels.
+* Internal code changes using OOP methods to assist further features. 
+
+
 ## 2024-03-25 v1.2.1
 
 * Label alignment bug fix (not sure how it slipped through).

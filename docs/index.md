@@ -158,6 +158,19 @@ sky.sankey(
 ```
 ![Image with options](frame3_labels.png)
 
+Repeating the labels can he redundant in cases where labels
+are repeated/duplicated in successive stages. Label
+duplication can be turned off, which only prints a label
+if it didn't appear in the previous stage.
+```
+sky.sankey(
+    data3,
+    label_loc=["right","right","left"],
+    label_duplicate=False,
+)
+```
+![Image with options](frame3_labels_dup.png)
+
 
 ## Titles
 
