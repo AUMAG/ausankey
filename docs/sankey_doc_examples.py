@@ -186,7 +186,7 @@ data = pd.DataFrame(
 )
 
 plt.figure()
-sky.sankey(data, sort="top", colormap="jet", aspect=0.5)
+sky.sankey(data, sort="top", colormap="jet")
 plt.savefig("frame2_sort_n1.png")
 plt.close()
 
