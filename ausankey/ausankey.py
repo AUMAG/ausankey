@@ -179,7 +179,7 @@ class Sankey:
         label_dict=None,
         label_width=0,
         label_gap=0.02,
-        label_loc=None,
+        label_loc=("left", "none", "right"),
         label_font=None,
         flow_lw=1,
         node_lw=1,
@@ -305,8 +305,6 @@ class Sankey:
         self.ax = self.ax or plt.gca()
         self.ax.axis("off")
 
-        if self.label_loc is None:
-            self.label_loc = ["left", "none", "right"]
         if self.node_edge is None:
             self.node_edge = False
         if self.flow_edge is None:
