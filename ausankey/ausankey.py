@@ -219,7 +219,6 @@ class Sankey:
         self.sort = sort
         self.valign = valign
 
-
     def setup(self, data):
         num_col = len(data.columns)
         data.columns = range(num_col)  # force numeric column headings
@@ -273,7 +272,7 @@ class Sankey:
 
         # offsets for alignment
         vscale_dict = {"top": 1, "center": 0.5, "bottom": 0}
-        self.vscale = vscale_dict.get(self.valign,0)
+        self.vscale = vscale_dict.get(self.valign, 0)
         self.voffset = np.empty(self.num_stages)
         for ii in range(self.num_stages):
             self.voffset[ii] = self.vscale * (col_hgt[1] - col_hgt[ii])
@@ -295,7 +294,6 @@ class Sankey:
         # initialise plot
         self.ax = self.ax or plt.gca()
         self.ax.axis("off")
-
 
     def plot_frame(self):
         """Plot frame on top/bottom edges"""
@@ -335,10 +333,14 @@ class Sankey:
 
         lastind = 4 if ii < self.num_flow - 1 else 2
         labels_lr = [
-            data[labelind], data[labelind + 2], data[labelind + lastind],
+            data[labelind],
+            data[labelind + 2],
+            data[labelind + lastind],
         ]
         weights_lr = [
-            data[weightind], data[weightind + 2], data[weightind + lastind],
+            data[weightind],
+            data[weightind + 2],
+            data[weightind + lastind],
         ]
 
         nodes_lr = [
