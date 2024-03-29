@@ -131,7 +131,7 @@ class Sankey:
     label_duplicate : bool
         When set False, will only print a middle label if that label didn't
         appear in the previous stage. This minimises chart clutter but might
-        be confusing in cases, hence defaulting to True.  
+        be confusing in cases, hence defaulting to True.
 
     sort : int
         Sorting routine to use for the data.
@@ -295,7 +295,7 @@ class Sankey:
         color_palette = cmap(np.linspace(0, 1, len(self.all_labels)))
         for i, label in enumerate(self.all_labels):
             color_dict_new[label] = self.color_dict.get(label, color_palette[i])
-        #check_colors_match_labels(self.all_labels, color_dict_new)
+        # check_colors_match_labels(self.all_labels, color_dict_new)
         self.color_dict = color_dict_new
 
         # initialise plot
@@ -460,7 +460,7 @@ class Sankey:
             xx = x_lr[lr] - x_label_gap
             ha = "right"
             for label in nodes_lr[lr]:
-                if (not label in nodes_lr[lr-1]) or self.label_duplicate:
+                if (label not in nodes_lr[lr - 1]) or self.label_duplicate:
                     yy = node_pos_bot[lr][label] + self.node_sizes[ii + lr][label] / 2
                     draw_label(xx, yy, label, ha)
 
@@ -469,7 +469,7 @@ class Sankey:
             xx = x_lr[lr] + x_node_width / 2
             ha = "center"
             for label in nodes_lr[lr]:
-                if (not label in nodes_lr[lr-1]) or self.label_duplicate:
+                if (label not in nodes_lr[lr - 1]) or self.label_duplicate:
                     yy = node_pos_bot[lr][label] + self.node_sizes[ii + lr][label] / 2
                     draw_label(xx, yy, label, ha)
 
@@ -478,7 +478,7 @@ class Sankey:
             xx = x_lr[lr] + x_label_gap + x_node_width
             ha = "left"
             for label in nodes_lr[lr]:
-                if (not label in nodes_lr[lr-1]) or self.label_duplicate:
+                if (label not in nodes_lr[lr - 1]) or self.label_duplicate:
                     yy = node_pos_bot[lr][label] + self.node_sizes[ii + lr][label] / 2
                     draw_label(xx, yy, label, ha)
 
