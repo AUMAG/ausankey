@@ -139,8 +139,10 @@ class Sankey:
         Up to three dictionary keys can be set:
 
         * `"val": v` — set node to other if it is less than `v`
-        * `"sum": s` — set node to other if it is less than `s` fraction of the summed total of all nodes in the current stage
-        * `"max": m` — set node to other if is is less than `m` fraction of the maximum node in the current stage
+        * `"sum": s` — set node to other if it is less than `s` fraction
+                       of the summed total of all nodes in the current stage
+        * `"max": m` — set node to other if is is less than `m` fraction
+                       of the maximum node in the current stage
 
         If any of these criteria are met the reclassification will occur.
 
@@ -299,9 +301,11 @@ class Sankey:
         for ii in range(self.num_stages):
             for nn, lbl in enumerate(self.data[2 * ii]):
                 val = self.node_sizes[ii][lbl]
-                if lbl is None:
-                    continue
-                if val < thresh_val or val < thresh_sum * self.weight_sum[ii] or val < thresh_max * max(self.data[2 * ii + 1]):
+                if lbl is not None and (
+                    val < thresh_val or
+                    val < thresh_sum * self.weight_sum[ii] or
+                    val < thresh_max * max(self.data[2 * ii + 1])
+                   ):
                     self.data.iat[nn,2 * ii] = self.other_name
         self.weight_labels()
 
