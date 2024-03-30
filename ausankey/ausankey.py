@@ -246,9 +246,7 @@ class Sankey:
         self.sort = sort
         self.valign = valign
 
-
     def weight_labels(self):
-
         self.weight_sum = np.empty(self.num_stages)
 
         for ii in range(self.num_stages):
@@ -277,9 +275,7 @@ class Sankey:
 
             self.weight_sum[ii] = pd.Series(self.node_sizes[ii].values()).sum()
 
-
     def setup(self, data):
-
         self.data = data
 
         num_col = len(self.data.columns)
@@ -293,20 +289,20 @@ class Sankey:
         self.nodes_uniq = {}
 
         self.weight_labels()
-        
+
         # reclassify
-        thresh_val = self.other_dict.get("val",0)
-        thresh_max = self.other_dict.get("max",0)
-        thresh_sum = self.other_dict.get("sum",0)
+        thresh_val = self.other_dict.get("val", 0)
+        thresh_max = self.other_dict.get("max", 0)
+        thresh_sum = self.other_dict.get("sum", 0)
         for ii in range(self.num_stages):
             for nn, lbl in enumerate(self.data[2 * ii]):
                 val = self.node_sizes[ii][lbl]
                 if lbl is not None and (
-                    val < thresh_val or
-                    val < thresh_sum * self.weight_sum[ii] or
-                    val < thresh_max * max(self.data[2 * ii + 1])
-                   ):
-                    self.data.iat[nn,2 * ii] = self.other_name
+                    val < thresh_val
+                    or val < thresh_sum * self.weight_sum[ii]
+                    or val < thresh_max * max(self.data[2 * ii + 1])
+                ):
+                    self.data.iat[nn, 2 * ii] = self.other_name
         self.weight_labels()
 
         # sort and calc
@@ -347,7 +343,6 @@ class Sankey:
         # initialise plot
         self.ax = self.ax or plt.gca()
         self.ax.axis("off")
-
 
     def plot_frame(self):
         """Plot frame on top/bottom edges"""
