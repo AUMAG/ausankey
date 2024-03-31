@@ -322,11 +322,11 @@ class Sankey:
             for nn, lbl in enumerate(self.data[2 * ii]):
                 val = self.node_sizes[ii][lbl]
                 if lbl is not None and (
-                    val < self.other_thresh_val or
-                    val < self.other_thresh_sum * self.weight_sum[ii] or
-                    val < self.other_thresh_max * max(self.data[2 * ii + 1])
-                   ):
-                    self.data.iat[nn,2 * ii] = self.other_name
+                    val < self.other_thresh_val
+                    or val < self.other_thresh_sum * self.weight_sum[ii]
+                    or val < self.other_thresh_max * max(self.data[2 * ii + 1])
+                ):
+                    self.data.iat[nn, 2 * ii] = self.other_name
         self.weight_labels()
 
         # sort and calc
