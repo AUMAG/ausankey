@@ -134,8 +134,32 @@ class Sankey:
         appear in the previous stage. This minimises chart clutter but might
         be confusing in cases, hence defaulting to True.
 
-    other_dict : dict
-        Sets thresholds to recategorise nodes that are below a certain value.
+    other_thresh_val : float
+        Sets threshold to recategorise nodes that are below a certain value.
+        Up to three dictionary keys can be set:
+
+        * `"val": v` — set node to other if it is less than `v`
+        * `"sum": s` — set node to other if it is less than `s` fraction
+                       of the summed total of all nodes in the current stage
+        * `"max": m` — set node to other if is is less than `m` fraction
+                       of the maximum node in the current stage
+
+        If any of these criteria are met the reclassification will occur.
+
+    other_thresh_sum : float
+        Sets threshold to recategorise nodes that are below a certain value.
+        Up to three dictionary keys can be set:
+
+        * `"val": v` — set node to other if it is less than `v`
+        * `"sum": s` — set node to other if it is less than `s` fraction
+                       of the summed total of all nodes in the current stage
+        * `"max": m` — set node to other if is is less than `m` fraction
+                       of the maximum node in the current stage
+
+        If any of these criteria are met the reclassification will occur.
+
+    other_thresh_max : float
+        Sets threshold to recategorise nodes that are below a certain value.
         Up to three dictionary keys can be set:
 
         * `"val": v` — set node to other if it is less than `v`
@@ -202,7 +226,9 @@ class Sankey:
         flow_lw=1,
         node_lw=1,
         frame_lw=1,
-        other_dict=None,
+        other_thresh_val=0,
+        other_thresh_max=0,
+        other_thresh_sum=0,
         other_name="Other",
         titles=None,
         title_gap=0.05,
@@ -237,7 +263,9 @@ class Sankey:
         self.node_lw = node_lw
         self.frame_lw = frame_lw
         self.other_name = other_name
-        self.other_dict = other_dict or {}
+        self.other_thresh_val = other_thresh_val
+        self.other_thresh_max = other_thresh_max
+        self.other_thresh_sum = other_thresh_sum
         self.titles = titles
         self.title_font = title_font or {"fontweight": "bold"}
         self.title_gap = title_gap
@@ -288,21 +316,17 @@ class Sankey:
         self.node_sizes = {}
         self.nodes_uniq = {}
 
+        # weight and reclassify
         self.weight_labels()
-
-        # reclassify
-        thresh_val = self.other_dict.get("val", 0)
-        thresh_max = self.other_dict.get("max", 0)
-        thresh_sum = self.other_dict.get("sum", 0)
         for ii in range(self.num_stages):
             for nn, lbl in enumerate(self.data[2 * ii]):
                 val = self.node_sizes[ii][lbl]
                 if lbl is not None and (
-                    val < thresh_val
-                    or val < thresh_sum * self.weight_sum[ii]
-                    or val < thresh_max * max(self.data[2 * ii + 1])
-                ):
-                    self.data.iat[nn, 2 * ii] = self.other_name
+                    val < self.other_thresh_val or
+                    val < self.other_thresh_sum * self.weight_sum[ii] or
+                    val < self.other_thresh_max * max(self.data[2 * ii + 1])
+                   ):
+                    self.data.iat[nn,2 * ii] = self.other_name
         self.weight_labels()
 
         # sort and calc

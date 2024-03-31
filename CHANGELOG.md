@@ -2,8 +2,9 @@
 
 ## 2024-99-99 v1.3
 
-* Add `label_duplicate` switch to avoid printing redundant labels.
-* Internal code changes using OOP methods to assist further features. 
+* Add `label_duplicate` option to avoid printing redundant labels.
+* Add `other_thresh_XX` option to allow recategorisation of entries with values below a certain threshold.
+* Internal code changes using OOP methods to assist further features.
 
 
 ## 2024-03-25 v1.2.1
