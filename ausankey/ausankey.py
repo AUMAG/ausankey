@@ -237,9 +237,9 @@ class Sankey:
         title_font=None,
         sort="bottom",  # "top", "bottom", "none"
         valign="bottom",  # "top","center"
-        value_format = ".0f",
-        value_gap = None,
-        value_font = None,
+        value_format=".0f",
+        value_gap=None,
+        value_font=None,
         value_loc=("right", "left", "left"),
     ):
         self.ax = ax
@@ -281,7 +281,6 @@ class Sankey:
         self.value_gap = label_gap if value_gap is None else value_gap
         self.value_font = value_font or {}
         self.value_loc = value_loc
-
 
     def setup(self, data):
         self.data = data
@@ -348,7 +347,6 @@ class Sankey:
         self.ax = self.ax or plt.gca()
         self.ax.axis("off")
 
-
     def weight_labels(self):
         self.weight_sum = np.empty(self.num_stages)
 
@@ -378,7 +376,6 @@ class Sankey:
 
             self.weight_sum[ii] = pd.Series(self.node_sizes[ii].values()).sum()
 
-
     def plot_frame(self):
         """Plot frame on top/bottom edges"""
 
@@ -404,7 +401,6 @@ class Sankey:
             color=col,
             lw=self.frame_lw,
         )
-
 
     def subplot(self, ii):
         """Subroutine for plotting horizontal sections of the Sankey plot
@@ -643,9 +639,9 @@ class Sankey:
                     ind = 2
                 else:
                     ind = 1
-                if self.value_loc[ind] in ("left","both"):
+                if self.value_loc[ind] in ("left", "both"):
                     sides.append(0)
-                if self.value_loc[ind] in ("right","both"):
+                if self.value_loc[ind] in ("right", "both"):
                     sides.append(1)
                 for lr in sides:
                     self.ax.text(
