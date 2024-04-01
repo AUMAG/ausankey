@@ -389,7 +389,6 @@ class Sankey:
         self.ax = self.ax or plt.gca()
         self.ax.axis("off")
 
-
     def weight_labels(self):
         self.weight_sum = np.empty(self.num_stages)
 
@@ -419,7 +418,6 @@ class Sankey:
 
             self.weight_sum[ii] = pd.Series(self.node_sizes[ii].values()).sum()
 
-
     def plot_frame(self):
         """Plot frame on top/bottom edges"""
 
@@ -445,7 +443,6 @@ class Sankey:
             color=col,
             lw=self.frame_lw,
         )
-
 
     def subplot(self, ii):
         """Subroutine for plotting horizontal sections of the Sankey plot
@@ -675,12 +672,11 @@ class Sankey:
 
         # Place "titles"
         if self.titles is not None:
-
             last_label = [lbl_l, lbl_r]
             y_title_gap = self.title_gap * self.plot_height_nom
             y_frame_gap = self.frame_gap * self.plot_height_nom
             title_x = [x_lr[0] - x_node_width / 2, x_lr[1] + x_node_width / 2]
-            
+
             for lr in [0, 1] if ii == 0 else [1]:
                 if self.title_side in ("top", "both"):
                     if self.title_loc == "outer":
@@ -696,8 +692,7 @@ class Sankey:
                         yt = self.voffset[ii + lr] - y_title_gap
                     self.draw_title(title_x[lr], yt, self.titles[ii + lr], "top")
 
-
-    def draw_node(self,x, dx, y, dy, label):
+    def draw_node(self, x, dx, y, dy, label):
         edge_lw = self.node_lw if self.node_edge else 0
         self.ax.fill_between(
             [x, x + dx],
@@ -719,8 +714,7 @@ class Sankey:
                 snap=True,
             )
 
-
-    def draw_label(self,x, y, label, ha):
+    def draw_label(self, x, y, label, ha):
         self.ax.text(
             x,
             y,
@@ -734,9 +728,8 @@ class Sankey:
                 **self.label_font,
             },
         )
-        
-        
-    def draw_title(self,x, y, label, va):
+
+    def draw_title(self, x, y, label, va):
         self.ax.text(
             x,
             y,
@@ -882,4 +875,3 @@ def combine_colours(c1, c2, num_col):
     aa = np.linspace(c1[3], c2[3], num_col)
 
     return np.array([rr, gg, bb, aa])
-
