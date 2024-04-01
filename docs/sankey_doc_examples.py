@@ -3,14 +3,6 @@ import pandas as pd
 
 import ausankey as sky
 
-data = pd.read_csv("../tests/fruit.csv")
-
-plt.figure()
-sky.sankey(data)
-plt.show()
-plt.savefig("fruits_default.png")
-plt.close()
-
 data = pd.DataFrame(
     [
         ("apple", 100, "apple", 50),
@@ -32,6 +24,12 @@ data3 = pd.DataFrame(
         ("e", 2, "e" , 3, "e" , 8),
     ]
 )
+
+plt.figure()
+sky.sankey(data)
+plt.show()
+plt.savefig("fruits_default.png")
+plt.close()
 
 plt.figure()
 sky.sankey(data, colormap="jet")
@@ -127,6 +125,7 @@ sky.sankey(
       "fontweight": "bold",
   },
   label_font = {"color": "blue"},
+  value_font = {"color": "green"},
 )
 plt.show()
 plt.savefig("data3_fonts_fancy.png")
@@ -215,6 +214,7 @@ plt.figure(dpi=600)
 sky.sankey(
     data3,
     label_loc=["right","right","left"],
+    value_loc=["none","none","none"],
 )
 plt.savefig("frame3_labels.png")
 plt.close()
@@ -223,6 +223,7 @@ plt.figure(dpi=600)
 sky.sankey(
     data3,
     label_loc=["right","right","left"],
+    value_loc=["none","none","none"],
     label_duplicate=False,
 )
 plt.savefig("frame3_labels_dup.png")

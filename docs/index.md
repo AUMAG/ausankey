@@ -124,6 +124,13 @@ sky.sankey(data,sort=“none”)
 ```
 ![Image with options](fruits_sort_none.png)
 
+## Vertical Alignment
+
+The vertical alignment of the diagram can be  `”top”`, `”bottom”`, or `”center”`:
+```
+sky.sankey(data,valign = “center”)
+```
+![Image with options](fruits_valign.png)
 
 ## Labels
 
@@ -151,16 +158,19 @@ Allowable values for `<loc_l>` and `<loc_r>` are `"left"`, `"right"`,  `"center"
 
     label_loc = [ "left", "none", "right" ]
 
-
+When adjusting the position of the labels, some care
+can be needed to avoid clashing with the printing
+of the values. In these examples we just turn the values off.
 ```
 sky.sankey(
     data3,
     label_loc=["right","right","left"],
+    value_loc=["none","none","none"],
 )
 ```
 ![Image with options](frame3_labels.png)
 
-Repeating the labels can he redundant in cases where labels
+Repeating the labels can be redundant in cases where labels
 are repeated/duplicated in successive stages. Label
 duplication can be turned off, which only prints a label
 if it didn't appear in the previous stage.
@@ -168,6 +178,7 @@ if it didn't appear in the previous stage.
 sky.sankey(
     data3,
     label_loc=["right","right","left"],
+    value_loc=["none","none","none"],
     label_duplicate=False,
 )
 ```
@@ -216,7 +227,7 @@ sky.sankey(data,
 ![Image with options](fruits_fonts.png)
 
 These options do not use `snake_case` for consistency with their underlying Matplotlib options.
-Further font options can be passed through directly via the `label_font` and `title_font` options, which override the settings above.
+Further font options can be passed through directly via the `label_font`, `title_font`, and `value_font` options, which override the settings above.
 
 For example:
 ```
@@ -229,6 +240,7 @@ sky.sankey(
       “fontweight”: “bold”,
   },
   label_font = {“color”: “blue”},
+  value_font = {“color”: “green”},
 )
 ```
 ![Image with options](data3_fonts_fancy.png)
@@ -236,13 +248,7 @@ sky.sankey(
 Refer to [Matplotlib documentation](https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.text.html) for available options.
 
 
-## Vertical Alignment
 
-The vertical alignment of the diagram can be  `"top"`, `"bottom"`, or `"center"`:
-```
-sky.sankey(data,valign = "center")
-```
-![Image with options](fruits_valign.png)
 
 
 ## Frames
