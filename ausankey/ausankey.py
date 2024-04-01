@@ -315,9 +315,10 @@ class Sankey:
         self.weight_labels()
 
         # sort and calc
+        self.plot_height_nom = max(self.weight_sum)
         for ii in range(self.num_stages):
             self.node_sizes[ii] = sort_dict(self.node_sizes[ii], self.sort)
-            col_hgt[ii] = self.weight_sum[ii] + (len(self.nodes_uniq[ii]) - 1) * self.node_gap * max(self.weight_sum)
+            col_hgt[ii] = self.weight_sum[ii] + (len(self.nodes_uniq[ii]) - 1) * self.node_gap * self.plot_height_nom
 
         # overall dimensions
         self.plot_height = max(col_hgt)
@@ -446,7 +447,7 @@ class Sankey:
                 nodesize[1][lbl_l][lbl_r] = weights_lr[1][ind].sum()
 
         # Determine vertical positions of nodes
-        y_node_gap = self.node_gap * self.plot_height
+        y_node_gap = self.node_gap * self.plot_height_nom
 
         node_voffset = [{}, {}]
         node_pos_bot = [{}, {}]
@@ -670,8 +671,8 @@ class Sankey:
         if self.titles is not None:
             last_label = [lbl_l, lbl_r]
 
-            y_title_gap = self.title_gap * self.plot_height
-            y_frame_gap = self.frame_gap * self.plot_height
+            y_title_gap = self.title_gap * self.plot_height_nom
+            y_frame_gap = self.frame_gap * self.plot_height_nom
 
             title_x = [
                 x_lr[0] - x_node_width / 2,
