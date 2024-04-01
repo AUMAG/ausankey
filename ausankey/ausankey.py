@@ -237,13 +237,13 @@ class Sankey:
         title_font=None,
         sort="bottom",  # "top", "bottom", "none"
         valign="bottom",  # "top","center"
-        value_format = ".0f",
-        value_gap = None,
-        value_font = None,
+        value_format=".0f",
+        value_gap=None,
+        value_font=None,
         value_loc=("both", "right", "right"),
-        value_thresh_val = 0,
-        value_thresh_sum = 0,
-        value_thresh_max = 0,
+        value_thresh_val=0,
+        value_thresh_sum=0,
+        value_thresh_max=0,
     ):
         self.ax = ax
         self.node_width = node_width
@@ -652,11 +652,11 @@ class Sankey:
                 for lr in sides:
                     val = len_lr[lr]
                     if (
-                        val < self.value_thresh_val or
-                        val < self.value_thresh_sum * self.weight_sum[ii+lr] or
-                        val < self.value_thresh_max * max(self.data[2 * ii + 1])
-                       ):
-                       continue
+                        val < self.value_thresh_val
+                        or val < self.value_thresh_sum * self.weight_sum[ii + lr]
+                        or val < self.value_thresh_max * max(self.data[2 * ii + 1])
+                    ):
+                        continue
                     self.ax.text(
                         x_lr[lr] + (1 - 2 * lr) * x_value_gap,
                         bot_lr[lr] + len_lr[lr] / 2,
