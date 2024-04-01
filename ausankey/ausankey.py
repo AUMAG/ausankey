@@ -233,9 +233,7 @@ class Sankey:
         Only print labels larger than this threshold as a fraction of the sum of all node weights in the stage.
 
     value_thresh_max : float
-        Only print labels larger than this threshold as a fraction of the maximum node weight in the stage.
-"""
-
+        Only print labels larger than this threshold as a fraction of the maximum node weight in the stage."""
 
     def __init__(
         self,
@@ -706,7 +704,7 @@ class Sankey:
                             "fontsize": self.fontsize,
                             "color": self.fontcolor,
                             **self.value_font,
-                        }
+                        },
                     )
 
         # Place "titles"
