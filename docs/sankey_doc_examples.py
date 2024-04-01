@@ -13,23 +13,23 @@ plt.close()
 
 data = pd.DataFrame(
     [
-        ("apple", 1, "apple", 0.5),
-        ("banana", 2, "banana", 3),
-        ("lime", 0.5, "lime", 0.2),
-        ("blueberry", 0.2, "blueberry", 1),
-        ("orange", 1.5, "orange", 1.5),
+        ("apple", 100, "apple", 50),
+        ("banana", 200, "banana", 30),
+        ("lime", 50, "lime", 20),
+        ("blueberry", 20, "blueberry", 10),
+        ("orange", 150, "orange", 150),
     ]
 )
 
 data3 = pd.DataFrame(
     [
-        ("a", 1.0, "ab", 2.0, "a" , 1.0),
-        ("a", 1.0, "ba", 0.8, "ba", 0.4),
-        ("c", 1.5, "cd", 0.5, "d" , 2.0),
-        ("b", 0.5, "ba", 0.8, "ba", 0.4),
-        ("b", 0.5, "ab", 0.8, "a" , 1.0),
-        ("d", 2.0, "cd", 0.4, "d" , 1.0),
-        ("e", 1.0, "e" , 1.0, "e" , 3.0),
+        ("a", 3, "ab", 6, "a" , 3),
+        ("a", 3, "ba", 2, "ba", 1),
+        ("c", 5, "cd", 3, "d" , 6),
+        ("b", 2, "ba", 2, "ba", 1),
+        ("b", 2, "ab", 2, "a" , 3),
+        ("d", 6, "cd", 1, "d" , 3),
+        ("e", 2, "e" , 3, "e" , 8),
     ]
 )
 
