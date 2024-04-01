@@ -237,10 +237,13 @@ class Sankey:
         title_font=None,
         sort="bottom",  # "top", "bottom", "none"
         valign="bottom",  # "top","center"
-        value_format=".0f",
-        value_gap=None,
-        value_font=None,
-        value_loc=("right", "left", "left"),
+        value_format = ".0f",
+        value_gap = None,
+        value_font = None,
+        value_loc=("both", "right", "right"),
+        value_thresh_val = 0,
+        value_thresh_sum = 0,
+        value_thresh_max = 0,
     ):
         self.ax = ax
         self.node_width = node_width
@@ -281,6 +284,9 @@ class Sankey:
         self.value_gap = label_gap if value_gap is None else value_gap
         self.value_font = value_font or {}
         self.value_loc = value_loc
+        self.value_thresh_val = value_thresh_val
+        self.value_thresh_sum = value_thresh_sum
+        self.value_thresh_max = value_thresh_max
 
     def setup(self, data):
         self.data = data
@@ -644,10 +650,17 @@ class Sankey:
                 if self.value_loc[ind] in ("right", "both"):
                     sides.append(1)
                 for lr in sides:
+                    val = len_lr[lr]
+                    if (
+                        val < self.value_thresh_val or
+                        val < self.value_thresh_sum * self.weight_sum[ii+lr] or
+                        val < self.value_thresh_max * max(self.data[2 * ii + 1])
+                       ):
+                       continue
                     self.ax.text(
                         x_lr[lr] + (1 - 2 * lr) * x_value_gap,
                         bot_lr[lr] + len_lr[lr] / 2,
-                        f"{format(len_lr[lr],self.value_format)}",
+                        f"{format(val,self.value_format)}",
                         ha=ha[lr],
                         va="center",
                         **self.value_font,
