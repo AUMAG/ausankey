@@ -389,6 +389,7 @@ class Sankey:
         self.ax = self.ax or plt.gca()
         self.ax.axis("off")
 
+
     def weight_labels(self):
         self.weight_sum = np.empty(self.num_stages)
 
@@ -418,6 +419,7 @@ class Sankey:
 
             self.weight_sum[ii] = pd.Series(self.node_sizes[ii].values()).sum()
 
+
     def plot_frame(self):
         """Plot frame on top/bottom edges"""
 
@@ -443,6 +445,7 @@ class Sankey:
             color=col,
             lw=self.frame_lw,
         )
+
 
     def subplot(self, ii):
         """Subroutine for plotting horizontal sections of the Sankey plot
@@ -507,31 +510,9 @@ class Sankey:
 
         # Draw nodes
 
-        def draw_node(x, dx, y, dy, label):
-            edge_lw = self.node_lw if self.node_edge else 0
-            self.ax.fill_between(
-                [x, x + dx],
-                y,
-                y + dy,
-                facecolor=self.color_dict[label],
-                alpha=self.node_alpha,
-                lw=edge_lw,
-                snap=True,
-            )
-            if self.node_edge:
-                self.ax.fill_between(
-                    [x, x + dx],
-                    y,
-                    y + dy,
-                    edgecolor=self.color_dict[label],
-                    facecolor="none",
-                    lw=edge_lw,
-                    snap=True,
-                )
-
         for lr in [0, 1] if ii == 0 else [1]:
             for label in nodes_lr[lr]:
-                draw_node(
+                self.draw_node(
                     x_lr[lr] - x_node_width * (1 - lr),
                     x_node_width,
                     node_pos_bot[lr][label],
@@ -540,21 +521,6 @@ class Sankey:
                 )
 
         # Draw node labels
-
-        def draw_label(x, y, label, ha):
-            self.ax.text(
-                x,
-                y,
-                self.label_dict.get(label, label),
-                {
-                    "ha": ha,
-                    "va": "center",
-                    "fontfamily": self.fontfamily,
-                    "fontsize": self.fontsize,
-                    "color": self.fontcolor,
-                    **self.label_font,
-                },
-            )
 
         ha_dict = {"left": "right", "right": "left", "center": "center"}
 
@@ -569,7 +535,7 @@ class Sankey:
                 xx = x_lr[lr] - x_node_width / 2
             for label in nodes_lr[lr]:
                 yy = node_pos_bot[lr][label] + self.node_sizes[ii + lr][label] / 2
-                draw_label(xx, yy, label, ha_dict[self.label_loc[0]])
+                self.draw_label(xx, yy, label, ha_dict[self.label_loc[0]])
 
         # inside labels, left
         lr = 1
@@ -579,7 +545,7 @@ class Sankey:
             for label in nodes_lr[lr]:
                 if (label not in nodes_lr[lr - 1]) or self.label_duplicate:
                     yy = node_pos_bot[lr][label] + self.node_sizes[ii + lr][label] / 2
-                    draw_label(xx, yy, label, ha)
+                    self.draw_label(xx, yy, label, ha)
 
         # inside labels, center
         if ii < self.num_flow - 1 and self.label_loc[1] in ("center"):
@@ -588,7 +554,7 @@ class Sankey:
             for label in nodes_lr[lr]:
                 if (label not in nodes_lr[lr - 1]) or self.label_duplicate:
                     yy = node_pos_bot[lr][label] + self.node_sizes[ii + lr][label] / 2
-                    draw_label(xx, yy, label, ha)
+                    self.draw_label(xx, yy, label, ha)
 
         # inside labels, right
         if ii < self.num_flow - 1 and self.label_loc[1] in ("right", "both"):
@@ -597,7 +563,7 @@ class Sankey:
             for label in nodes_lr[lr]:
                 if (label not in nodes_lr[lr - 1]) or self.label_duplicate:
                     yy = node_pos_bot[lr][label] + self.node_sizes[ii + lr][label] / 2
-                    draw_label(xx, yy, label, ha)
+                    self.draw_label(xx, yy, label, ha)
 
         # last row of labels
         if ii == self.num_flow - 1 and self.label_loc[2] != "none":
@@ -609,7 +575,7 @@ class Sankey:
                 xx = x_lr[lr] + x_node_width / 2
             for label in nodes_lr[lr]:
                 yy = node_pos_bot[lr][label] + self.node_sizes[ii + lr][label] / 2
-                draw_label(xx, yy, label, ha_dict[self.label_loc[2]])
+                self.draw_label(xx, yy, label, ha_dict[self.label_loc[2]])
 
         # Plot flows
         if self.flow_edge:
@@ -709,48 +675,81 @@ class Sankey:
 
         # Place "titles"
         if self.titles is not None:
-            last_label = [lbl_l, lbl_r]
 
+            last_label = [lbl_l, lbl_r]
             y_title_gap = self.title_gap * self.plot_height_nom
             y_frame_gap = self.frame_gap * self.plot_height_nom
-
-            title_x = [
-                x_lr[0] - x_node_width / 2,
-                x_lr[1] + x_node_width / 2,
-            ]
-
-            def draw_title(x, y, label, va):
-                self.ax.text(
-                    x,
-                    y,
-                    label,
-                    {
-                        "ha": "center",
-                        "va": va,
-                        "fontfamily": self.fontfamily,
-                        "fontsize": self.fontsize,
-                        "color": self.fontcolor,
-                        **self.title_font,
-                    },
-                )
-
-            # leftmost title
-            title_lr = [0, 1] if ii == 0 else [1]
-
-            for lr in title_lr:
+            title_x = [x_lr[0] - x_node_width / 2, x_lr[1] + x_node_width / 2]
+            
+            for lr in [0, 1] if ii == 0 else [1]:
                 if self.title_side in ("top", "both"):
                     if self.title_loc == "outer":
                         yt = min(self.voffset) + y_title_gap + y_frame_gap + self.plot_height
                     elif self.title_loc == "inner":
                         yt = y_title_gap + node_pos_top[lr][last_label[lr]]
-                    draw_title(title_x[lr], yt, self.titles[ii + lr], "bottom")
+                    self.draw_title(title_x[lr], yt, self.titles[ii + lr], "bottom")
 
                 if self.title_side in ("bottom", "both"):
                     if self.title_loc == "outer":
                         yt = min(self.voffset) - y_title_gap - y_frame_gap
                     elif self.title_loc == "inner":
                         yt = self.voffset[ii + lr] - y_title_gap
-                    draw_title(title_x[lr], yt, self.titles[ii + lr], "top")
+                    self.draw_title(title_x[lr], yt, self.titles[ii + lr], "top")
+
+
+    def draw_node(self,x, dx, y, dy, label):
+        edge_lw = self.node_lw if self.node_edge else 0
+        self.ax.fill_between(
+            [x, x + dx],
+            y,
+            y + dy,
+            facecolor=self.color_dict[label],
+            alpha=self.node_alpha,
+            lw=edge_lw,
+            snap=True,
+        )
+        if self.node_edge:
+            self.ax.fill_between(
+                [x, x + dx],
+                y,
+                y + dy,
+                edgecolor=self.color_dict[label],
+                facecolor="none",
+                lw=edge_lw,
+                snap=True,
+            )
+
+
+    def draw_label(self,x, y, label, ha):
+        self.ax.text(
+            x,
+            y,
+            self.label_dict.get(label, label),
+            {
+                "ha": ha,
+                "va": "center",
+                "fontfamily": self.fontfamily,
+                "fontsize": self.fontsize,
+                "color": self.fontcolor,
+                **self.label_font,
+            },
+        )
+        
+        
+    def draw_title(self,x, y, label, va):
+        self.ax.text(
+            x,
+            y,
+            label,
+            {
+                "ha": "center",
+                "va": va,
+                "fontfamily": self.fontfamily,
+                "fontsize": self.fontsize,
+                "color": self.fontcolor,
+                **self.title_font,
+            },
+        )
 
 
 ###########################################
@@ -883,3 +882,4 @@ def combine_colours(c1, c2, num_col):
     aa = np.linspace(c1[3], c2[3], num_col)
 
     return np.array([rr, gg, bb, aa])
+
