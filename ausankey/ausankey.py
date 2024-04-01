@@ -134,6 +134,9 @@ class Sankey:
         appear in the previous stage. This minimises chart clutter but might
         be confusing in cases, hence defaulting to True.
 
+    label_font : dict
+        Dictionary of Matplotlib text options to be passed to the labels.
+
     other_thresh_val : float
         Sets threshold to recategorise nodes that are below a certain value.
         Up to three dictionary keys can be set:
@@ -195,10 +198,44 @@ class Sankey:
         or outside the frame.
         Allowed values: `"inner"` or `"outer"`
 
+    title_font : dict
+        Dictionary of Matplotlib text options to be passed to the titles.
+
     valign : str
         Vertical alignment of the data bars at each stage,
         with respect to the whole plot.
-        Allowed values: `"top"`, `"bottom"`, or `"center"`"""
+        Allowed values: `"top"`, `"bottom"`, or `"center"`
+
+    value_loc : dict
+        label_loc : [str1, str2, str3]
+        Position to place values next to the nodes corresponding to the sizes.
+        These are placed within the flows at the beginning (left) and end (right) of each one.
+        Each str can be one of: `"left"`, `"right"`, `"both"`, or `"none"`
+
+        * `str1`: position of value(s) in first flow
+        * `str2`: position of value(s) in middle flows
+        * `str3`: position of value(s) in last flow
+
+    value_format : str
+        String formatting specification passed internally to the `format()` function.
+
+    value_gap : float
+        Horizontal space fraction between the edge of the node and the value label.
+        Defaults to `label_gap`.
+
+    value_font : dict
+        Dictionary of Matplotlib text options to be passed to the value labels.
+
+    value_thresh_val : float
+        Only print labels larger than this absolute value threshold.
+
+    value_thresh_sum : float
+        Only print labels larger than this threshold as a fraction of the sum of all node weights in the stage.
+
+    value_thresh_max : float
+        Only print labels larger than this threshold as a fraction of the maximum node weight in the stage.
+"""
+
 
     def __init__(
         self,
@@ -662,9 +699,14 @@ class Sankey:
                         x_lr[lr] + (1 - 2 * lr) * x_value_gap,
                         bot_lr[lr] + len_lr[lr] / 2,
                         f"{format(val,self.value_format)}",
-                        ha=ha[lr],
-                        va="center",
-                        **self.value_font,
+                        {
+                            "ha": ha[lr],
+                            "va": "center",
+                            "fontfamily": self.fontfamily,
+                            "fontsize": self.fontsize,
+                            "color": self.fontcolor,
+                            **self.value_font,
+                        }
                     )
 
         # Place "titles"
