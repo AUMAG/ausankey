@@ -20,7 +20,7 @@
 
 ### sort_dict
 
-::: ausankey.sort_dict
+::: ausankey.sort_node_sizes
 
 ### sort_nodes
 
