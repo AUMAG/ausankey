@@ -182,6 +182,10 @@ class Sankey:
         * `"bottom"`: data is sorted with largest entries on bottom
         * `"none"`: data is presented in the same order as it (first) appears in the DataFrame
 
+    sort_dict : dict
+        Override the weight sum used to sort nodes by the value specified in the dict.
+        Typically used to force particular categories to the top or bottom.
+
     titles : list of str
         Array of title strings for each columns
 
@@ -271,6 +275,7 @@ class Sankey:
         title_loc="inner",  # "outer"
         title_font=None,
         sort="bottom",  # "top", "bottom", "none"
+        sort_dict=None,
         valign="bottom",  # "top","center"
         value_format=".0f",
         value_gap=None,
@@ -314,6 +319,7 @@ class Sankey:
         self.title_loc = title_loc
         self.title_side = title_side
         self.sort = sort
+        self.sort_dict = sort_dict or {}
         self.valign = valign
         self.value_format = value_format
         self.value_gap = label_gap if value_gap is None else value_gap
@@ -352,7 +358,7 @@ class Sankey:
         # sort and calc
         self.plot_height_nom = max(self.weight_sum)
         for ii in range(self.num_stages):
-            self.node_sizes[ii] = sort_dict(self.node_sizes[ii], self.sort)
+            self.node_sizes[ii] = self.sort_node_sizes(self.node_sizes[ii], self.sort)
             col_hgt[ii] = self.weight_sum[ii] + (len(self.nodes_uniq[ii]) - 1) * self.node_gap * self.plot_height_nom
 
         # overall dimensions
@@ -467,9 +473,9 @@ class Sankey:
             self.data[weightind + lastind],
         ]
 
-        nodes_lr = [
-            sort_nodes(labels_lr[0], self.node_sizes[ii]),
-            sort_nodes(labels_lr[1], self.node_sizes[ii + 1]),
+        nodes_lr =[
+            self.sort_nodes(labels_lr[0], self.node_sizes[ii]),
+            self.sort_nodes(labels_lr[1], self.node_sizes[ii + 1]),
         ]
 
         # Determine sizes of individual subflows
@@ -749,52 +755,52 @@ class Sankey:
 ###########################################
 
 
-def sort_nodes(lbl, node_sizes):
-    """creates a sorted list of labels by their summed weights"""
-
-    arr = {}
-    for uniq in lbl.unique():
-        if uniq is not None:
-            arr[uniq] = True
-
-    sort_arr = sorted(
-        arr.items(),
-        key=lambda item: list(node_sizes).index(item[0]),
-        # sorting = 0,1,-1 affects this
-    )
-
-    return list(dict(sort_arr).keys())
+    def sort_nodes(self,lbl, node_sizes):
+        """creates a sorted list of labels by their summed weights"""
+    
+        arr = {}
+        for uniq in lbl.unique():
+            if uniq is not None:
+                arr[uniq] = True
+    
+        sort_arr = sorted(
+            arr.items(),
+            key=lambda item: list(node_sizes).index(item[0]),
+        )
+    
+        return list(dict(sort_arr).keys())
 
 
 ###########################################
 
 
-def sort_dict(lbl, sorting):
-    """creates a sorted list of labels by their summed weights"""
+    def sort_node_sizes(self,lbl, sorting):
+        """creates a sorted list of labels by their summed weights"""
 
-    if sorting == "top":
-        s = 1
-    elif sorting == "bottom":
-        s = -1
-    elif sorting == "center":
-        s = 1
-    else:
-        s = 0
+        if sorting == "top":
+            s = 1
+        elif sorting == "bottom":
+            s = -1
+        elif sorting == "center":
+            s = 1
+        else:
+            s = 0
 
-    sort_arr = sorted(
-        lbl.items(),
-        key=lambda item: s * item[1],
-        # sorting = 0,1,-1 affects this
-    )
+        sort_arr = sorted(
+            lbl.items(),
+            key=lambda item:
+                s * self.sort_dict.get(item[0], item[1]),
+            # sorting = 0,1,-1 affects this
+        )
 
-    sorted_labels = dict(sort_arr)
+        sorted_labels = dict(sort_arr)
 
-    if sorting == "center":
-        # this kinda works but i dont think it's a good idea because you lose perception of relative sizes
-        # probably has an off-by-one even/odd error
-        sorted_labels = sorted_labels[1::2] + sorted_labels[-1::-2]
+        if sorting == "center":
+            # this kinda works but i dont think it's a good idea because you lose perception of relative sizes
+            # probably has an off-by-one even/odd error
+            sorted_labels = sorted_labels[1::2] + sorted_labels[-1::-2]
 
-    return sorted_labels
+        return sorted_labels
 
 
 ###########################################

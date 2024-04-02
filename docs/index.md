@@ -126,6 +126,9 @@ sky.sankey(data,sort=“none”)
 ```
 ![Image with options](fruits_sort_none.png)
 
+The sort order of individual labels can be overidden using the `sort_dict`.
+E.g., `sort_dict={"a",0}` would sort label `a` to the bottom of each stage regardless of its weighted node values.
+
 ## Vertical Alignment
 
 The vertical alignment of the diagram can be  `”top”`, `”bottom”`, or `”center”`:
@@ -133,6 +136,7 @@ The vertical alignment of the diagram can be  `”top”`, `”bottom”`, or `�
 sky.sankey(data,valign = “center”)
 ```
 ![Image with options](fruits_valign.png)
+
 
 ## Labels
 
@@ -185,6 +189,25 @@ sky.sankey(
 )
 ```
 ![Image with options](frame3_labels_dup.png)
+
+
+## Values
+
+The numerical values for each (sub)flow are annotated by default. 
+(It's slightly confusing that labels refer to nodes whereas values
+refer to flows.) These can be customised or turned off.
+
+The locations of the values can be specified according to whether they correspond to the flows in the first, middle, or right of the diagram:
+
+    value_loc = [ <loc_l> , <loc_m>, <loc_r> ]
+
+Allowable values for `<loc_l>` and `<loc_r>` are `"left"`, `"right"`,  `"both"`, or `"none"`.
+The default settings are:
+
+    value_loc = [ "both", "right", "right" ]
+
+These defaults are intended to a avoid clashes with the default `label_loc` settings.
+Currently there is no way to de-duplicate repeated values.
 
 
 ## Titles
@@ -305,6 +328,7 @@ sky.sankey( data,
             frame_gap   = 0.2 ,
             label_width = 0.3 ,
             label_gap   = 0.02,
+            value_gap   = 0.03,
             title_gap   = 0.1 ,
           )
 ```

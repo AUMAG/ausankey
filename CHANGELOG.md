@@ -4,7 +4,8 @@
 
 * Add `label_duplicate` option to avoid printing redundant labels.
 * Add `other_thresh_XX` option to allow recategorisation of entries with values below a certain threshold.
-* Internal code changes using OOP methods to assist further features.
+* Add `sort_dict` to override sort order for individual labels.
+* Internal code changes using OOP methods to tidy up.
 
 
 ## 2024-03-25 v1.2.1
