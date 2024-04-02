@@ -273,16 +273,17 @@ sky.sankey(data,
 
 ## Edges
 
-Lines around the edges of the nodes and/or flows can be specified as follows. 
+Lines around the edges of the nodes and/or flows, and their linewidths (`lw`) can be specified as follows. 
 ```
 sky.sankey(data3,
-    node_width = 0.1,
-    node_alpha = 0.6,
-    flow_alpha = 0.3,
     node_edge = True,
     flow_edge = True,
     node_lw = 2,
     flow_lw = 1,
+    # just for better visuals in this case:
+    node_width = 0.1,
+    node_alpha = 0.6,
+    flow_alpha = 0.3,
     )
 ```
 ![Image with options](frame3_edge.png)
