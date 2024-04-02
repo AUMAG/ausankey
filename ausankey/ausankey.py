@@ -358,10 +358,11 @@ class Sankey:
         # overall dimensions
         self.plot_height = max(col_hgt)
         self.sub_width = self.plot_height
+        self.plot_width_nom = (self.num_stages - 1) * self.sub_width
         self.plot_width = (
             (self.num_stages - 1) * self.sub_width
-            + 2 * self.sub_width * (self.label_gap + self.label_width)
-            + self.num_stages * self.sub_width * self.node_width
+            + 2 * self.plot_width_nom * (self.label_gap + self.label_width)
+            + self.num_stages * self.plot_width_nom * self.node_width
         )
 
         # offsets for alignment
@@ -498,10 +499,10 @@ class Sankey:
                 node_pos_top[lr][label] = node_pos_bot[lr][label] + node_height
 
         # horizontal positions of nodes
-        x_node_width = self.node_width * self.sub_width
-        x_label_width = self.label_width * self.sub_width
-        x_label_gap = self.label_gap * self.sub_width
-        x_value_gap = self.value_gap * self.sub_width
+        x_node_width = self.node_width * self.plot_width_nom
+        x_label_width = self.label_width * self.plot_width_nom
+        x_label_gap = self.label_gap * self.plot_width_nom
+        x_value_gap = self.value_gap * self.plot_width_nom
         x_left = x_node_width + x_label_gap + x_label_width + ii * (self.sub_width + x_node_width)
         x_lr = [x_left, x_left + self.sub_width]
 
