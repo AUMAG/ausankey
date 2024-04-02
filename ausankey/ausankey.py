@@ -473,7 +473,7 @@ class Sankey:
             self.data[weightind + lastind],
         ]
 
-        nodes_lr =[
+        nodes_lr = [
             self.sort_nodes(labels_lr[0], self.node_sizes[ii]),
             self.sort_nodes(labels_lr[1], self.node_sizes[ii + 1]),
         ]
@@ -751,30 +751,26 @@ class Sankey:
             },
         )
 
+    ###########################################
 
-###########################################
-
-
-    def sort_nodes(self,lbl, node_sizes):
+    def sort_nodes(self, lbl, node_sizes):
         """creates a sorted list of labels by their summed weights"""
-    
+
         arr = {}
         for uniq in lbl.unique():
             if uniq is not None:
                 arr[uniq] = True
-    
+
         sort_arr = sorted(
             arr.items(),
             key=lambda item: list(node_sizes).index(item[0]),
         )
-    
+
         return list(dict(sort_arr).keys())
 
+    ###########################################
 
-###########################################
-
-
-    def sort_node_sizes(self,lbl, sorting):
+    def sort_node_sizes(self, lbl, sorting):
         """creates a sorted list of labels by their summed weights"""
 
         if sorting == "top":
@@ -788,8 +784,7 @@ class Sankey:
 
         sort_arr = sorted(
             lbl.items(),
-            key=lambda item:
-                s * self.sort_dict.get(item[0], item[1]),
+            key=lambda item: s * self.sort_dict.get(item[0], item[1]),
             # sorting = 0,1,-1 affects this
         )
 
