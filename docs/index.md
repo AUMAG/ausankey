@@ -95,6 +95,8 @@ sky.sankey(data,color_dict=color_dict)
 ```
 ![Image with options](fruits_colordict.png)
 
+You can combine both approaches to use a colour map for most of the nodes and then override only some of them manually. (I.e., the `color_dict` does not need to have entries for all of the labels.)
+
 The opacity of the flows and nodes can be customised with `flow_alpha` and `node_alpha` respectively:
 ```
 sky.sankey(data,flow_alpha=0.3)
