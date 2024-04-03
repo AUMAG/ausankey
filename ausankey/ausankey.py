@@ -797,67 +797,63 @@ class Sankey:
 
         return sorted_labels
 
-
     ###########################################
-    
-    
+
     def create_curve(self, lpoint, rpoint):
         """Create array of y values for each strip"""
-    
+
         num_div = 20
         num_arr = 50
-    
+
         # half at left value, half at right, convolve
-    
+
         ys = np.array(num_arr * [lpoint] + num_arr * [rpoint])
-    
+
         ys = np.convolve(ys, 1 / num_div * np.ones(num_div), mode="valid")
-    
+
         return np.convolve(ys, 1 / num_div * np.ones(num_div), mode="valid")
-    
-    
+
     ###########################################
-    
-    
+
     def combine_colours(self, c1, c2, num_col):
         """Creates N colours needed to produce a gradient
-    
+
         Parameters
         ----------
-    
+
         c1 : col
             First (left) colour. Can be a colour string `"#rrbbgg"` or a colour list `[r, b, g, a]`
-    
+
         c1 : col
             Second (right) colour. As above.
-    
+
         num_col : int
             The number of colours N to create in the array.
-    
+
         Returns
         -------
-    
+
         color_array : np.array
             4xN array of numerical colours
         """
         color_array_len = 4
         # if not [r,g,b,a] assume a hex string like "#rrggbb":
-    
+
         if len(c1) != color_array_len:
             r1 = int(c1[1:3], 16) / 255
             g1 = int(c1[3:5], 16) / 255
             b1 = int(c1[5:7], 16) / 255
             c1 = [r1, g1, b1, 1]
-    
+
         if len(c2) != color_array_len:
             r2 = int(c2[1:3], 16) / 255
             g2 = int(c2[3:5], 16) / 255
             b2 = int(c2[5:7], 16) / 255
             c2 = [r2, g2, b2, 1]
-    
+
         rr = np.linspace(c1[0], c2[0], num_col)
         gg = np.linspace(c1[1], c2[1], num_col)
         bb = np.linspace(c1[2], c2[2], num_col)
         aa = np.linspace(c1[3], c2[3], num_col)
-    
+
         return np.array([rr, gg, bb, aa])
