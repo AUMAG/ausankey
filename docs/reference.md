@@ -18,10 +18,3 @@
 
 ::: ausankey.combine_colours
 
-### sort_dict
-
-::: ausankey.sort_node_sizes
-
-### sort_nodes
-
-::: ausankey.sort_nodes
