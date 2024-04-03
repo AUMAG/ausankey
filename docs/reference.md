@@ -1,20 +1,8 @@
-# Reference
-
-## The `Sankey` class
-
-::: ausankey.Sankey
-
-## The `sankey` user function
+# The `sankey` user function
 
 ::: ausankey.sankey
 
-## Internal/private functions
+# The `Sankey` class
 
-### create_curve
-
-::: ausankey.create_curve
-
-### combine_colours
-
-::: ausankey.combine_colours
+::: ausankey.Sankey
 
