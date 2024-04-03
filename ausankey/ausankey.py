@@ -586,12 +586,6 @@ class Sankey:
                 self.draw_label(xx, yy, label, ha_dict[self.label_loc[2]])
 
         # Plot flows
-        if self.flow_edge:
-            edge_lw = self.flow_lw
-            edge_alpha = 1
-        else:
-            edge_alpha = self.flow_alpha
-            edge_lw = 0
 
         for lbl_l in nodes_lr[0]:
             for lbl_r in nodes_lr[1]:
