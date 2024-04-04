@@ -10,7 +10,14 @@ Sankey diagrams</a> flowing only from left to right.
 [![Jekyll Pages](https://github.com/AUMAG/auSankey/actions/workflows/doc.yml/badge.svg)](https://github.com/AUMAG/auSankey/actions/workflows/doc.yml)
 [![Publish release](https://github.com/AUMAG/ausankey/actions/workflows/release.yml/badge.svg)](https://github.com/AUMAG/ausankey/actions/workflows/release.yml)
 
+This package is [available on PyPi](https://pypi.org/project/ausankey/) and can be installed via:
+
+    pip install ausankey
+
 User documentation for the repository is published via GitHub Pages: https://aumag.github.io/ausankey/
+
+Code documentation by Mkdocs is available here:
+https://aumag.github.io/ausankey/reference/
 
 ## Minimal example
 
