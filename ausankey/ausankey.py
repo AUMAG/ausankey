@@ -13,6 +13,7 @@ import pandas as pd
 
 ###########################################
 
+
 def sankey(data, **kwargs):
     """Make Sankey Diagram
 
@@ -35,12 +36,16 @@ def sankey(data, **kwargs):
     for ii in range(sky.num_flow):
         sky.subplot(ii)
 
+
 ###########################################
+
 
 class SankeyError(Exception):
     pass
 
+
 ###########################################
+
 
 class Sankey:
     """Sankey Diagram
