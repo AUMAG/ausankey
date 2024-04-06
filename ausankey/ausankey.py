@@ -11,6 +11,7 @@ import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 
+###########################################
 
 def sankey(data, **kwargs):
     """Make Sankey Diagram
@@ -34,10 +35,12 @@ def sankey(data, **kwargs):
     for ii in range(sky.num_flow):
         sky.subplot(ii)
 
+###########################################
 
 class SankeyError(Exception):
     pass
 
+###########################################
 
 class Sankey:
     """Sankey Diagram
@@ -242,40 +245,40 @@ class Sankey:
     def __init__(
         self,
         ax=None,
-        node_width=0.02,
-        node_gap=0.05,
-        node_alpha=1,
-        node_edge=None,
         color_dict=None,
         colormap="viridis",
         flow_edge=None,
         flow_alpha=0.6,
+        flow_lw=1,
         fontcolor="black",
         fontfamily="sans-serif",
         fontsize=12,
         frame_side="none",
         frame_gap=0.1,
         frame_color=None,
+        frame_lw=1,
         label_dict=None,
         label_width=0,
         label_gap=0.02,
         label_loc=("left", "none", "right"),
         label_font=None,
         label_duplicate=None,
-        flow_lw=1,
         node_lw=1,
-        frame_lw=1,
+        node_width=0.02,
+        node_gap=0.05,
+        node_alpha=1,
+        node_edge=None,
         other_thresh_val=0,
         other_thresh_max=0,
         other_thresh_sum=0,
         other_name="Other",
+        sort="bottom",  # "top", "bottom", "none"
+        sort_dict=None,
         titles=None,
         title_gap=0.05,
         title_side="top",  # "bottom", "both"
         title_loc="inner",  # "outer"
         title_font=None,
-        sort="bottom",  # "top", "bottom", "none"
-        sort_dict=None,
         valign="bottom",  # "top","center"
         value_format=".0f",
         value_gap=None,
@@ -287,40 +290,40 @@ class Sankey:
     ):
         """Assigns all input arguments to the class as variables with appropriate defaults"""
         self.ax = ax
-        self.node_width = node_width
-        self.node_gap = node_gap
-        self.node_alpha = node_alpha
-        self.node_edge = node_edge or False
         self.color_dict = color_dict or {}
         self.colormap = colormap
         self.flow_edge = flow_edge or False
         self.flow_alpha = flow_alpha
+        self.flow_lw = flow_lw
         self.fontcolor = fontcolor
         self.fontsize = fontsize
         self.fontfamily = fontfamily
         self.frame_side = frame_side
         self.frame_gap = frame_gap
         self.frame_color = frame_color
+        self.frame_lw = frame_lw
         self.label_dict = label_dict or {}
         self.label_width = label_width
         self.label_gap = label_gap
         self.label_loc = label_loc
         self.label_font = label_font or {}
         self.label_duplicate = True if label_duplicate is None else label_duplicate
-        self.flow_lw = flow_lw
         self.node_lw = node_lw
-        self.frame_lw = frame_lw
+        self.node_width = node_width
+        self.node_gap = node_gap
+        self.node_alpha = node_alpha
+        self.node_edge = node_edge or False
         self.other_name = other_name
         self.other_thresh_val = other_thresh_val
         self.other_thresh_max = other_thresh_max
         self.other_thresh_sum = other_thresh_sum
+        self.sort = sort
+        self.sort_dict = sort_dict or {}
         self.titles = titles
         self.title_font = title_font or {"fontweight": "bold"}
         self.title_gap = title_gap
         self.title_loc = title_loc
         self.title_side = title_side
-        self.sort = sort
-        self.sort_dict = sort_dict or {}
         self.valign = valign
         self.value_format = value_format
         self.value_gap = label_gap if value_gap is None else value_gap
@@ -329,6 +332,8 @@ class Sankey:
         self.value_thresh_val = value_thresh_val
         self.value_thresh_sum = value_thresh_sum
         self.value_thresh_max = value_thresh_max
+
+    ###########################################
 
     def setup(self, data):
         """Calculates all parameters needed to plot the graph"""
@@ -399,6 +404,8 @@ class Sankey:
         self.ax = self.ax or plt.gca()
         self.ax.axis("off")
 
+    ###########################################
+
     def weight_labels(self):
         """Calculates sizes of each node, taking into account discontinuities"""
         self.weight_sum = np.empty(self.num_stages)
@@ -429,6 +436,8 @@ class Sankey:
 
             self.weight_sum[ii] = pd.Series(self.node_sizes[ii].values()).sum()
 
+    ###########################################
+
     def plot_frame(self):
         """Plot frame on top/bottom edges"""
 
@@ -454,6 +463,8 @@ class Sankey:
             color=col,
             lw=self.frame_lw,
         )
+
+    ###########################################
 
     def subplot(self, ii):
         """Subroutine for plotting horizontal sections of the Sankey plot
@@ -676,6 +687,8 @@ class Sankey:
                         yt = self.voffset[ii + lr] - y_title_gap
                     self.draw_title(title_x[lr], yt, self.titles[ii + lr], "top")
 
+    ###########################################
+
     def draw_node(self, x, dx, y, dy, label):
         """Draw a single node"""
         edge_lw = self.node_lw if self.node_edge else 0
@@ -698,6 +711,8 @@ class Sankey:
                 lw=edge_lw,
                 snap=True,
             )
+
+    ###########################################
 
     def draw_flow(self, xx, yd, yu, col):
         """Draw a single flow"""
@@ -730,6 +745,8 @@ class Sankey:
                 snap=True,
             )
 
+    ###########################################
+
     def draw_label(self, x, y, label, ha):
         """Place a single label"""
         self.ax.text(
@@ -745,6 +762,8 @@ class Sankey:
                 **self.label_font,
             },
         )
+
+    ###########################################
 
     def draw_title(self, x, y, label, va):
         """Place a single title"""
