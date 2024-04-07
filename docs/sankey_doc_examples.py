@@ -48,7 +48,7 @@ plt.close()
 label_dict = {"apple": "Apple", "blueberry": "B'berry", "banana": "Banana", "lime": "Lime", "orange": "Orange"}
 
 plt.figure()
-sky.sankey(data, label_dict=label_dict)
+sky.sankey(data, label_dictx=label_dict)
 plt.show()
 plt.savefig("fruits_labeldict.png")
 plt.close()
