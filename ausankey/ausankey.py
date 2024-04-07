@@ -499,7 +499,7 @@ class Sankey:
         y_node_gap = self.node_gap * self.plot_height_nom
         y_title_gap = self.title_gap * self.plot_height_nom
         y_frame_gap = self.frame_gap * self.plot_height_nom
-        
+
         # horizontal positions
         x_node_width = self.node_width * self.plot_width_nom
         x_label_width = self.label_width * self.plot_width_nom
