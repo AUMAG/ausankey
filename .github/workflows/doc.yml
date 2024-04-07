@@ -36,7 +36,10 @@ jobs:
         
       - name: Generate images
         run: hatch run doc:img
-        
+  
+      - name: Copy images
+        run: hatch run doc:icp
+ 
       - name: Setup Pages
         uses: actions/configure-pages@v4
  
