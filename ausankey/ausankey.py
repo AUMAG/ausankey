@@ -735,7 +735,6 @@ class Sankey:
                 xx,
                 yd,
                 color=col,
-                alpha=self.edge_alpha,
                 lw=self.flow_lw,
                 snap=True,
             )
@@ -743,7 +742,6 @@ class Sankey:
                 xx,
                 yu,
                 color=col,
-                alpha=self.edge_alpha,
                 lw=self.flow_lw,
                 snap=True,
             )
