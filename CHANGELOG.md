@@ -1,11 +1,19 @@
 # Changelog for ausankey
 
-## 2024-99-99 v1.3
+## 2024-04-07 v1.3
 
-* Add `label_duplicate` option to avoid printing redundant labels.
-* Add `other_thresh_XX` option to allow recategorisation of entries with values below a certain threshold.
-* Add `sort_dict` to override sort order for individual labels.
-* Internal code changes using OOP methods to tidy up.
+* Add `value_loc` option to control printing
+  of numeric values of flows. Several accompanying
+  options control the typesetting, etc.
+* Add `label_duplicate` option to avoid printing 
+  redundant labels.
+* Add `other_thresh_XX` options to allow 
+  recategorisation of entries with values below a
+  certain threshold.
+* Add `sort_dict` option to override sort order for
+  individual labels.
+* Internal code changes using OOP methods to
+  tidy up.
 
 
 ## 2024-03-25 v1.2.1
