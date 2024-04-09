@@ -398,11 +398,23 @@ class Sankey:
         self.x_value_gap = self.value_gap * self.plot_width_nom
 
         self.x_lr = {}
+        self.nodesize_l = {}
+        self.nodesize_r = {}
         for ii in range(self.num_flow):
             x_left = (
                 +self.x_node_width + self.x_label_gap + self.x_label_width + ii * (self.sub_width + self.x_node_width)
             )
             self.x_lr[ii] = (x_left, x_left + self.sub_width)
+            self.nodesize_l[ii] = {}
+            self.nodesize_r[ii] = {}
+            for lbl_l in self.node_list[ii]:
+                self.nodesize_l[ii][lbl_l] = {}
+                self.nodesize_r[ii][lbl_l] = {}
+                for lbl_r in self.node_list[ii + 1]:
+                    ind = (self.data[2 * ii] == lbl_l) & (self.data[2 * ii + 2] == lbl_r)
+                    self.nodesize_l[ii][lbl_l][lbl_r] = self.data[2 * ii + 1][ind].sum()
+                    self.nodesize_r[ii][lbl_l][lbl_r] = self.data[2 * ii + 3][ind].sum()
+
 
         # offsets for alignment
         vscale_dict = {"top": 1, "center": 0.5, "bottom": 0}
@@ -503,15 +515,6 @@ class Sankey:
         node_voffset = [{}, {}]
         node_pos_bot = [{}, {}]
         node_pos_top = [{}, {}]
-        nodesize = [{}, {}]
-
-        for lbl_l in self.node_list[ii]:
-            nodesize[0][lbl_l] = {}
-            nodesize[1][lbl_l] = {}
-            for lbl_r in self.node_list[ii + 1]:
-                ind = (self.data[2 * ii] == lbl_l) & (self.data[2 * ii + 2] == lbl_r)
-                nodesize[0][lbl_l][lbl_r] = self.data[2 * ii + 1][ind].sum()
-                nodesize[1][lbl_l][lbl_r] = self.data[2 * ii + 3][ind].sum()
 
         for lr in [0, 1]:
             for i, label in enumerate(self.node_list[ii + lr]):
@@ -606,8 +609,8 @@ class Sankey:
 
                 lbot = node_voffset[0][lbl_l] + node_pos_bot[0][lbl_l]
                 rbot = node_voffset[1][lbl_r] + node_pos_bot[1][lbl_r]
-                llen = nodesize[0][lbl_l][lbl_r]
-                rlen = nodesize[1][lbl_l][lbl_r]
+                llen = self.nodesize_l[ii][lbl_l][lbl_r]
+                rlen = self.nodesize_r[ii][lbl_l][lbl_r]
                 bot_lr = [lbot, rbot]
                 len_lr = [llen, rlen]
 
