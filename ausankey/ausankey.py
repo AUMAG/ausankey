@@ -400,10 +400,7 @@ class Sankey:
         self.x_lr = {}
         for ii in range(self.num_flow):
             x_left = (
-                + self.x_node_width
-                + self.x_label_gap
-                + self.x_label_width
-                + ii * (self.sub_width + self.x_node_width)
+                +self.x_node_width + self.x_label_gap + self.x_label_width + ii * (self.sub_width + self.x_node_width)
             )
             self.x_lr[ii] = (x_left, x_left + self.sub_width)
 
