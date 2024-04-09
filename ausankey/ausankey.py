@@ -353,7 +353,7 @@ class Sankey:
         # sizes
         col_hgt = np.empty(self.num_stages)
         self.node_sizes = {}
-        self.node_list  = {}
+        self.node_list = {}
         self.nodes_uniq = {}
 
         # weight and reclassify
