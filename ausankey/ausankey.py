@@ -500,8 +500,6 @@ class Sankey:
 
         # All node sizes and positions
 
-        x_lr = self.x_lr[ii]
-
         node_voffset = [{}, {}]
         node_pos_bot = [{}, {}]
         node_pos_top = [{}, {}]
@@ -523,6 +521,10 @@ class Sankey:
                 next_bot = node_pos_top[lr][self.node_list[ii + lr][i - 1]] + self.y_node_gap if i > 0 else 0
                 node_pos_bot[lr][label] = self.voffset[ii + lr] if i == 0 else next_bot
                 node_pos_top[lr][label] = node_pos_bot[lr][label] + node_height
+
+        # Abbrev
+
+        x_lr = self.x_lr[ii]
 
         # Draw nodes
 
@@ -642,25 +644,24 @@ class Sankey:
                     sides.append(1)
                 for lr in sides:
                     val = len_lr[lr]
-                    if (
+                    if not (
                         val < self.value_thresh_val
                         or val < self.value_thresh_sum * self.weight_sum[ii + lr]
                         or val < self.value_thresh_max * max(self.data[2 * ii + 1])
                     ):
-                        continue
-                    self.ax.text(
-                        x_lr[lr] + (1 - 2 * lr) * self.x_value_gap,
-                        bot_lr[lr] + len_lr[lr] / 2,
-                        f"{format(val,self.value_format)}",
-                        {
-                            "ha": ha[lr],
-                            "va": "center",
-                            "fontfamily": self.fontfamily,
-                            "fontsize": self.fontsize,
-                            "color": self.fontcolor,
-                            **self.value_font,
-                        },
-                    )
+                        self.ax.text(
+                            x_lr[lr] + (1 - 2 * lr) * self.x_value_gap,
+                            bot_lr[lr] + len_lr[lr] / 2,
+                            f"{format(val,self.value_format)}",
+                            {
+                                "ha": ha[lr],
+                                "va": "center",
+                                "fontfamily": self.fontfamily,
+                                "fontsize": self.fontsize,
+                                "color": self.fontcolor,
+                                **self.value_font,
+                            },
+                        )
 
         # Place "titles"
         if self.titles is not None:
