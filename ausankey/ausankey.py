@@ -415,7 +415,6 @@ class Sankey:
                     self.nodesize_l[ii][lbl_l][lbl_r] = self.data[2 * ii + 1][ind].sum()
                     self.nodesize_r[ii][lbl_l][lbl_r] = self.data[2 * ii + 3][ind].sum()
 
-
         # offsets for alignment
         vscale_dict = {"top": 1, "center": 0.5, "bottom": 0}
         self.vscale = vscale_dict.get(self.valign, 0)
