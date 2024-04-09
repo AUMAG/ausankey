@@ -486,10 +486,6 @@ class Sankey:
             self.data[2 * ii + 2],
             self.data[2 * ii + lastind],
         ]
-        weights_lr = [
-            self.data[2 * ii + 1],
-            self.data[2 * ii + 1 + 2],
-        ]
 
         # vertical positions
         y_node_gap = self.node_gap * self.plot_height_nom
@@ -522,7 +518,7 @@ class Sankey:
         for lr in [0, 1]:
             for i, label in enumerate(self.node_list[ii + lr]):
                 node_height = self.node_sizes[ii + lr][label]
-                this_side_height = weights_lr[lr][labels_lr[lr] == label].sum()
+                this_side_height = self.data[2 * (ii + lr) + 1][labels_lr[lr] == label].sum()
                 node_voffset[lr][label] = self.vscale * (node_height - this_side_height)
                 next_bot = node_pos_top[lr][self.node_list[ii + lr][i - 1]] + y_node_gap if i > 0 else 0
                 node_pos_bot[lr][label] = self.voffset[ii + lr] if i == 0 else next_bot
