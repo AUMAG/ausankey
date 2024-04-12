@@ -355,7 +355,7 @@ class Sankey:
         self.node_sizes = {}
         self.node_list = {}
         self.nodes_uniq = {}
-        
+
         self.node_pos_voffset = {}
         self.node_pos_bot = {}
         self.node_pos_top = {}
@@ -431,7 +431,7 @@ class Sankey:
             self.node_pos_voffset[ii] = [{}, {}]
             self.node_pos_bot[ii] = [{}, {}]
             self.node_pos_top[ii] = [{}, {}]
-    
+
             for lr in [0, 1]:
                 for i, label in enumerate(self.node_list[ii + lr]):
                     node_height = self.node_sizes[ii + lr][label]
