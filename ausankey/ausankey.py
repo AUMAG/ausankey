@@ -355,6 +355,10 @@ class Sankey:
         self.node_sizes = {}
         self.node_list = {}
         self.nodes_uniq = {}
+        
+        self.node_pos_voffset = {}
+        self.node_pos_bot = {}
+        self.node_pos_top = {}
 
         # weight and reclassify
         self.weight_labels()
@@ -421,6 +425,24 @@ class Sankey:
         self.voffset = np.empty(self.num_stages)
         for ii in range(self.num_stages):
             self.voffset[ii] = self.vscale * (col_hgt[1] - col_hgt[ii])
+
+        # All node sizes and positions
+        for ii in range(self.num_flow):
+            self.node_pos_voffset[ii] = [{}, {}]
+            self.node_pos_bot[ii] = [{}, {}]
+            self.node_pos_top[ii] = [{}, {}]
+    
+            for lr in [0, 1]:
+                for i, label in enumerate(self.node_list[ii + lr]):
+                    node_height = self.node_sizes[ii + lr][label]
+                    this_side_height = self.data[2 * (ii + lr) + 1][self.data[2 * (ii + lr)] == label].sum()
+                    self.node_pos_voffset[ii][lr][label] = self.vscale * (node_height - this_side_height)
+                    if i == 0:
+                        tmp_top = self.voffset[ii + lr]
+                    else:
+                        tmp_top = self.node_pos_top[ii][lr][self.node_list[ii + lr][i - 1]] + self.y_node_gap
+                    self.node_pos_bot[ii][lr][label] = tmp_top
+                    self.node_pos_top[ii][lr][label] = self.node_pos_bot[ii][lr][label] + node_height
 
         # labels
         label_record = self.data[range(0, 2 * self.num_stages, 2)].to_records(index=False)
@@ -509,21 +531,6 @@ class Sankey:
         for the first and last cases.
         """
 
-        # All node sizes and positions
-
-        node_voffset = [{}, {}]
-        node_pos_bot = [{}, {}]
-        node_pos_top = [{}, {}]
-
-        for lr in [0, 1]:
-            for i, label in enumerate(self.node_list[ii + lr]):
-                node_height = self.node_sizes[ii + lr][label]
-                this_side_height = self.data[2 * (ii + lr) + 1][self.data[2 * (ii + lr)] == label].sum()
-                node_voffset[lr][label] = self.vscale * (node_height - this_side_height)
-                next_bot = node_pos_top[lr][self.node_list[ii + lr][i - 1]] + self.y_node_gap if i > 0 else 0
-                node_pos_bot[lr][label] = self.voffset[ii + lr] if i == 0 else next_bot
-                node_pos_top[lr][label] = node_pos_bot[lr][label] + node_height
-
         # Abbrev
 
         x_lr = self.x_lr[ii]
@@ -535,7 +542,7 @@ class Sankey:
                 self.draw_node(
                     x_lr[lr] - self.x_node_width * (1 - lr),
                     self.x_node_width,
-                    node_pos_bot[lr][label],
+                    self.node_pos_bot[ii][lr][label],
                     self.node_sizes[ii + lr][label],
                     label,
                 )
@@ -554,7 +561,7 @@ class Sankey:
             elif self.label_loc[0] in ("center"):
                 xx = x_lr[lr] - self.x_node_width / 2
             for label in self.node_list[ii + lr]:
-                yy = node_pos_bot[lr][label] + self.node_sizes[ii + lr][label] / 2
+                yy = self.node_pos_bot[ii][lr][label] + self.node_sizes[ii + lr][label] / 2
                 self.draw_label(xx, yy, label, ha_dict[self.label_loc[0]])
 
         # inside labels, left
@@ -564,7 +571,7 @@ class Sankey:
             ha = "right"
             for label in self.node_list[ii + lr]:
                 if (label not in self.node_list[ii]) or self.label_duplicate:
-                    yy = node_pos_bot[lr][label] + self.node_sizes[ii + lr][label] / 2
+                    yy = self.node_pos_bot[ii][lr][label] + self.node_sizes[ii + lr][label] / 2
                     self.draw_label(xx, yy, label, ha)
 
         # inside labels, center
@@ -573,7 +580,7 @@ class Sankey:
             ha = "center"
             for label in self.node_list[ii + lr]:
                 if (label not in self.node_list[ii]) or self.label_duplicate:
-                    yy = node_pos_bot[lr][label] + self.node_sizes[ii + lr][label] / 2
+                    yy = self.node_pos_bot[ii][lr][label] + self.node_sizes[ii + lr][label] / 2
                     self.draw_label(xx, yy, label, ha)
 
         # inside labels, right
@@ -582,7 +589,7 @@ class Sankey:
             ha = "left"
             for label in self.node_list[ii + lr]:
                 if (label not in self.node_list[ii]) or self.label_duplicate:
-                    yy = node_pos_bot[lr][label] + self.node_sizes[ii + lr][label] / 2
+                    yy = self.node_pos_bot[ii][lr][label] + self.node_sizes[ii + lr][label] / 2
                     self.draw_label(xx, yy, label, ha)
 
         # last row of labels
@@ -594,7 +601,7 @@ class Sankey:
             elif self.label_loc[2] in ("center"):
                 xx = x_lr[lr] + self.x_node_width / 2
             for label in self.node_list[ii + lr]:
-                yy = node_pos_bot[lr][label] + self.node_sizes[ii + lr][label] / 2
+                yy = self.node_pos_bot[ii][lr][label] + self.node_sizes[ii + lr][label] / 2
                 self.draw_label(xx, yy, label, ha_dict[self.label_loc[2]])
 
         # Plot flows
@@ -606,8 +613,8 @@ class Sankey:
                 if not any(lind & rind):
                     continue
 
-                lbot = node_voffset[0][lbl_l] + node_pos_bot[0][lbl_l]
-                rbot = node_voffset[1][lbl_r] + node_pos_bot[1][lbl_r]
+                lbot = self.node_pos_voffset[ii][0][lbl_l] + self.node_pos_bot[ii][0][lbl_l]
+                rbot = self.node_pos_voffset[ii][1][lbl_r] + self.node_pos_bot[ii][1][lbl_r]
                 llen = self.nodesize_l[ii][lbl_l][lbl_r]
                 rlen = self.nodesize_r[ii][lbl_l][lbl_r]
                 bot_lr = [lbot, rbot]
@@ -618,8 +625,8 @@ class Sankey:
 
                 # Update bottom edges at each label
                 # so next strip starts at the right place
-                node_pos_bot[0][lbl_l] += llen
-                node_pos_bot[1][lbl_r] += rlen
+                self.node_pos_bot[ii][0][lbl_l] += llen
+                self.node_pos_bot[ii][1][lbl_r] += rlen
 
                 xx = np.linspace(x_lr[0], x_lr[1], len(ys_d))
                 cc = self.combine_colours(self.color_dict[lbl_l], self.color_dict[lbl_r], len(ys_d))
@@ -675,7 +682,7 @@ class Sankey:
                     if self.title_loc == "outer":
                         yt = min(self.voffset) + self.y_title_gap + self.y_frame_gap + self.plot_height
                     elif self.title_loc == "inner":
-                        yt = self.y_title_gap + node_pos_top[lr][last_label[lr]]
+                        yt = self.y_title_gap + self.node_pos_top[ii][lr][last_label[lr]]
                     self.draw_title(title_x[lr], yt, self.titles[ii + lr], "bottom")
 
                 if self.title_side in ("bottom", "both"):
