@@ -380,6 +380,13 @@ class Sankey:
             col_hgt[ii] = self.weight_sum[ii] + (len(self.nodes_uniq[ii]) - 1) * self.node_gap * self.plot_height_nom
             self.node_list[ii] = self.sort_nodes(self.data[2 * ii], self.node_sizes[ii])
 
+        # offsets for alignment
+        vscale_dict = {"top": 1, "center": 0.5, "bottom": 0}
+        self.vscale = vscale_dict.get(self.valign, 0)
+        self.voffset = np.empty(self.num_stages)
+        for ii in range(self.num_stages):
+            self.voffset[ii] = self.vscale * (col_hgt[1] - col_hgt[ii])
+
         # overall dimensions
         self.plot_height = max(col_hgt)
         self.sub_width = self.plot_height
@@ -406,7 +413,7 @@ class Sankey:
         self.nodesize_r = {}
         for ii in range(self.num_flow):
             x_left = (
-                +self.x_node_width + self.x_label_gap + self.x_label_width + ii * (self.sub_width + self.x_node_width)
+                self.x_node_width + self.x_label_gap + self.x_label_width + ii * (self.sub_width + self.x_node_width)
             )
             self.x_lr[ii] = (x_left, x_left + self.sub_width)
             self.nodesize_l[ii] = {}
@@ -419,19 +426,11 @@ class Sankey:
                     self.nodesize_l[ii][lbl_l][lbl_r] = self.data[2 * ii + 1][ind].sum()
                     self.nodesize_r[ii][lbl_l][lbl_r] = self.data[2 * ii + 3][ind].sum()
 
-        # offsets for alignment
-        vscale_dict = {"top": 1, "center": 0.5, "bottom": 0}
-        self.vscale = vscale_dict.get(self.valign, 0)
-        self.voffset = np.empty(self.num_stages)
-        for ii in range(self.num_stages):
-            self.voffset[ii] = self.vscale * (col_hgt[1] - col_hgt[ii])
-
         # All node sizes and positions
         for ii in range(self.num_flow):
             self.node_pos_voffset[ii] = [{}, {}]
             self.node_pos_bot[ii] = [{}, {}]
             self.node_pos_top[ii] = [{}, {}]
-
             for lr in [0, 1]:
                 for i, label in enumerate(self.node_list[ii + lr]):
                     node_height = self.node_sizes[ii + lr][label]
@@ -658,18 +657,11 @@ class Sankey:
                         or val < self.value_thresh_sum * self.weight_sum[ii + lr]
                         or val < self.value_thresh_max * max(self.data[2 * ii + 1])
                     ):
-                        self.ax.text(
+                        self.draw_value(
                             x_lr[lr] + (1 - 2 * lr) * self.x_value_gap,
                             bot_lr[lr] + len_lr[lr] / 2,
-                            f"{format(val,self.value_format)}",
-                            {
-                                "ha": ha[lr],
-                                "va": "center",
-                                "fontfamily": self.fontfamily,
-                                "fontsize": self.fontsize,
-                                "color": self.fontcolor,
-                                **self.value_font,
-                            },
+                            val,
+                            ha[lr],
                         )
 
         # Place "titles"
@@ -763,6 +755,24 @@ class Sankey:
                 "fontsize": self.fontsize,
                 "color": self.fontcolor,
                 **self.label_font,
+            },
+        )
+
+    ###########################################
+
+    def draw_value(self, x, y, val, ha):
+        """Place a single value label"""
+        self.ax.text(
+            x,
+            y,
+            f"{format(val,self.value_format)}",
+            {
+                "ha": ha,
+                "va": "center",
+                "fontfamily": self.fontfamily,
+                "fontsize": self.fontsize,
+                "color": self.fontcolor,
+                **self.value_font,
             },
         )
 
