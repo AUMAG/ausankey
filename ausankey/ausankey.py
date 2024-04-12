@@ -427,7 +427,7 @@ class Sankey:
                     ind = (self.data[2 * ii] == lbl_l) & (self.data[2 * ii + 2] == lbl_r)
                     if not any(ind):
                         continue
-                    self.node_pairs[ii].append((lbl_l,lbl_r))
+                    self.node_pairs[ii].append((lbl_l, lbl_r))
                     self.nodesize_l[ii][lbl_l][lbl_r] = self.data[2 * ii + 1][ind].sum()
                     self.nodesize_r[ii][lbl_l][lbl_r] = self.data[2 * ii + 3][ind].sum()
 
@@ -611,7 +611,6 @@ class Sankey:
         # Plot flows
 
         for lbl_l, lbl_r in self.node_pairs[ii]:
-
             lbot = self.node_pos_voffset[ii][0][lbl_l] + self.node_pos_bot[ii][0][lbl_l]
             rbot = self.node_pos_voffset[ii][1][lbl_r] + self.node_pos_bot[ii][1][lbl_r]
             llen = self.nodesize_l[ii][lbl_l][lbl_r]
