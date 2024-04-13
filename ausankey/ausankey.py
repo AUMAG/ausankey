@@ -564,7 +564,7 @@ class Sankey:
 
         # inside labels, left
         lr = 1
-        if ii > 0 and ii < self.num_flow - 1 and self.label_loc[1] in ("left", "both"):
+        if ii < self.num_flow - 1 and self.label_loc[1] in ("left", "both"):
             xx = x_lr[lr] - self.x_label_gap
             for label in self.node_list[ii + lr]:
                 if (label not in self.node_list[ii]) or self.label_duplicate:
@@ -572,7 +572,7 @@ class Sankey:
                     self.draw_label(xx, yy, label, "right")
 
         # inside labels, center
-        if ii > 0 and ii < self.num_flow - 1 and self.label_loc[1] in ("center"):
+        if ii < self.num_flow - 1 and self.label_loc[1] in ("center"):
             xx = x_lr[lr] + self.x_node_width / 2
             for label in self.node_list[ii + lr]:
                 if (label not in self.node_list[ii]) or self.label_duplicate:
@@ -580,7 +580,7 @@ class Sankey:
                     self.draw_label(xx, yy, label, "center")
 
         # inside labels, right
-        if ii > 0 and ii < self.num_flow - 1 and self.label_loc[1] in ("right", "both"):
+        if ii < self.num_flow - 1 and self.label_loc[1] in ("right", "both"):
             xx = x_lr[lr] + self.x_label_gap + self.x_node_width
             for label in self.node_list[ii + lr]:
                 if (label not in self.node_list[ii]) or self.label_duplicate:
