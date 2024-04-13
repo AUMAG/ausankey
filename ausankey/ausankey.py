@@ -478,18 +478,12 @@ class Sankey:
         for ii in range(self.num_stages):
             self.node_sizes[ii] = {}
             for lbl in self.nodes_uniq[ii]:
-                if ii == 0:
-                    ind_prev = self.data[2 * ii - 0] == lbl
-                    ind_this = self.data[2 * ii + 0] == lbl
-                    ind_next = self.data[2 * ii + 2] == lbl
-                elif ii == self.num_flow:
-                    ind_prev = self.data[2 * ii - 2] == lbl
-                    ind_this = self.data[2 * ii + 0] == lbl
-                    ind_next = self.data[2 * ii + 0] == lbl
-                else:
-                    ind_prev = self.data[2 * ii - 2] == lbl
-                    ind_this = self.data[2 * ii + 0] == lbl
-                    ind_next = self.data[2 * ii + 2] == lbl
+                i_p = 2 if ii > 0 else 0
+                i_n = 2 if ii < self.num_flow else 0
+                ind_prev = self.data[2 * ii - i_p] == lbl
+                ind_this = self.data[2 * ii] == lbl
+                ind_next = self.data[2 * ii + i_n] == lbl
+
                 weight_cont = self.data[2 * ii + 1][ind_this & ind_prev & ind_next].sum()
                 weight_only = self.data[2 * ii + 1][ind_this & ~ind_prev & ~ind_next].sum()
                 weight_stop = self.data[2 * ii + 1][ind_this & ind_prev & ~ind_next].sum()
@@ -570,31 +564,28 @@ class Sankey:
 
         # inside labels, left
         lr = 1
-        if ii < self.num_flow - 1 and self.label_loc[1] in ("left", "both"):
+        if ii > 0 and ii < self.num_flow - 1 and self.label_loc[1] in ("left", "both"):
             xx = x_lr[lr] - self.x_label_gap
-            ha = "right"
             for label in self.node_list[ii + lr]:
                 if (label not in self.node_list[ii]) or self.label_duplicate:
                     yy = self.node_pos_bot[ii][lr][label] + self.node_sizes[ii + lr][label] / 2
-                    self.draw_label(xx, yy, label, ha)
+                    self.draw_label(xx, yy, label, "right")
 
         # inside labels, center
-        if ii < self.num_flow - 1 and self.label_loc[1] in ("center"):
+        if ii > 0 and ii < self.num_flow - 1 and self.label_loc[1] in ("center"):
             xx = x_lr[lr] + self.x_node_width / 2
-            ha = "center"
             for label in self.node_list[ii + lr]:
                 if (label not in self.node_list[ii]) or self.label_duplicate:
                     yy = self.node_pos_bot[ii][lr][label] + self.node_sizes[ii + lr][label] / 2
-                    self.draw_label(xx, yy, label, ha)
+                    self.draw_label(xx, yy, label, "center")
 
         # inside labels, right
-        if ii < self.num_flow - 1 and self.label_loc[1] in ("right", "both"):
+        if ii > 0 and ii < self.num_flow - 1 and self.label_loc[1] in ("right", "both"):
             xx = x_lr[lr] + self.x_label_gap + self.x_node_width
-            ha = "left"
             for label in self.node_list[ii + lr]:
                 if (label not in self.node_list[ii]) or self.label_duplicate:
                     yy = self.node_pos_bot[ii][lr][label] + self.node_sizes[ii + lr][label] / 2
-                    self.draw_label(xx, yy, label, ha)
+                    self.draw_label(xx, yy, label, "left")
 
         # last row of labels
         if ii == self.num_flow - 1 and self.label_loc[2] != "none":
