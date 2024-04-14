@@ -43,6 +43,7 @@ def sankey(data, **kwargs):
         for ii in range(sky.num_flow):
             sky.plot_titles(ii)
 
+
 ###########################################
 
 
@@ -664,8 +665,7 @@ class Sankey:
     ###########################################
 
     def plot_titles(self, ii):
-        """Subroutine for placing titles
-        """
+        """Subroutine for placing titles"""
 
         x_lr = self.x_lr[ii]
 
