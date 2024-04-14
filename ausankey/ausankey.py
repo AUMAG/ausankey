@@ -305,7 +305,7 @@ class Sankey:
         self.fontfamily = fontfamily
         self.frame_side = frame_side
         self.frame_gap = frame_gap
-        self.frame_color = frame_color
+        self.frame_color = frame_color or [0, 0, 0, 1]
         self.frame_lw = frame_lw
         self.label_dict = label_dict or {}
         self.label_width = label_width
@@ -495,28 +495,26 @@ class Sankey:
     ###########################################
 
     def plot_frame(self):
-        """Plot frame on top/bottom edges"""
+        """Plot frame on top/bottom edges.
+        
+        We always plot them to ensure the exported plot width is correct.
+        If the frame is not requested it is drawn with 100% transparency.
+        """
 
         frame_top = self.frame_side in ("top", "both")
         frame_bot = self.frame_side in ("bottom", "both")
 
-        frame_color = self.frame_color or [0, 0, 0, 1]
-
-        self.y_frame_gap = self.frame_gap * self.plot_height
-
-        col = frame_color if frame_top else [1, 1, 1, 0]
         self.ax.plot(
             [0, self.plot_width],
             min(self.voffset) + (self.plot_height) + self.y_frame_gap + [0, 0],
-            color=col,
+            color=self.frame_color if frame_top else [1, 1, 1, 0],
             lw=self.frame_lw,
         )
 
-        col = frame_color if frame_bot else [1, 1, 1, 0]
         self.ax.plot(
             [0, self.plot_width],
             min(self.voffset) - self.y_frame_gap + [0, 0],
-            color=col,
+            color=self.frame_color if frame_bot else [1, 1, 1, 0],
             lw=self.frame_lw,
         )
 
