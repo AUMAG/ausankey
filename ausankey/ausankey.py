@@ -30,12 +30,18 @@ def sankey(data, **kwargs):
 
     sky = Sankey(**kwargs)
     sky.setup(data)
+
+    sky.plot_init()
     sky.plot_frame()
 
-    # draw each segment
+    # draw each sankey
     for ii in range(sky.num_flow):
         sky.subplot(ii)
 
+    # draw titles
+    if sky.titles is not None:
+        for ii in range(sky.num_flow):
+            sky.plot_titles(ii)
 
 ###########################################
 
@@ -462,6 +468,9 @@ class Sankey:
         # check_colors_match_labels(self.all_labels, color_dict_new)
         self.color_dict = color_dict_new
 
+    ###########################################
+
+    def plot_init(self):
         # initialise plot
         self.ax = self.ax or plt.gca()
         self.ax.axis("off")
@@ -652,25 +661,31 @@ class Sankey:
                         ha[lr],
                     )
 
-        # Place "titles"
-        if self.titles is not None:
-            last_label = self.node_pairs[ii][-1]
-            title_x = [x_lr[0] - self.x_node_width / 2, x_lr[1] + self.x_node_width / 2]
+    ###########################################
 
-            for lr in [0, 1] if ii == 0 else [1]:
-                if self.title_side in ("top", "both"):
-                    if self.title_loc == "outer":
-                        yt = min(self.voffset) + self.y_title_gap + self.y_frame_gap + self.plot_height
-                    elif self.title_loc == "inner":
-                        yt = self.y_title_gap + self.node_pos_top[ii][lr][last_label[lr]]
-                    self.draw_title(title_x[lr], yt, self.titles[ii + lr], "bottom")
+    def plot_titles(self, ii):
+        """Subroutine for placing titles
+        """
 
-                if self.title_side in ("bottom", "both"):
-                    if self.title_loc == "outer":
-                        yt = min(self.voffset) - self.y_title_gap - self.y_frame_gap
-                    elif self.title_loc == "inner":
-                        yt = self.voffset[ii + lr] - self.y_title_gap
-                    self.draw_title(title_x[lr], yt, self.titles[ii + lr], "top")
+        x_lr = self.x_lr[ii]
+
+        last_label = self.node_pairs[ii][-1]
+        title_x = [x_lr[0] - self.x_node_width / 2, x_lr[1] + self.x_node_width / 2]
+
+        for lr in [0, 1] if ii == 0 else [1]:
+            if self.title_side in ("top", "both"):
+                if self.title_loc == "outer":
+                    yt = min(self.voffset) + self.y_title_gap + self.y_frame_gap + self.plot_height
+                elif self.title_loc == "inner":
+                    yt = self.y_title_gap + self.node_pos_top[ii][lr][last_label[lr]]
+                self.draw_title(title_x[lr], yt, self.titles[ii + lr], "bottom")
+
+            if self.title_side in ("bottom", "both"):
+                if self.title_loc == "outer":
+                    yt = min(self.voffset) - self.y_title_gap - self.y_frame_gap
+                elif self.title_loc == "inner":
+                    yt = self.voffset[ii + lr] - self.y_title_gap
+                self.draw_title(title_x[lr], yt, self.titles[ii + lr], "top")
 
     ###########################################
 
