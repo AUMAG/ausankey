@@ -496,7 +496,7 @@ class Sankey:
 
     def plot_frame(self):
         """Plot frame on top/bottom edges.
-        
+
         We always plot them to ensure the exported plot width is correct.
         If the frame is not requested it is drawn with 100% transparency.
         """
