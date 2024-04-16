@@ -366,22 +366,17 @@ class Sankey:
         self.node_pos_bot = {}
         self.node_pos_top = {}
 
-        for ii in range(self.num_stages):
-            uni = pd.Series(self.data[2 * ii]).unique()
-            self.nodes_uniq[ii] = pd.Series(uni).dropna()
-
         # weight and reclassify
         self.weight_labels()
         for ii in range(self.num_stages):
             for nn, lbl in enumerate(self.data[2 * ii]):
-                if lbl is not None:
-                    val = self.node_sizes[ii][lbl]
-                    if (
-                        val < self.other_thresh_val
-                        or val < self.other_thresh_sum * self.weight_sum[ii]
-                        or val < self.other_thresh_max * max(self.data[2 * ii + 1])
-                    ):
-                        self.data.iat[nn, 2 * ii] = self.other_name
+                val = self.node_sizes[ii][lbl]
+                if lbl is not None and (
+                    val < self.other_thresh_val
+                    or val < self.other_thresh_sum * self.weight_sum[ii]
+                    or val < self.other_thresh_max * max(self.data[2 * ii + 1])
+                ):
+                    self.data.iat[nn, 2 * ii] = self.other_name
         self.weight_labels()
 
         # sort and calc
@@ -486,6 +481,9 @@ class Sankey:
     def weight_labels(self):
         """Calculates sizes of each node, taking into account discontinuities"""
         self.weight_sum = np.empty(self.num_stages)
+
+        for ii in range(self.num_stages):
+            self.nodes_uniq[ii] = pd.Series(self.data[2 * ii]).unique()
 
         for ii in range(self.num_stages):
             self.node_sizes[ii] = {}
