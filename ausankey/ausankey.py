@@ -359,7 +359,6 @@ class Sankey:
 
         # sizes
         self.node_sizes = {}
-        self.node_list = {}
         self.nodes_uniq = {}
 
         self.node_pos_voffset = {}
@@ -383,7 +382,6 @@ class Sankey:
         self.plot_height_nom = max(self.weight_sum)
         for ii in range(self.num_stages):
             self.node_sizes[ii] = self.sort_node_sizes(self.node_sizes[ii], self.sort)
-            self.node_list[ii] = self.sort_nodes(self.data[2 * ii], self.node_sizes[ii])
 
         # offsets for alignment
         vscale_dict = {"top": 1, "center": 0.5, "bottom": 0}
@@ -427,10 +425,10 @@ class Sankey:
             self.nodesize_l[ii] = {}
             self.nodesize_r[ii] = {}
             self.node_pairs[ii] = []
-            for lbl_l in self.node_list[ii]:
+            for lbl_l in self.node_sizes[ii]:
                 self.nodesize_l[ii][lbl_l] = {}
                 self.nodesize_r[ii][lbl_l] = {}
-                for lbl_r in self.node_list[ii + 1]:
+                for lbl_r in self.node_sizes[ii + 1]:
                     ind = (self.data[2 * ii] == lbl_l) & (self.data[2 * ii + 2] == lbl_r)
                     if not any(ind):
                         continue
@@ -444,16 +442,16 @@ class Sankey:
             self.node_pos_bot[ii] = [{}, {}]
             self.node_pos_top[ii] = [{}, {}]
             for lr in [0, 1]:
-                for i, label in enumerate(self.node_list[ii + lr]):
-                    node_height = self.node_sizes[ii + lr][label]
+                for i, (label, node_height) in enumerate(self.node_sizes[ii + lr].items()):
                     this_side_height = self.data[2 * (ii + lr) + 1][self.data[2 * (ii + lr)] == label].sum()
                     self.node_pos_voffset[ii][lr][label] = self.vscale * (node_height - this_side_height)
                     if i == 0:
                         tmp_top = self.voffset[ii + lr]
                     else:
-                        tmp_top = self.node_pos_top[ii][lr][self.node_list[ii + lr][i - 1]] + self.y_node_gap
+                        tmp_top = self.node_pos_top[ii][lr][prev_label] + self.y_node_gap
                     self.node_pos_bot[ii][lr][label] = tmp_top
-                    self.node_pos_top[ii][lr][label] = self.node_pos_bot[ii][lr][label] + node_height
+                    self.node_pos_top[ii][lr][label] = tmp_top + node_height
+                    prev_label = label
 
         # labels
         label_record = self.data[range(0, 2 * self.num_stages, 2)].to_records(index=False)
@@ -544,7 +542,7 @@ class Sankey:
         # Draw nodes
 
         for lr in [0, 1] if ii == 0 else [1]:
-            for label in self.node_list[ii + lr]:
+            for label in self.node_sizes[ii + lr]:
                 self.draw_node(
                     x_lr[lr] - self.x_node_width * (1 - lr),
                     self.x_node_width,
@@ -566,7 +564,7 @@ class Sankey:
                 xx = x_lr[lr] + self.x_label_gap
             elif self.label_loc[0] in ("center"):
                 xx = x_lr[lr] - self.x_node_width / 2
-            for label in self.node_list[ii + lr]:
+            for label in self.node_sizes[ii + lr]:
                 yy = self.node_pos_bot[ii][lr][label] + self.node_sizes[ii + lr][label] / 2
                 self.draw_label(xx, yy, label, ha_dict[self.label_loc[0]])
 
@@ -574,24 +572,24 @@ class Sankey:
         lr = 1
         if ii < self.num_flow - 1 and self.label_loc[1] in ("left", "both"):
             xx = x_lr[lr] - self.x_label_gap
-            for label in self.node_list[ii + lr]:
-                if (label not in self.node_list[ii]) or self.label_duplicate:
+            for label in self.node_sizes[ii + lr]:
+                if (label not in self.node_sizes[ii]) or self.label_duplicate:
                     yy = self.node_pos_bot[ii][lr][label] + self.node_sizes[ii + lr][label] / 2
                     self.draw_label(xx, yy, label, "right")
 
         # inside labels, center
         if ii < self.num_flow - 1 and self.label_loc[1] in ("center"):
             xx = x_lr[lr] + self.x_node_width / 2
-            for label in self.node_list[ii + lr]:
-                if (label not in self.node_list[ii]) or self.label_duplicate:
+            for label in self.node_sizes[ii + lr]:
+                if (label not in self.node_sizes[ii]) or self.label_duplicate:
                     yy = self.node_pos_bot[ii][lr][label] + self.node_sizes[ii + lr][label] / 2
                     self.draw_label(xx, yy, label, "center")
 
         # inside labels, right
         if ii < self.num_flow - 1 and self.label_loc[1] in ("right", "both"):
             xx = x_lr[lr] + self.x_label_gap + self.x_node_width
-            for label in self.node_list[ii + lr]:
-                if (label not in self.node_list[ii]) or self.label_duplicate:
+            for label in self.node_sizes[ii + lr]:
+                if (label not in self.node_sizes[ii]) or self.label_duplicate:
                     yy = self.node_pos_bot[ii][lr][label] + self.node_sizes[ii + lr][label] / 2
                     self.draw_label(xx, yy, label, "left")
 
@@ -603,7 +601,7 @@ class Sankey:
                 xx = x_lr[lr] + self.x_label_gap + self.x_node_width
             elif self.label_loc[2] in ("center"):
                 xx = x_lr[lr] + self.x_node_width / 2
-            for label in self.node_list[ii + lr]:
+            for label in self.node_sizes[ii + lr]:
                 yy = self.node_pos_bot[ii][lr][label] + self.node_sizes[ii + lr][label] / 2
                 self.draw_label(xx, yy, label, ha_dict[self.label_loc[2]])
 
@@ -796,23 +794,6 @@ class Sankey:
                 **self.title_font,
             },
         )
-
-    ###########################################
-
-    def sort_nodes(self, lbl, node_sizes):
-        """Creates a sorted list of unique labels into a list"""
-
-        arr = {}
-        for uniq in lbl.unique():
-            if uniq is not None:
-                arr[uniq] = True
-
-        sort_arr = sorted(
-            arr.items(),
-            key=lambda item: list(node_sizes).index(item[0]),
-        )
-
-        return list(dict(sort_arr).keys())
 
     ###########################################
 
