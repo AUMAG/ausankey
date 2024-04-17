@@ -369,9 +369,9 @@ class Sankey:
         # weight and reclassify
         self.weight_labels()
         for ii in range(self.num_stages):
-            for nn, lbl in enumerate(self.data[2 * ii]):
+            for nn, lbl in enumerate([x for x in self.data[2 * ii] if x is not None]):
                 val = self.node_sizes[ii][lbl]
-                if lbl is not None and (
+                if (
                     val < self.other_thresh_val
                     or val < self.other_thresh_sum * self.weight_sum[ii]
                     or val < self.other_thresh_max * max(self.data[2 * ii + 1])
@@ -483,7 +483,7 @@ class Sankey:
         self.weight_sum = np.empty(self.num_stages)
 
         for ii in range(self.num_stages):
-            self.nodes_uniq[ii] = pd.Series(self.data[2 * ii]).unique()
+            self.nodes_uniq[ii] = pd.Series(self.data[2 * ii]).dropna().unique()
 
         for ii in range(self.num_stages):
             self.node_sizes[ii] = {}
