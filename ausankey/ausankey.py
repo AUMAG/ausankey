@@ -379,39 +379,11 @@ class Sankey:
         self.weight_labels()
 
         # sort and calc
-        self.plot_height_nom = max(self.weight_sum)
         for ii in range(self.num_stages):
             self.node_sizes[ii] = self.sort_node_sizes(self.node_sizes[ii], self.sort)
 
-        # offsets for alignment
-        vscale_dict = {"top": 1, "center": 0.5, "bottom": 0}
-        self.vscale = vscale_dict.get(self.valign, 0)
-        self.voffset = np.empty(self.num_stages)
-        col_hgt = np.empty(self.num_stages)
-        for ii in range(self.num_stages):
-            col_hgt[ii] = self.weight_sum[ii] + (len(self.nodes_uniq[ii]) - 1) * self.node_gap * self.plot_height_nom
-            self.voffset[ii] = self.vscale * (col_hgt[0] - col_hgt[ii])
-
-        # overall dimensions
-        self.plot_height = max(col_hgt)
-        self.sub_width = self.plot_height
-        self.plot_width_nom = (self.num_stages - 1) * self.sub_width
-        self.plot_width = (
-            (self.num_stages - 1) * self.sub_width
-            + 2 * self.plot_width_nom * (self.label_gap + self.label_width)
-            + self.num_stages * self.plot_width_nom * self.node_width
-        )
-
-        # vertical positions
-        self.y_node_gap = self.node_gap * self.plot_height_nom
-        self.y_title_gap = self.title_gap * self.plot_height_nom
-        self.y_frame_gap = self.frame_gap * self.plot_height_nom
-
-        # horizontal positions
-        self.x_node_width = self.node_width * self.plot_width_nom
-        self.x_label_width = self.label_width * self.plot_width_nom
-        self.x_label_gap = self.label_gap * self.plot_width_nom
-        self.x_value_gap = self.value_gap * self.plot_width_nom
+        self.calc_plot_height()
+        self.calc_plot_dimens()
 
         self.x_lr = {}
         self.nodesize_l = {}
@@ -441,6 +413,7 @@ class Sankey:
             self.node_pos_voffset[ii] = [{}, {}]
             self.node_pos_bot[ii] = [{}, {}]
             self.node_pos_top[ii] = [{}, {}]
+            prev_label = None  # avoid lint error
             for lr in [0, 1]:
                 for i, (label, node_height) in enumerate(self.node_sizes[ii + lr].items()):
                     this_side_height = self.data[2 * (ii + lr) + 1][self.data[2 * (ii + lr)] == label].sum()
@@ -499,6 +472,49 @@ class Sankey:
                 self.node_sizes[ii][lbl] = weight_cont + weight_only + max(weight_stop, weight_strt)
 
             self.weight_sum[ii] = pd.Series(self.node_sizes[ii].values()).sum()
+
+    ###########################################
+
+    def calc_plot_height(self):
+        """Calculate column heights, offsets, and total plot height"""
+
+        self.plot_height_nom = max(self.weight_sum)
+
+        vscale_dict = {"top": 1, "center": 0.5, "bottom": 0}
+        self.vscale = vscale_dict.get(self.valign, 0)
+
+        self.voffset = np.empty(self.num_stages)
+        col_hgt = np.empty(self.num_stages)
+        for ii in range(self.num_stages):
+            col_hgt[ii] = self.weight_sum[ii] + (len(self.nodes_uniq[ii]) - 1) * self.node_gap * self.plot_height_nom
+            self.voffset[ii] = self.vscale * (col_hgt[0] - col_hgt[ii])
+
+        self.plot_height = max(col_hgt)
+    
+    ###########################################
+
+    def calc_plot_dimens(self):
+        """Calculate absolute size of plot dimens based on scaling factors"""
+
+        # overall dimensions
+        self.sub_width = self.plot_height
+        self.plot_width_nom = (self.num_stages - 1) * self.sub_width
+        self.plot_width = (
+            (self.num_stages - 1) * self.sub_width
+            + 2 * self.plot_width_nom * (self.label_gap + self.label_width)
+            + self.num_stages * self.plot_width_nom * self.node_width
+        )
+
+        # vertical positions
+        self.y_node_gap = self.node_gap * self.plot_height_nom
+        self.y_title_gap = self.title_gap * self.plot_height_nom
+        self.y_frame_gap = self.frame_gap * self.plot_height_nom
+
+        # horizontal positions
+        self.x_node_width = self.node_width * self.plot_width_nom
+        self.x_label_width = self.label_width * self.plot_width_nom
+        self.x_label_gap = self.label_gap * self.plot_width_nom
+        self.x_value_gap = self.value_gap * self.plot_width_nom
 
     ###########################################
 
