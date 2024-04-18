@@ -490,7 +490,7 @@ class Sankey:
             self.voffset[ii] = self.vscale * (col_hgt[0] - col_hgt[ii])
 
         self.plot_height = max(col_hgt)
-    
+
     ###########################################
 
     def calc_plot_dimens(self):
