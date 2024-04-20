@@ -437,7 +437,6 @@ class Sankey:
         color_palette = cmap(np.linspace(0, 1, len(self.all_labels)))
         for i, label in enumerate(self.all_labels):
             color_dict_new[label] = self.color_dict.get(label, color_palette[i])
-        # check_colors_match_labels(self.all_labels, color_dict_new)
         self.color_dict = color_dict_new
 
     ###########################################
