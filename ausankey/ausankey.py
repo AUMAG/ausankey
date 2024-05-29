@@ -716,15 +716,15 @@ class Sankey:
 
         x_lr = self.x_lr[ii]
 
-        last_label = self.node_pairs[ii][-1]
         title_x = [x_lr[0] - self.x_node_width / 2, x_lr[1] + self.x_node_width / 2]
 
         for lr in [0, 1] if ii == 0 else [1]:
+            last_label = list(self.node_sizes[ii + lr])[-1]
             if self.title_side in ("top", "both"):
                 if self.title_loc == "outer":
                     yt = min(self.voffset) + self.y_title_gap + self.y_frame_gap + self.plot_height
                 elif self.title_loc == "inner":
-                    yt = self.y_title_gap + self.node_pos_top[ii][lr][last_label[lr]]
+                    yt = self.y_title_gap + self.node_pos_top[ii][lr][last_label]
                 self.draw_title(title_x[lr], yt, self.titles[ii + lr], "bottom")
 
             if self.title_side in ("bottom", "both"):

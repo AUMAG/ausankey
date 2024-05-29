@@ -1,9 +1,12 @@
 # Changelog for ausankey
 
+
 ## 2024-05-29 v1.4
 
 * Fix alignment bug when nodes were changing their
   label and stopping/starting. 
+* Fix title alignment bug when second-to-last and
+  last stages had different nodes on top.  
 * Add `top` option for `label_loc`.
 * Start a doc page to collate some examples.
 * Substantial code refactoring (which I sometimes
