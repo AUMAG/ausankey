@@ -5,7 +5,7 @@
 
 This Python package is used for creating diagrams like this, often known as Sankey diagrams:
 
-![Image with options](frame3_pretty.png)
+![Image with options](interface/iface_frame3_pretty.png)
 
 Currently, the package only supports flows in the horizontal direction (left-right).
 
