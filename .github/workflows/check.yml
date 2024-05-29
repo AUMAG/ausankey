@@ -51,6 +51,4 @@ jobs:
       - name: Coverage
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        run: |
-          cd ${{ vars.SOURCE_DIR }}
-          hatch run test:cov
+        run: hatch run test:cov

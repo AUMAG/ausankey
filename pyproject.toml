@@ -86,7 +86,7 @@ dependencies = [
 
 [tool.hatch.envs.test.scripts]
 test = "python -m pytest"
-test-cov = "pwd; ls -lR; coverage run -m pytest"
+test-cov = "coverage run -m pytest"
 coverall = "coveralls --service=github"
 cov = ["test-cov", "coverall"]
 
