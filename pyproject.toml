@@ -74,7 +74,7 @@ dependencies = ["mkdocs", "mkdocstrings[python]"]
 
 [tool.hatch.envs.doc.scripts]
 ref = "mkdocs -v build"
-img = "cd docs; python sankey_doc_examples.py"
+img = "cd docs; python sankey_doc_examples.py; python example_plastics.py"
 icp = "cd docs; cp -v *.png ../_site/"
 
 
@@ -93,6 +93,7 @@ cov = ["test-cov", "coverall"]
 [tool.ruff]
 extend-exclude = [
   "sankey_doc_examples.py",
+  "example_*.py",
   "__init__.py",
   "docs/*",
  ]
