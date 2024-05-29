@@ -416,7 +416,7 @@ class Sankey:
             prev_label = None  # avoid lint error
             for lr in [0, 1]:
                 for i, (label, node_height) in enumerate(self.node_sizes[ii + lr].items()):
-                    this_side_height = self.data[2 * (ii + lr) + 1][self.data[2 * (ii + lr)] == label].sum()
+                    this_side_height = self.node_indiv_heights[ii][lr].get(label,0)
                     self.node_pos_voffset[ii][lr][label] = self.vscale * (node_height - this_side_height)
                     if i == 0:
                         tmp_top = self.voffset[ii + lr]
@@ -451,23 +451,43 @@ class Sankey:
     def weight_labels(self):
         """Calculates sizes of each node, taking into account discontinuities"""
         self.weight_sum = np.empty(self.num_stages)
+        
+        self.node_indiv_heights = {}
 
         for ii in range(self.num_stages):
             self.nodes_uniq[ii] = pd.Series(self.data[2 * ii]).dropna().unique()
 
         for ii in range(self.num_stages):
             self.node_sizes[ii] = {}
+            self.node_indiv_heights[ii] = {}
+            self.node_indiv_heights[ii][0] = {}
+            if ii > 0:
+                self.node_indiv_heights[ii-1][1] = {}
             for lbl in self.nodes_uniq[ii]:
+
                 i_p = 2 if ii > 0 else 0
                 i_n = 2 if ii < self.num_flow else 0
-                ind_prev = self.data[2 * ii - i_p] == lbl
                 ind_this = self.data[2 * ii] == lbl
-                ind_next = self.data[2 * ii + i_n] == lbl
+                none_prev = self.data[2 * ii - i_p].isna()
+                none_next = self.data[2 * ii + i_n].isna()
 
-                weight_cont = self.data[2 * ii + 1][ind_this & ind_prev & ind_next].sum()
-                weight_only = self.data[2 * ii + 1][ind_this & ~ind_prev & ~ind_next].sum()
-                weight_stop = self.data[2 * ii + 1][ind_this & ind_prev & ~ind_next].sum()
-                weight_strt = self.data[2 * ii + 1][ind_this & ~ind_prev & ind_next].sum()
+                ind_cont = ind_this & ~none_prev & ~none_next
+                ind_only = ind_this & none_prev & none_next
+                ind_stop = ind_this & ~none_prev & none_next
+                ind_strt = ind_this & none_prev & ~none_next
+                
+                weight_cont = self.data[2 * ii + 1][ind_cont].sum()
+                weight_only = self.data[2 * ii + 1][ind_only].sum()
+                weight_stop = self.data[2 * ii + 1][ind_stop].sum()
+                weight_strt = self.data[2 * ii + 1][ind_strt].sum()
+
+                if ii == 0:
+                    self.node_indiv_heights[ii][0][lbl] = weight_cont + weight_only + weight_stop
+                elif ii == self.num_stages:
+                    self.node_indiv_heights[ii-1][1][lbl] = weight_cont + weight_only + weight_strt
+                else:
+                    self.node_indiv_heights[ii][0][lbl] = weight_cont + weight_only + weight_stop
+                    self.node_indiv_heights[ii-1][1][lbl] = weight_cont + weight_only + weight_strt
                 self.node_sizes[ii][lbl] = weight_cont + weight_only + max(weight_stop, weight_strt)
 
             self.weight_sum[ii] = pd.Series(self.node_sizes[ii].values()).sum()
