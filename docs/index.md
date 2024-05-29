@@ -24,6 +24,12 @@ I started redeveloping the package independently to learn more about Python prog
 * [floweaver for Python](https://github.com/ricklupton/floweaver) by ricklupton
 * [alluvial for R](https://github.com/mbojan/alluvial) by mbojan
 
+## Documentation
+
+* Basic interface: see below
+* [Examples](examples.html)
+* [Code reference documentation](reference.html)
+
 # Interface
 
 ## Getting started
