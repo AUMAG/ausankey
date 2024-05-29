@@ -140,9 +140,9 @@ class Sankey:
     label_loc : [str1, str2, str3]
         Position to place labels next to the nodes.
 
-        * `str1`: position of first labels (`"left"`, `"right"`, `"center"`, or `"none"`)
-        * `str2`: position of middle labels (`"left"`, `"right"`, `"both"`, `"center"`, or `"none"`)
-        * `str3`: position of last labels (`"left"`, `"right"`, `"center"`, or `"none"`)
+        * `str1`: position of first labels (`"left"`, `"right"`, `"center"`,  `"top"`, or `"none"`)
+        * `str2`: position of middle labels (`"left"`, `"right"`, `"both"`, `"center"`,  `"top"`, or `"none"`)
+        * `str3`: position of last labels (`"left"`, `"right"`, `"center"`,  `"top"`, or `"none"`)
 
     label_duplicate : bool
         When set False, will only print a middle label if that label didn't
@@ -527,6 +527,7 @@ class Sankey:
         self.y_node_gap = self.node_gap * self.plot_height_nom
         self.y_title_gap = self.title_gap * self.plot_height_nom
         self.y_frame_gap = self.frame_gap * self.plot_height_nom
+        self.y_label_gap = self.label_gap * self.plot_height_nom
 
         # horizontal positions
         self.x_node_width = self.node_width * self.plot_width_nom
@@ -587,7 +588,7 @@ class Sankey:
 
         # Draw node labels
 
-        ha_dict = {"left": "right", "right": "left", "center": "center"}
+        ha_dict = {"left": "right", "right": "left", "center": "center", "top": "center"}
 
         # first row of labels
         lr = 0
@@ -596,10 +597,13 @@ class Sankey:
                 xx = x_lr[lr] - self.x_label_gap - self.x_node_width
             elif self.label_loc[0] in ("right"):
                 xx = x_lr[lr] + self.x_label_gap
-            elif self.label_loc[0] in ("center"):
+            elif self.label_loc[0] in ("center", "top"):
                 xx = x_lr[lr] - self.x_node_width / 2
             for label in self.node_sizes[ii + lr]:
-                yy = self.node_pos_bot[ii][lr][label] + self.node_sizes[ii + lr][label] / 2
+                if self.label_loc[0] in ("top"):
+                    yy = self.node_pos_bot[ii][lr][label] + self.node_sizes[ii + lr][label] + self.y_label_gap
+                else:
+                    yy = self.node_pos_bot[ii][lr][label] + self.node_sizes[ii + lr][label] / 2
                 self.draw_label(xx, yy, label, ha_dict[self.label_loc[0]])
 
         # inside labels, left
@@ -619,6 +623,14 @@ class Sankey:
                     yy = self.node_pos_bot[ii][lr][label] + self.node_sizes[ii + lr][label] / 2
                     self.draw_label(xx, yy, label, "center")
 
+        # inside labels, top
+        if ii < self.num_flow - 1 and self.label_loc[1] in ("top"):
+            xx = x_lr[lr] + self.x_node_width / 2
+            for label in self.node_sizes[ii + lr]:
+                if (label not in self.node_sizes[ii]) or self.label_duplicate:
+                    yy = self.node_pos_bot[ii][lr][label] + self.node_sizes[ii + lr][label] + self.y_label_gap
+                    self.draw_label(xx, yy, label, "center")
+
         # inside labels, right
         if ii < self.num_flow - 1 and self.label_loc[1] in ("right", "both"):
             xx = x_lr[lr] + self.x_label_gap + self.x_node_width
@@ -633,10 +645,13 @@ class Sankey:
                 xx = x_lr[lr] - self.x_label_gap
             elif self.label_loc[2] in ("right"):
                 xx = x_lr[lr] + self.x_label_gap + self.x_node_width
-            elif self.label_loc[2] in ("center"):
+            elif self.label_loc[2] in ("center", "top"):
                 xx = x_lr[lr] + self.x_node_width / 2
             for label in self.node_sizes[ii + lr]:
-                yy = self.node_pos_bot[ii][lr][label] + self.node_sizes[ii + lr][label] / 2
+                if self.label_loc[0] in ("top"):
+                    yy = self.node_pos_bot[ii][lr][label] + self.node_sizes[ii + lr][label] + self.y_label_gap
+                else:
+                    yy = self.node_pos_bot[ii][lr][label] + self.node_sizes[ii + lr][label] / 2
                 self.draw_label(xx, yy, label, ha_dict[self.label_loc[2]])
 
         # Plot flows

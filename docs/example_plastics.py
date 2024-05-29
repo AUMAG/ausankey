@@ -56,35 +56,38 @@ data = pd.DataFrame([
 ])
 
 plt.figure(dpi=600,figsize=(10,10))
+
+
 sky.sankey(
   data,
   node_lw=3,
   flow_lw=1.5,
   label_width = 0.1,
-  label_gap   = 0.05,
+  label_gap   = 0.02,
   node_width  = 0.06,
-  node_gap    = 0.05,
-  node_alpha  = 0.5,
+  node_gap    = 0.08,
+  node_alpha  = 1,
   node_edge = True,
   flow_alpha  = 0.4,
-  flow_edge = False,
+  flow_edge = True,
   title_gap  = 0.02,
   title_side = "both",
   title_loc  = "outer",
   frame_side = "both",
   frame_lw = 0,
-  label_loc = ["left", "center", "right"],
+  label_loc = ["top", "top", "top"],
   value_loc = ["right", "right", "right"],
   sort = "top",
   sort_dict = {"Still Used":999},
-  label_duplicate = False,
-  fontcolor = "blue",
+  label_duplicate = True,
  # label_font = {"color": "red", "rotation": 90},
   valign    = "top",
   value_gap = 0.03,
-  value_font = {"color": [0, 0, 0], "fontweight": "bold"}
- # other_thresh_val = 3,
+  value_font = {"color": [0, 0, 0], "fontweight": "bold"},
+  label_font = {"color": [0, 0, 0], "fontweight": "bold"},
+  colormap = "jet",
 )
+
 
 plt.show()
 plt.savefig("example_plastics.png")
