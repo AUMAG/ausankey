@@ -1,5 +1,15 @@
 # Changelog for ausankey
 
+## 2024-05-29 v1.4
+
+* Fix alignment bug when nodes were changing their
+  label and stopping/starting. 
+* Add `top` option for `label_loc`.
+* Start a doc page to collate some examples.
+* Substantial code refactoring (which I sometimes
+  worry is closer to obfuscation). 
+ 
+
 ## 2024-04-07 v1.3
 
 * Add `value_loc` option to control printing
