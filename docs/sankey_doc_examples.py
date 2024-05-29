@@ -28,13 +28,13 @@ data3 = pd.DataFrame(
 plt.figure()
 sky.sankey(data)
 plt.show()
-plt.savefig("fruits_default.png")
+plt.savefig("iface_fruits_default.png")
 plt.close()
 
 plt.figure()
 sky.sankey(data, colormap="jet")
 plt.show()
-plt.savefig("fruits_jet.png")
+plt.savefig("iface_fruits_jet.png")
 plt.close()
 
 color_dict = {"apple": "#f71b1b", "blueberry": "#1b7ef7", "banana": "#f3f71b", "lime": "#12e23f", "orange": "#f78c1b"}
@@ -42,7 +42,7 @@ color_dict = {"apple": "#f71b1b", "blueberry": "#1b7ef7", "banana": "#f3f71b", "
 plt.figure()
 sky.sankey(data, color_dict=color_dict)
 plt.show()
-plt.savefig("fruits_colordict.png")
+plt.savefig("iface_fruits_colordict.png")
 plt.close()
 
 label_dict = {"apple": "Apple", "blueberry": "B'berry", "banana": "Banana", "lime": "Lime", "orange": "Orange"}
@@ -50,38 +50,38 @@ label_dict = {"apple": "Apple", "blueberry": "B'berry", "banana": "Banana", "lim
 plt.figure()
 sky.sankey(data, label_dict=label_dict)
 plt.show()
-plt.savefig("fruits_labeldict.png")
+plt.savefig("iface_fruits_labeldict.png")
 plt.close()
 
 
 plt.figure()
 sky.sankey(data, flow_alpha=0.3)
 plt.show()
-plt.savefig("fruits_alpha.png")
+plt.savefig("iface_fruits_alpha.png")
 plt.close()
 
 plt.figure()
 sky.sankey(data, sort="top")
 plt.show()
-plt.savefig("fruits_sort_top.png")
+plt.savefig("iface_fruits_sort_top.png")
 plt.close()
 
 plt.figure()
 sky.sankey(data, sort="bottom")
 plt.show()
-plt.savefig("fruits_sort_bot.png")
+plt.savefig("iface_fruits_sort_bot.png")
 plt.close()
 
 plt.figure()
 sky.sankey(data, sort="none")
 plt.show()
-plt.savefig("fruits_sort_none.png")
+plt.savefig("iface_fruits_sort_none.png")
 plt.close()
 
 plt.figure()
 sky.sankey(data, titles=["Summer", "Winter"])
 plt.show()
-plt.savefig("fruits_titles.png")
+plt.savefig("iface_fruits_titles.png")
 plt.close()
 
 plt.figure()
@@ -91,7 +91,7 @@ sky.sankey(
     title_side="bottom",
 )
 plt.show()
-plt.savefig("fruits_titles_bottom.png")
+plt.savefig("iface_fruits_titles_bottom.png")
 plt.close()
 
 plt.figure()
@@ -101,7 +101,7 @@ sky.sankey(data,
     title_loc = "outer",
 )
 plt.show()
-plt.savefig("fruits_titles_outer.png")
+plt.savefig("iface_fruits_titles_outer.png")
 plt.close()
 
 plt.figure()
@@ -112,7 +112,7 @@ sky.sankey(data,
     fontcolor="red",
 )
 plt.show()
-plt.savefig("fruits_fonts.png")
+plt.savefig("iface_fruits_fonts.png")
 plt.close()
 
 plt.figure(dpi=600)
@@ -128,19 +128,19 @@ sky.sankey(
   value_font = {"color": "green"},
 )
 plt.show()
-plt.savefig("data3_fonts_fancy.png")
+plt.savefig("iface_data3_fonts_fancy.png")
 plt.close()
 
 plt.figure()
 sky.sankey(data, valign="center")
 plt.show()
-plt.savefig("fruits_valign.png")
+plt.savefig("iface_fruits_valign.png")
 plt.close()
 
 plt.figure()
 sky.sankey(data, frame_side="both")
 plt.show()
-plt.savefig("fruits_frame.png")
+plt.savefig("iface_fruits_frame.png")
 plt.close()
 
 plt.figure()
@@ -149,7 +149,7 @@ sky.sankey(data,
     frame_color="#62dcbe",
 )
 plt.show()
-plt.savefig("fruits_frame_color.png")
+plt.savefig("iface_fruits_frame_color.png")
 plt.close()
 
 plt.figure()
@@ -169,7 +169,7 @@ sky.sankey(
     title_gap=0.1,
 )
 plt.show()
-plt.savefig("fruits_spacing.png")
+plt.savefig("iface_fruits_spacing.png")
 plt.close()
 
 data = pd.DataFrame(
@@ -186,7 +186,7 @@ data = pd.DataFrame(
 
 plt.figure()
 sky.sankey(data, sort="top", colormap="jet")
-plt.savefig("frame2_sort_n1.png")
+plt.savefig("iface_frame2_sort_n1.png")
 plt.close()
 
 color_dict = {
@@ -207,7 +207,7 @@ sky.sankey(
     titles=["Stage 1", "Stage 2", "Stage 3"],
     valign="center",
 )
-plt.savefig("frame3_pretty.png")
+plt.savefig("iface_frame3_pretty.png")
 plt.close()
 
 plt.figure(dpi=600)
@@ -216,7 +216,7 @@ sky.sankey(
     label_loc=["right","right","left"],
     value_loc=["none","none","none"],
 )
-plt.savefig("frame3_labels.png")
+plt.savefig("iface_frame3_labels.png")
 plt.close()
 
 plt.figure(dpi=600)
@@ -226,7 +226,7 @@ sky.sankey(
     value_loc=["none","none","none"],
     label_duplicate=False,
 )
-plt.savefig("frame3_labels_dup.png")
+plt.savefig("iface_frame3_labels_dup.png")
 plt.close()
 
 
@@ -250,7 +250,7 @@ sky.sankey(
     valign="top",
 )
 
-plt.savefig("frame3_many.png")
+plt.savefig("iface_frame3_many.png")
 plt.close()
 
 plt.figure(dpi=600)
@@ -263,7 +263,7 @@ sky.sankey(data3,
     node_lw = 2,
     flow_lw = 1,
     )
-plt.savefig("frame3_edge.png")
+plt.savefig("iface_frame3_edge.png")
 plt.close()
 
 

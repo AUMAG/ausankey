@@ -82,6 +82,6 @@ import ausankey as sky
 sky.sankey(data)
 ```
 which produces:
-![Image with options](fruits_default.png)
+![Image with options](interface/iface_fruits_default.png)
 
 There are a ton of customisation options set using a keyval interface. See the [user interface documentation](interface/) for details. 

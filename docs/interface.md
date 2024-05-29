@@ -45,7 +45,7 @@ import ausankey as sky
 sky.sankey(data)
 ```
 which produces:
-![Image with options](fruits_default.png)
+![Image with options](iface_fruits_default.png)
 
 
 ## Colours
@@ -54,7 +54,7 @@ You can customise the colours either by changing the Matplotlib colormap:
 ```
 sky.sankey(data,colormap=“jet”)
 ```
-![Image with options](fruits_jet.png)
+![Image with options](iface_fruits_jet.png)
 
 Or by manually choosing the colours:
 ```
@@ -67,7 +67,7 @@ color_dict = {
 }
 sky.sankey(data,color_dict=color_dict)
 ```
-![Image with options](fruits_colordict.png)
+![Image with options](iface_fruits_colordict.png)
 
 You can combine both approaches to use a colour map for most of the nodes and then override only some of them manually. (I.e., the `color_dict` does not need to have entries for all of the labels.)
 
@@ -75,7 +75,7 @@ The opacity of the flows and nodes can be customised with `flow_alpha` and `node
 ```
 sky.sankey(data,flow_alpha=0.3)
 ```
-![Image with options](fruits_alpha.png)
+![Image with options](iface_fruits_alpha.png)
 
 
 ## Order of entries (sorting)
@@ -86,19 +86,19 @@ The entries can be sorted highest to lowest:
 ```
 sky.sankey(data,sort=“top”)
 ```
-![Image with options](fruits_sort_top.png)
+![Image with options](iface_fruits_sort_top.png)
 
 Or lowest to highest:
 ```
 sky.sankey(data,sort=“bottom”)
 ```
-![Image with options](fruits_sort_bot.png)
+![Image with options](iface_fruits_sort_bot.png)
 
 Or left in the order listed in the data:
 ```
 sky.sankey(data,sort=“none”)
 ```
-![Image with options](fruits_sort_none.png)
+![Image with options](iface_fruits_sort_none.png)
 
 The sort order of individual labels can be overidden using the `sort_dict`.
 E.g., `sort_dict={“a”,0}` would sort label `a` to the bottom of each stage regardless of its weighted node values.
@@ -109,7 +109,7 @@ The vertical alignment of the diagram can be  `”top”`, `”bottom”`, or `�
 ```
 sky.sankey(data,valign = “center”)
 ```
-![Image with options](fruits_valign.png)
+![Image with options](iface_fruits_valign.png)
 
 
 ## Labels
@@ -125,7 +125,7 @@ label_dict = {
 }
 sky.sankey(data,label_dict=label_dict)
 ```
-![Image with options](fruits_labeldict.png)
+![Image with options](iface_fruits_labeldict.png)
 
 Note that the dictionary does not need to contain an entry for each label.
 
@@ -148,7 +148,7 @@ sky.sankey(
     value_loc=[“none”,”none”,”none”],
 )
 ```
-![Image with options](frame3_labels.png)
+![Image with options](iface_frame3_labels.png)
 
 Repeating the labels can be redundant in cases where labels
 are repeated/duplicated in successive stages. Label
@@ -162,7 +162,7 @@ sky.sankey(
     label_duplicate=False,
 )
 ```
-![Image with options](frame3_labels_dup.png)
+![Image with options](iface_frame3_labels_dup.png)
 
 
 ## Values
@@ -190,7 +190,7 @@ Titles for each column of data can be added:
 ```
 sky.sankey(data,titles=[“Summer”,”Winter”])
 ```
-![Image with options](fruits_titles.png)
+![Image with options](iface_fruits_titles.png)
 
 Titles can be placed `”top”`, `”bottom”`, or `”both”`:
 ```
@@ -199,7 +199,7 @@ sky.sankey(data,
     title_side = “bottom”,
 )
 ```
-![Image with options](fruits_titles_bottom.png)
+![Image with options](iface_fruits_titles_bottom.png)
 
 Titles can also be placed “outside” the plot area, with default spacing intending to be placed outside the frame:
 ```
@@ -209,7 +209,7 @@ sky.sankey(data,
     title_loc = “outer”,
 )
 ```
-![Image with options](fruits_titles_outer.png)
+![Image with options](iface_fruits_titles_outer.png)
 
 
 ## Fonts
@@ -223,7 +223,7 @@ sky.sankey(data,
     fontcolor=“red”,
 )
 ```
-![Image with options](fruits_fonts.png)
+![Image with options](iface_fruits_fonts.png)
 
 These options do not use `snake_case` for consistency with their underlying Matplotlib options.
 Further font options can be passed through directly via the `label_font`, `title_font`, and `value_font` options, which override the settings above.
@@ -242,7 +242,7 @@ sky.sankey(
   value_font = {“color”: “green”},
 )
 ```
-![Image with options](data3_fonts_fancy.png)
+![Image with options](iface_data3_fonts_fancy.png)
 
 Refer to [Matplotlib documentation](https://matplotlib.org/stable/api/_as_gen/matplotlib.pyplot.text.html) for available options.
 
@@ -256,7 +256,7 @@ Horizontal framing can be placed `”top”`, `”bottom”`, or `”both”`:
 ```
 sky.sankey(data,frame_side = “both”)
 ```
-![Image with options](fruits_frame.png)
+![Image with options](iface_fruits_frame.png)
 
 The frame can be coloured:
 ```
@@ -265,7 +265,7 @@ sky.sankey(data,
     frame_color=“#62dcbe”,
  )
 ```
-![Image with options](fruits_frame_color.png)
+![Image with options](iface_fruits_frame_color.png)
 
 
 ## Edges
@@ -283,7 +283,7 @@ sky.sankey(data3,
     flow_alpha = 0.3,
     )
 ```
-![Image with options](frame3_edge.png)
+![Image with options](iface_frame3_edge.png)
 
 
 ## Spacing
@@ -306,4 +306,4 @@ sky.sankey( data,
             title_gap   = 0.1 ,
           )
 ```
-![Image with options](fruits_spacing.png)
+![Image with options](iface_fruits_spacing.png)
