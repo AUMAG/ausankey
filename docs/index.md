@@ -27,8 +27,8 @@ I started redeveloping the package independently to learn more about Python prog
 ## Documentation
 
 * Basic interface: see below
-* [Examples](examples.html)
-* [Code reference documentation](reference.html)
+* [Examples](examples/)
+* [Code reference documentation](reference/)
 
 # Interface
 
