@@ -6,6 +6,7 @@ Produces simple Sankey Diagrams with matplotlib.
 Forked from: Anneya Golob & marcomanz & pierre-sassoulas & jorwoods
 """
 
+import matplotlib as mpl
 import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
@@ -432,7 +433,7 @@ class Sankey:
 
         # If no color_dict given, make one
         color_dict_new = {}
-        cmap = plt.cm.get_cmap(self.colormap)
+        cmap = getattr(mpl.cm, self.colormap, None)
         color_palette = cmap(np.linspace(0, 1, len(self.all_labels)))
         for i, label in enumerate(self.all_labels):
             color_dict_new[label] = self.color_dict.get(label, color_palette[i])
