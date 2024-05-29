@@ -93,7 +93,6 @@ cov = ["test-cov", "coverall"]
 [tool.ruff]
 extend-exclude = [
   "sankey_doc_examples.py",
-  "example_*.py",
   "__init__.py",
   "docs/*",
  ]
