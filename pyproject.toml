@@ -74,7 +74,7 @@ dependencies = ["mkdocs", "mkdocstrings[python]"]
 
 [tool.hatch.envs.doc.scripts]
 ref = "mkdocs -v build"
-img = "cd docs; for f in *.py; do echo "Processing $f file..."; python $f; done"
+img = "cd docs; for f in *.py; do python $f; done"
 icp = "cd docs; cp -v *.png ../_site/; cp -v example_*.png ../_site/examples/; cp -v iface_*.png ../_site/interface/ "
 
 
