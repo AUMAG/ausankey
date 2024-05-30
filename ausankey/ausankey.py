@@ -350,7 +350,8 @@ class Sankey:
     def setup(self, data):
         """Calculates all parameters needed to plot the graph"""
 
-        self.data = data
+        self.data = data.fillna(np.nan).replace([np.nan], [None])
+        # replaces NaN etc with None
 
         num_col = len(self.data.columns)
         self.data.columns = range(num_col)  # force numeric column headings
@@ -373,7 +374,7 @@ class Sankey:
                 if (
                     val < self.other_thresh_val
                     or val < self.other_thresh_sum * self.weight_sum[ii]
-                    or val < self.other_thresh_max * max(self.data[2 * ii + 1])
+                    or val < self.other_thresh_max * np.max(self.data[2 * ii + 1])
                 ):
                     self.data.iat[nn, 2 * ii] = self.other_name
         self.weight_labels()
@@ -700,7 +701,7 @@ class Sankey:
                 if not (
                     val < self.value_thresh_val
                     or val < self.value_thresh_sum * self.weight_sum[ii + lr]
-                    or val < self.value_thresh_max * max(self.data[2 * ii + 1])
+                    or val < self.value_thresh_max * np.max(self.data[2 * ii + 1])
                 ):
                     self.draw_value(
                         x_lr[lr] + (1 - 2 * lr) * self.x_value_gap,

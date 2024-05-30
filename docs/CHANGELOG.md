@@ -1,6 +1,11 @@
 # Changelog for ausankey
 
 
+## 2024-99-99 v1.5
+
+* Allow NaN or None when flows terminate. 
+
+
 ## 2024-05-29 v1.4
 
 * Fix alignment bug when nodes were changing their
