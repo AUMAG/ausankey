@@ -197,7 +197,18 @@ The default settings are:
     value_loc = [ “both”, “right”, “right” ]
 
 These defaults are intended to a avoid clashes with the default `label_loc` settings.
-Currently there is no way to de-duplicate repeated values.
+
+When `"both"` is used, a flow which doesn't change size will display repeated values.
+This behaviour can be controlled with `value_duplicate`:
+
+```
+sky.sankey(
+    data,
+    value_loc = ["both","both","both"],
+    value_duplicate = False,
+)
+```
+![Image with options](iface_fruits_value_dup.png)
 
 
 ## Titles

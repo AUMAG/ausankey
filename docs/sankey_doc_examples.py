@@ -183,7 +183,15 @@ plt.show()
 plt.savefig("iface_fruits_node_labels.png")
 plt.close()
 
-
+plt.figure()
+sky.sankey(
+    data,
+    value_loc = ["both","both","both"],
+    value_duplicate = False,
+)
+plt.show()
+plt.savefig("iface_fruits_value_dup.png")
+plt.close()
 
 data = pd.DataFrame(
     [
