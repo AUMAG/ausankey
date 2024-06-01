@@ -28,5 +28,9 @@ sky.sankey(data,
       }
   }
 )
+
+
 plt.show()
+plt.savefig("example_nyc_waste.png")
+plt.close()
 
