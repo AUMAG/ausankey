@@ -807,10 +807,7 @@ class Sankey:
     def draw_label(self, x, y, label, ha, val=None):
         """Place a single label"""
 
-        if val is None:
-            valstr = ""
-        else:
-            valstr = f"\n{format(val,self.value_format)}"
+        valstr = "" if val is None else f"\n{format(val,self.value_format)}"
 
         self.ax.text(
             x,
