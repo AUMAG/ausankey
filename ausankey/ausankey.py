@@ -152,6 +152,9 @@ class Sankey:
     label_font : dict
         Dictionary of Matplotlib text options to be passed to the labels.
 
+    label_values : bool
+        Whether to include the value of the node size with the node label text.
+
     other_thresh_val : float
         Sets threshold to recategorise nodes that are below a certain value.
         Up to three dictionary keys can be set:
@@ -275,6 +278,7 @@ class Sankey:
         label_loc=("left", "none", "right"),
         label_font=None,
         label_duplicate=None,
+        label_values=None,
         node_lw=1,
         node_width=0.02,
         node_gap=0.05,
@@ -320,6 +324,7 @@ class Sankey:
         self.label_loc = label_loc
         self.label_font = label_font or {}
         self.label_duplicate = True if label_duplicate is None else label_duplicate
+        self.label_values = False if label_values is None else label_values
         self.node_lw = node_lw
         self.node_width = node_width
         self.node_gap = node_gap
@@ -707,11 +712,11 @@ class Sankey:
                     or val < self.value_thresh_sum * self.weight_sum[ii + lr]
                     or val < self.value_thresh_max * np.max(self.data[2 * ii + 1])
                 ):
-                    if self.node_sizes[ii + lr][lbl_lr[lr]] == len_lr[lr]:
+                    if self.label_values and self.node_sizes[ii + lr][lbl_lr[lr]] == len_lr[lr]:
                         continue  # dont plot flow label if equal the adjacent node label
                     if lr == 1 and len_lr[0] == len_lr[1]:
                         continue  # don't plot right flow label is equal to left flow label
-                    if lr == 0 and len_lr[0] == self.node_sizes[ii + 1][lbl_r]:
+                    if self.label_values and lr == 0 and len_lr[0] == self.node_sizes[ii + 1][lbl_r]:
                         continue
 
                     self.draw_value(
@@ -807,7 +812,9 @@ class Sankey:
     def draw_label(self, x, y, label, ha, val=None):
         """Place a single label"""
 
-        valstr = "" if val is None else f"\n{format(val,self.value_format)}"
+        valstr = ""
+        if self.label_values and val is not None:
+            valstr = f"\n{format(val,self.value_format)}"
 
         self.ax.text(
             x,

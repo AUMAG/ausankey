@@ -18,6 +18,7 @@ sky.sankey(data,
   node_lw = 0,
   label_gap = 0.03,
   label_loc = ["center","center","center"],
+  label_values = True,
   value_loc = ["both","both","both"],
   value_thresh_val = 200,
   label_font = {

@@ -2,7 +2,10 @@ site_name: "The ausankey package"
 
 nav:
   - Home: index.md
+  - User guide: interface.md
+  - Examples: examples.md
   - Reference: reference.md
+  - Changelog: CHANGELOG.md
 
 theme:
   name: "mkdocs"

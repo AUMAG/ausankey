@@ -164,6 +164,22 @@ sky.sankey(
 ```
 ![Image with options](iface_frame3_labels_dup.png)
 
+By default the node label only includes the textual string. 
+To include the numerical value as well, set `label_values` to true:
+
+```
+sky.sankey(
+    data,
+    node_gap = 0.2,
+    label_values = True,
+    value_format = "0.1f"
+)
+```
+![Image with options](iface_fruits_node_labels.png)
+
+Although not shown here, for more complex plots some heuristics
+are used to avoid printing redundant flow values (see next section).
+
 
 ## Values
 

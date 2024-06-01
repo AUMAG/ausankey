@@ -172,6 +172,19 @@ plt.show()
 plt.savefig("iface_fruits_spacing.png")
 plt.close()
 
+plt.figure()
+sky.sankey(
+    data,
+    node_gap = 0.2,
+    label_values = True,
+    value_format = "0.1f"
+)
+plt.show()
+plt.savefig("iface_fruits_node_labels.png")
+plt.close()
+
+
+
 data = pd.DataFrame(
     [
         ("a", 1.0, "ab", 2.0),

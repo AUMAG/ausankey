@@ -4,7 +4,7 @@
 ## 2024-99-99 v1.5
 
 * Allow NaN or None when flows terminate.
-* Add values to node labels. 
+* Add values to node labels when `label_values = True`. 
 
 
 ## 2024-05-29 v1.4
