@@ -713,7 +713,7 @@ class Sankey:
                         continue  # don't plot right flow label is equal to left flow label
                     if lr == 0 and len_lr[0] == self.node_sizes[ii + 1][lbl_r]:
                         continue
-                    
+
                     self.draw_value(
                         x_lr[lr] + (1 - 2 * lr) * self.x_value_gap,
                         bot_lr[lr] + len_lr[lr] / 2,
