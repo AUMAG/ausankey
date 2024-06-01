@@ -3,7 +3,8 @@
 
 ## 2024-99-99 v1.5
 
-* Allow NaN or None when flows terminate. 
+* Allow NaN or None when flows terminate.
+* Add values to node labels. 
 
 
 ## 2024-05-29 v1.4

@@ -605,7 +605,7 @@ class Sankey:
                     yy = self.node_pos_bot[ii][lr][label] + self.node_sizes[ii + lr][label] + self.y_label_gap
                 else:
                     yy = self.node_pos_bot[ii][lr][label] + self.node_sizes[ii + lr][label] / 2
-                self.draw_label(xx, yy, label, ha_dict[self.label_loc[0]])
+                self.draw_label(xx, yy, label, ha_dict[self.label_loc[0]], self.node_sizes[ii + lr][label])
 
         # inside labels, left
         lr = 1
@@ -614,7 +614,7 @@ class Sankey:
             for label in self.node_sizes[ii + lr]:
                 if (label not in self.node_sizes[ii]) or self.label_duplicate:
                     yy = self.node_pos_bot[ii][lr][label] + self.node_sizes[ii + lr][label] / 2
-                    self.draw_label(xx, yy, label, "right")
+                    self.draw_label(xx, yy, label, "right", self.node_sizes[ii + lr][label])
 
         # inside labels, center
         if ii < self.num_flow - 1 and self.label_loc[1] in ("center"):
@@ -622,23 +622,25 @@ class Sankey:
             for label in self.node_sizes[ii + lr]:
                 if (label not in self.node_sizes[ii]) or self.label_duplicate:
                     yy = self.node_pos_bot[ii][lr][label] + self.node_sizes[ii + lr][label] / 2
-                    self.draw_label(xx, yy, label, "center")
+                    self.draw_label(xx, yy, label, "center", self.node_sizes[ii + lr][label])
 
         # inside labels, top
         if ii < self.num_flow - 1 and self.label_loc[1] in ("top"):
             xx = x_lr[lr] + self.x_node_width / 2
             for label in self.node_sizes[ii + lr]:
                 if (label not in self.node_sizes[ii]) or self.label_duplicate:
-                    yy = self.node_pos_bot[ii][lr][label] + self.node_sizes[ii + lr][label] + self.y_label_gap
-                    self.draw_label(xx, yy, label, "center")
+                    val = self.node_sizes[ii + lr][label]
+                    yy = self.node_pos_bot[ii][lr][label] + val + self.y_label_gap
+                    self.draw_label(xx, yy, label, "center", val)
 
         # inside labels, right
         if ii < self.num_flow - 1 and self.label_loc[1] in ("right", "both"):
             xx = x_lr[lr] + self.x_label_gap + self.x_node_width
             for label in self.node_sizes[ii + lr]:
                 if (label not in self.node_sizes[ii]) or self.label_duplicate:
-                    yy = self.node_pos_bot[ii][lr][label] + self.node_sizes[ii + lr][label] / 2
-                    self.draw_label(xx, yy, label, "left")
+                    val = self.node_sizes[ii + lr][label]
+                    yy = self.node_pos_bot[ii][lr][label] + val / 2
+                    self.draw_label(xx, yy, label, "left", val)
 
         # last row of labels
         if ii == self.num_flow - 1 and self.label_loc[2] != "none":
@@ -649,11 +651,12 @@ class Sankey:
             elif self.label_loc[2] in ("center", "top"):
                 xx = x_lr[lr] + self.x_node_width / 2
             for label in self.node_sizes[ii + lr]:
+                val = self.node_sizes[ii + lr][label]
                 if self.label_loc[0] in ("top"):
-                    yy = self.node_pos_bot[ii][lr][label] + self.node_sizes[ii + lr][label] + self.y_label_gap
+                    yy = self.node_pos_bot[ii][lr][label] + val + self.y_label_gap
                 else:
-                    yy = self.node_pos_bot[ii][lr][label] + self.node_sizes[ii + lr][label] / 2
-                self.draw_label(xx, yy, label, ha_dict[self.label_loc[2]])
+                    yy = self.node_pos_bot[ii][lr][label] + val / 2
+                self.draw_label(xx, yy, label, ha_dict[self.label_loc[2]], val)
 
         # Plot flows
 
@@ -662,6 +665,7 @@ class Sankey:
             rbot = self.node_pos_voffset[ii][1][lbl_r] + self.node_pos_bot[ii][1][lbl_r]
             llen = self.nodesize_l[ii][lbl_l][lbl_r]
             rlen = self.nodesize_r[ii][lbl_l][lbl_r]
+            lbl_lr = [lbl_l, lbl_r]
             bot_lr = [lbot, rbot]
             len_lr = [llen, rlen]
 
@@ -703,6 +707,13 @@ class Sankey:
                     or val < self.value_thresh_sum * self.weight_sum[ii + lr]
                     or val < self.value_thresh_max * np.max(self.data[2 * ii + 1])
                 ):
+                    if self.node_sizes[ii + lr][lbl_lr[lr]] == len_lr[lr]:
+                        continue  # dont plot flow label if equal the adjacent node label
+                    if lr == 1 and len_lr[0] == len_lr[1]:
+                        continue  # don't plot right flow label is equal to left flow label
+                    if lr == 0 and len_lr[0] == self.node_sizes[ii + 1][lbl_r]:
+                        continue
+                    
                     self.draw_value(
                         x_lr[lr] + (1 - 2 * lr) * self.x_value_gap,
                         bot_lr[lr] + len_lr[lr] / 2,
@@ -793,12 +804,18 @@ class Sankey:
 
     ###########################################
 
-    def draw_label(self, x, y, label, ha):
+    def draw_label(self, x, y, label, ha, val=None):
         """Place a single label"""
+
+        if val is None:
+            valstr = ""
+        else:
+            valstr = f"\n{format(val,self.value_format)}"
+
         self.ax.text(
             x,
             y,
-            self.label_dict.get(label, label),
+            self.label_dict.get(label, label) + valstr,
             {
                 "ha": ha,
                 "va": "center",
