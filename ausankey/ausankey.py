@@ -259,7 +259,7 @@ class Sankey:
 
     value_duplicate: bool
         When `True` (default), all values are printed. When `False`, only print a right value if it is not equal to the preceding left value.
-"""
+    """
 
     def __init__(
         self,
@@ -720,7 +720,7 @@ class Sankey:
                 ):
                     if self.label_values and self.node_sizes[ii + lr][lbl_lr[lr]] == len_lr[lr]:
                         continue  # dont plot flow label if equal the adjacent node label
-                    if not(self.value_duplicate) and lr == 1 and len_lr[0] == len_lr[1]:
+                    if not (self.value_duplicate) and lr == 1 and len_lr[0] == len_lr[1]:
                         continue  # don't plot right flow label is equal to left flow label
                     if self.label_values and lr == 0 and len_lr[0] == self.node_sizes[ii + 1][lbl_r]:
                         continue  # don't plot left value if it is same as succeeding flow value
