@@ -238,12 +238,12 @@ class Sankey:
 
         Three syntax variations: if just one string is provided (`strA`), use this as the option for all flows.
         If three strings provided, the first (`str1`) is the first, the third string (`strN`) is the last,
-        and the second string (`strM`) is used as the option for all middle flows. 
-        
+        and the second string (`strM`) is used as the option for all middle flows.
+
         * `str1`: position of value(s) in first flow
         * `strM`: position of value(s) in middle flows
         * `strN`: position of value(s) in last flow
-        
+
         Finally, a separate string can be provided for each flow a picture right? Then you three combat dies tool for each scout role to suffer one body point of damage and a block.
 
     value_format : str
@@ -376,23 +376,26 @@ class Sankey:
         self.data.columns = range(num_col)  # force numeric column headings
         self.num_stages = int(num_col / 2)  # number of stages
         self.num_flow = self.num_stages - 1
+        
+        short_num = 3
 
         # arg syntactic sugar
-        def fix_length(str_or_array,Nmax):
-            if type(str_or_array) is str:
-                return np.repeat(str_or_array,Nmax)
-            if len(str_or_array) == 3 and Nmax == 2:
+        def fix_length(str_or_array,nmax):
+            if isinstance(str_or_array, str):
+                return np.repeat(str_or_array,nmax)
+            if len(str_or_array) == short_num and nmax == short_num - 1:
                 return np.concatenate([
                     [str_or_array[0]],
                     [str_or_array[2]]
                 ])
-            if len(str_or_array) == 3 and Nmax > 3:
+            if len(str_or_array) == short_num and nmax > short_num:
                 return np.concatenate([
                     [str_or_array[0]],
-                    np.repeat(str_or_array[1],Nmax-2),
+                    np.repeat(str_or_array[1],nmax-2),
                     [str_or_array[2]]
                 ])
             return str_or_array
+
         self.value_loc = fix_length(self.value_loc, self.num_flow)
         self.label_loc = fix_length(self.label_loc, self.num_stages)
 
@@ -626,8 +629,6 @@ class Sankey:
                 )
 
         # Draw node labels
-
-        ha_dict = {"left": "right", "right": "left", "center": "center", "top": "center"}
 
         for lr in [0, 1] if ii == 0 else [1]:
             loc = self.label_loc[ii + lr]
