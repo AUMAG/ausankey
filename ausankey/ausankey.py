@@ -137,12 +137,23 @@ class Sankey:
         plot edges and the label
         (1.0 = 100% of plot width)
 
-    label_loc : [str1, str2, str3]
-        Position to place labels next to the nodes.
+    label_loc : array or str
+        label_loc : strA
+        label_loc : [str1, strM, strN]
+        label_loc : [str1, str2,..., strN]
 
-        * `str1`: position of first labels (`"left"`, `"right"`, `"center"`,  `"top"`, or `"none"`)
-        * `str2`: position of middle labels (`"left"`, `"right"`, `"both"`, `"center"`,  `"top"`, or `"none"`)
-        * `str3`: position of last labels (`"left"`, `"right"`, `"center"`,  `"top"`, or `"none"`)
+        Position to place labels next to the nodes. Each str can be one of:
+        `"left"`, `"right"`, `"both"`, `"center"`,  `"top"`, or `"none"`.
+
+        Three syntax variations: if just one string is provided (`strA`), use this as the option for all flows.
+        If three strings provided, the first (`str1`) is the first, the third string (`strN`) is the last,
+        and the second string (`strM`) is used as the option for all middle flows.
+
+        * `str1`: position of value(s) in first flow
+        * `strM`: position of value(s) in middle flows
+        * `strN`: position of value(s) in last flow
+
+        Finally, a separate string can be provided for each flow.
 
     label_duplicate : bool
         When set False, will only print a middle label if that label didn't
@@ -232,6 +243,7 @@ class Sankey:
         value_loc : strA
         value_loc : [str1, strM, strN]
         value_loc : [str1, str2,..., strN]
+
         Position to place values next to the nodes corresponding to the sizes.
         These are placed within the flows at the beginning (left) and end (right) of each one.
         Each str can be one of: `"left"`, `"right"`, `"both"`, or `"none"`
@@ -244,7 +256,7 @@ class Sankey:
         * `strM`: position of value(s) in middle flows
         * `strN`: position of value(s) in last flow
 
-        Finally, a separate string can be provided for each flow a picture right? Then you three combat dies tool for each scout role to suffer one body point of damage and a block.
+        Finally, a separate string can be provided for each flow.
 
     value_format : str
         String formatting specification passed internally to the `format()` function.
@@ -692,7 +704,6 @@ class Sankey:
                     cc[:, jj],
                 )
 
-            ha = ["left", "right"]
             sides = []
             if self.value_loc[ii] in ("left", "both"):
                 sides.append(0)
@@ -700,24 +711,25 @@ class Sankey:
                 sides.append(1)
             for lr in sides:
                 val = len_lr[lr]
-                if not (
+                if (
                     val < self.value_thresh_val
                     or val < self.value_thresh_sum * self.weight_sum[ii + lr]
                     or val < self.value_thresh_max * np.max(self.data[2 * ii + 1])
                 ):
-                    if self.label_values and self.node_sizes[ii + lr][lbl_lr[lr]] == len_lr[lr]:
-                        continue  # dont plot flow label if equal the adjacent node label
-                    if not (self.value_duplicate) and lr == 1 and len_lr[0] == len_lr[1]:
-                        continue  # don't plot right flow label is equal to left flow label
-                    if self.label_values and lr == 0 and len_lr[0] == self.node_sizes[ii + 1][lbl_r]:
-                        continue  # don't plot left value if it is same as succeeding flow value
+                    continue # dont plot flow label if less than threshold(s)
+                if self.label_values and self.node_sizes[ii + lr][lbl_lr[lr]] == len_lr[lr]:
+                    continue  # dont plot flow label if equal the adjacent node label
+                if not (self.value_duplicate) and lr == 1 and len_lr[0] == len_lr[1]:
+                    continue  # don't plot right flow label is equal to left flow label
+                if self.label_values and lr == 0 and len_lr[0] == self.node_sizes[ii + 1][lbl_r]:
+                    continue  # don't plot left value if it is same as succeeding flow value
 
-                    self.draw_value(
-                        x_lr[lr] + (1 - 2 * lr) * self.x_value_gap,
-                        bot_lr[lr] + len_lr[lr] / 2,
-                        val,
-                        ha[lr],
-                    )
+                self.draw_value(
+                    x_lr[lr] + (1 - 2 * lr) * self.x_value_gap,
+                    bot_lr[lr] + len_lr[lr] / 2,
+                    val,
+                    ("left", "right")[lr],
+                )
 
     ###########################################
 
