@@ -376,24 +376,17 @@ class Sankey:
         self.data.columns = range(num_col)  # force numeric column headings
         self.num_stages = int(num_col / 2)  # number of stages
         self.num_flow = self.num_stages - 1
-        
+
         short_num = 3
 
         # arg syntactic sugar
-        def fix_length(str_or_array,nmax):
+        def fix_length(str_or_array, nmax):
             if isinstance(str_or_array, str):
-                return np.repeat(str_or_array,nmax)
+                return np.repeat(str_or_array, nmax)
             if len(str_or_array) == short_num and nmax == short_num - 1:
-                return np.concatenate([
-                    [str_or_array[0]],
-                    [str_or_array[2]]
-                ])
+                return np.concatenate([[str_or_array[0]], [str_or_array[2]]])
             if len(str_or_array) == short_num and nmax > short_num:
-                return np.concatenate([
-                    [str_or_array[0]],
-                    np.repeat(str_or_array[1],nmax-2),
-                    [str_or_array[2]]
-                ])
+                return np.concatenate([[str_or_array[0]], np.repeat(str_or_array[1], nmax - 2), [str_or_array[2]]])
             return str_or_array
 
         self.value_loc = fix_length(self.value_loc, self.num_flow)
@@ -632,7 +625,7 @@ class Sankey:
 
         for lr in [0, 1] if ii == 0 else [1]:
             loc = self.label_loc[ii + lr]
-    
+
             # inside labels, left
             if loc in ("left", "both"):
                 xx = x_lr[lr] - self.x_label_gap + (lr - 1) * self.x_node_width
@@ -641,7 +634,7 @@ class Sankey:
                         val = self.node_sizes[ii + lr][label]
                         yy = self.node_pos_bot[ii][lr][label] + val / 2
                         self.draw_label(xx, yy, label, "right", val)
-    
+
             # inside labels, center
             if loc in ("center"):
                 xx = x_lr[lr] + (2 * lr - 1) * self.x_node_width / 2
@@ -650,7 +643,7 @@ class Sankey:
                         val = self.node_sizes[ii + lr][label]
                         yy = self.node_pos_bot[ii][lr][label] + val / 2
                         self.draw_label(xx, yy, label, "center", val)
-    
+
             # inside labels, top
             if loc in ("top"):
                 xx = x_lr[lr] + (2 * lr - 1) * self.x_node_width / 2
@@ -659,7 +652,7 @@ class Sankey:
                         val = self.node_sizes[ii + lr][label]
                         yy = self.node_pos_bot[ii][lr][label] + val + self.y_label_gap
                         self.draw_label(xx, yy, label, "center", val)
-    
+
             # inside labels, right
             if loc in ("right", "both"):
                 xx = x_lr[lr] + self.x_label_gap + lr * self.x_node_width
