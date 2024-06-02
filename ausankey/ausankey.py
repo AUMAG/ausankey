@@ -716,7 +716,7 @@ class Sankey:
                     or val < self.value_thresh_sum * self.weight_sum[ii + lr]
                     or val < self.value_thresh_max * np.max(self.data[2 * ii + 1])
                 ):
-                    continue # dont plot flow label if less than threshold(s)
+                    continue  # dont plot flow label if less than threshold(s)
                 if self.label_values and self.node_sizes[ii + lr][lbl_lr[lr]] == len_lr[lr]:
                     continue  # dont plot flow label if equal the adjacent node label
                 if not (self.value_duplicate) and lr == 1 and len_lr[0] == len_lr[1]:
