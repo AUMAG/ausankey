@@ -228,15 +228,23 @@ class Sankey:
         with respect to the whole plot.
         Allowed values: `"top"`, `"bottom"`, or `"center"`
 
-    value_loc : dict
-        label_loc : [str1, str2, str3]
+    value_loc : array or str
+        value_loc : strA
+        value_loc : [str1, strM, strN]
+        value_loc : [str1, str2,..., strN]
         Position to place values next to the nodes corresponding to the sizes.
         These are placed within the flows at the beginning (left) and end (right) of each one.
         Each str can be one of: `"left"`, `"right"`, `"both"`, or `"none"`
 
+        Three syntax variations: if just one string is provided (`strA`), use this as the option for all flows.
+        If three strings provided, the first (`str1`) is the first, the third string (`strN`) is the last,
+        and the second string (`strM`) is used as the option for all middle flows. 
+        
         * `str1`: position of value(s) in first flow
-        * `str2`: position of value(s) in middle flows
-        * `str3`: position of value(s) in last flow
+        * `strM`: position of value(s) in middle flows
+        * `strN`: position of value(s) in last flow
+        
+        Finally, a separate string can be provided for each flow a picture right? Then you three combat dies tool for each scout role to suffer one body point of damage and a block.
 
     value_format : str
         String formatting specification passed internally to the `format()` function.
@@ -368,6 +376,25 @@ class Sankey:
         self.data.columns = range(num_col)  # force numeric column headings
         self.num_stages = int(num_col / 2)  # number of stages
         self.num_flow = self.num_stages - 1
+
+        # arg syntactic sugar
+        def fix_length(str_or_array,Nmax):
+            if type(str_or_array) is str:
+                return np.repeat(str_or_array,Nmax)
+            if len(str_or_array) == 3 and Nmax == 2:
+                return np.concatenate([
+                    [str_or_array[0]],
+                    [str_or_array[2]]
+                ])
+            if len(str_or_array) == 3 and Nmax > 3:
+                return np.concatenate([
+                    [str_or_array[0]],
+                    np.repeat(str_or_array[1],Nmax-2),
+                    [str_or_array[2]]
+                ])
+            return str_or_array
+        self.value_loc = fix_length(self.value_loc, self.num_flow)
+        self.label_loc = fix_length(self.label_loc, self.num_stages)
 
         # sizes
         self.node_sizes = {}
@@ -602,72 +629,44 @@ class Sankey:
 
         ha_dict = {"left": "right", "right": "left", "center": "center", "top": "center"}
 
-        # first row of labels
-        lr = 0
-        if ii == 0 and self.label_loc[0] != "none":
-            if self.label_loc[0] in ("left"):
-                xx = x_lr[lr] - self.x_label_gap - self.x_node_width
-            elif self.label_loc[0] in ("right"):
-                xx = x_lr[lr] + self.x_label_gap
-            elif self.label_loc[0] in ("center", "top"):
-                xx = x_lr[lr] - self.x_node_width / 2
-            for label in self.node_sizes[ii + lr]:
-                if self.label_loc[0] in ("top"):
-                    yy = self.node_pos_bot[ii][lr][label] + self.node_sizes[ii + lr][label] + self.y_label_gap
-                else:
-                    yy = self.node_pos_bot[ii][lr][label] + self.node_sizes[ii + lr][label] / 2
-                self.draw_label(xx, yy, label, ha_dict[self.label_loc[0]], self.node_sizes[ii + lr][label])
-
-        # inside labels, left
-        lr = 1
-        if ii < self.num_flow - 1 and self.label_loc[1] in ("left", "both"):
-            xx = x_lr[lr] - self.x_label_gap
-            for label in self.node_sizes[ii + lr]:
-                if (label not in self.node_sizes[ii]) or self.label_duplicate:
-                    yy = self.node_pos_bot[ii][lr][label] + self.node_sizes[ii + lr][label] / 2
-                    self.draw_label(xx, yy, label, "right", self.node_sizes[ii + lr][label])
-
-        # inside labels, center
-        if ii < self.num_flow - 1 and self.label_loc[1] in ("center"):
-            xx = x_lr[lr] + self.x_node_width / 2
-            for label in self.node_sizes[ii + lr]:
-                if (label not in self.node_sizes[ii]) or self.label_duplicate:
-                    yy = self.node_pos_bot[ii][lr][label] + self.node_sizes[ii + lr][label] / 2
-                    self.draw_label(xx, yy, label, "center", self.node_sizes[ii + lr][label])
-
-        # inside labels, top
-        if ii < self.num_flow - 1 and self.label_loc[1] in ("top"):
-            xx = x_lr[lr] + self.x_node_width / 2
-            for label in self.node_sizes[ii + lr]:
-                if (label not in self.node_sizes[ii]) or self.label_duplicate:
-                    val = self.node_sizes[ii + lr][label]
-                    yy = self.node_pos_bot[ii][lr][label] + val + self.y_label_gap
-                    self.draw_label(xx, yy, label, "center", val)
-
-        # inside labels, right
-        if ii < self.num_flow - 1 and self.label_loc[1] in ("right", "both"):
-            xx = x_lr[lr] + self.x_label_gap + self.x_node_width
-            for label in self.node_sizes[ii + lr]:
-                if (label not in self.node_sizes[ii]) or self.label_duplicate:
-                    val = self.node_sizes[ii + lr][label]
-                    yy = self.node_pos_bot[ii][lr][label] + val / 2
-                    self.draw_label(xx, yy, label, "left", val)
-
-        # last row of labels
-        if ii == self.num_flow - 1 and self.label_loc[2] != "none":
-            if self.label_loc[2] in ("left"):
-                xx = x_lr[lr] - self.x_label_gap
-            elif self.label_loc[2] in ("right"):
-                xx = x_lr[lr] + self.x_label_gap + self.x_node_width
-            elif self.label_loc[2] in ("center", "top"):
-                xx = x_lr[lr] + self.x_node_width / 2
-            for label in self.node_sizes[ii + lr]:
-                val = self.node_sizes[ii + lr][label]
-                if self.label_loc[0] in ("top"):
-                    yy = self.node_pos_bot[ii][lr][label] + val + self.y_label_gap
-                else:
-                    yy = self.node_pos_bot[ii][lr][label] + val / 2
-                self.draw_label(xx, yy, label, ha_dict[self.label_loc[2]], val)
+        for lr in [0, 1] if ii == 0 else [1]:
+            loc = self.label_loc[ii + lr]
+    
+            # inside labels, left
+            if loc in ("left", "both"):
+                xx = x_lr[lr] - self.x_label_gap + (lr - 1) * self.x_node_width
+                for label in self.node_sizes[ii + lr]:
+                    if (label not in self.node_sizes[ii]) or self.label_duplicate:
+                        val = self.node_sizes[ii + lr][label]
+                        yy = self.node_pos_bot[ii][lr][label] + val / 2
+                        self.draw_label(xx, yy, label, "right", val)
+    
+            # inside labels, center
+            if loc in ("center"):
+                xx = x_lr[lr] + (2 * lr - 1) * self.x_node_width / 2
+                for label in self.node_sizes[ii + lr]:
+                    if (label not in self.node_sizes[ii]) or self.label_duplicate:
+                        val = self.node_sizes[ii + lr][label]
+                        yy = self.node_pos_bot[ii][lr][label] + val / 2
+                        self.draw_label(xx, yy, label, "center", val)
+    
+            # inside labels, top
+            if loc in ("top"):
+                xx = x_lr[lr] + (2 * lr - 1) * self.x_node_width / 2
+                for label in self.node_sizes[ii + lr]:
+                    if (label not in self.node_sizes[ii]) or self.label_duplicate:
+                        val = self.node_sizes[ii + lr][label]
+                        yy = self.node_pos_bot[ii][lr][label] + val + self.y_label_gap
+                        self.draw_label(xx, yy, label, "center", val)
+    
+            # inside labels, right
+            if loc in ("right", "both"):
+                xx = x_lr[lr] + self.x_label_gap + lr * self.x_node_width
+                for label in self.node_sizes[ii + lr]:
+                    if (label not in self.node_sizes[ii]) or self.label_duplicate:
+                        val = self.node_sizes[ii + lr][label]
+                        yy = self.node_pos_bot[ii][lr][label] + val / 2
+                        self.draw_label(xx, yy, label, "left", val)
 
         # Plot flows
 
@@ -701,15 +700,9 @@ class Sankey:
 
             ha = ["left", "right"]
             sides = []
-            if ii == 0:
-                ind = 0
-            elif ii == self.num_flow - 1:
-                ind = 2
-            else:
-                ind = 1
-            if self.value_loc[ind] in ("left", "both"):
+            if self.value_loc[ii] in ("left", "both"):
                 sides.append(0)
-            if self.value_loc[ind] in ("right", "both"):
+            if self.value_loc[ii] in ("right", "both"):
                 sides.append(1)
             for lr in sides:
                 val = len_lr[lr]
