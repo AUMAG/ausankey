@@ -645,7 +645,6 @@ class Sankey:
                 xx = x_lr[lr] - self.x_label_gap + (lr - 1) * self.x_node_width
                 for label in self.node_sizes[ii + lr]:
                     if label_bool or label not in self.node_sizes[ii]:
-                        print(ii+lr,label_bool,"left")
                         val = self.node_sizes[ii + lr][label]
                         yy = self.node_pos_bot[ii][lr][label] + val / 2
                         self.draw_label(xx, yy, label, "right", val)
@@ -673,7 +672,6 @@ class Sankey:
                 xx = x_lr[lr] + self.x_label_gap + lr * self.x_node_width
                 for label in self.node_sizes[ii + lr]:
                     if label_bool or label not in self.node_sizes[ii]:
-                        print(ii+lr,label_bool,"right")
                         val = self.node_sizes[ii + lr][label]
                         yy = self.node_pos_bot[ii][lr][label] + val / 2
                         self.draw_label(xx, yy, label, "left", val)
