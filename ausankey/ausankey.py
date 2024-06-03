@@ -636,13 +636,16 @@ class Sankey:
         # Draw node labels
 
         for lr in [0, 1] if ii == 0 else [1]:
+            
+            label_bool = ii + lr == 0 or ii + lr == self.num_flow or self.label_duplicate
             loc = self.label_loc[ii + lr]
 
             # inside labels, left
             if loc in ("left", "both"):
                 xx = x_lr[lr] - self.x_label_gap + (lr - 1) * self.x_node_width
                 for label in self.node_sizes[ii + lr]:
-                    if (label not in self.node_sizes[ii]) or self.label_duplicate:
+                    if label_bool or label not in self.node_sizes[ii]:
+                        print(ii+lr,label_bool,"left")
                         val = self.node_sizes[ii + lr][label]
                         yy = self.node_pos_bot[ii][lr][label] + val / 2
                         self.draw_label(xx, yy, label, "right", val)
@@ -651,7 +654,7 @@ class Sankey:
             if loc in ("center"):
                 xx = x_lr[lr] + (2 * lr - 1) * self.x_node_width / 2
                 for label in self.node_sizes[ii + lr]:
-                    if (label not in self.node_sizes[ii]) or self.label_duplicate:
+                    if label_bool or label not in self.node_sizes[ii]:
                         val = self.node_sizes[ii + lr][label]
                         yy = self.node_pos_bot[ii][lr][label] + val / 2
                         self.draw_label(xx, yy, label, "center", val)
@@ -660,7 +663,7 @@ class Sankey:
             if loc in ("top"):
                 xx = x_lr[lr] + (2 * lr - 1) * self.x_node_width / 2
                 for label in self.node_sizes[ii + lr]:
-                    if (label not in self.node_sizes[ii]) or self.label_duplicate:
+                    if label_bool or label not in self.node_sizes[ii]:
                         val = self.node_sizes[ii + lr][label]
                         yy = self.node_pos_bot[ii][lr][label] + val + self.y_label_gap
                         self.draw_label(xx, yy, label, "center", val)
@@ -669,7 +672,8 @@ class Sankey:
             if loc in ("right", "both"):
                 xx = x_lr[lr] + self.x_label_gap + lr * self.x_node_width
                 for label in self.node_sizes[ii + lr]:
-                    if (label not in self.node_sizes[ii]) or self.label_duplicate:
+                    if label_bool or label not in self.node_sizes[ii]:
+                        print(ii+lr,label_bool,"right")
                         val = self.node_sizes[ii + lr][label]
                         yy = self.node_pos_bot[ii][lr][label] + val / 2
                         self.draw_label(xx, yy, label, "left", val)
