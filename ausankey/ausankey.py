@@ -636,7 +636,6 @@ class Sankey:
         # Draw node labels
 
         for lr in [0, 1] if ii == 0 else [1]:
-            
             label_bool = ii + lr == 0 or ii + lr == self.num_flow or self.label_duplicate
             loc = self.label_loc[ii + lr]
 
