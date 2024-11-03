@@ -205,6 +205,33 @@ class Sankey:
     other_name : str
         The string used to rename nodes to if they are classified as “other”.
 
+    percent_loc : array or str
+        percent_loc : strA
+        percent_loc : [str1, strM, strN]
+        percent_loc : [str1, str2,..., strN]
+
+        Position to place percentage labels next to the nodes. Each str can be one of:
+        `"left"`, `"right"`, `"center"`, or `"none"`.
+
+        Three syntax variations: if just one string is provided (`strA`), use this as the option for all nodes.
+        If three strings provided, the first (`str1`) is the first, the third string (`strN`) is the last,
+        and the second string (`strM`) is used as the option for all middle ones.
+
+        * `str1`: position of value(s) in first
+        * `strM`: position of value(s) in middle
+        * `strN`: position of value(s) in last
+
+        Finally, a separate string can be provided for each node.
+
+    percent_thresh : float
+        Only print percentage labels greater or equal to this value. In normalised units where 1 = 100%. 
+
+    percent_format : str
+        String formatting specification passed internally to the `format()` function.
+
+    percent_font : dict
+        Dictionary of Matplotlib text options to be passed to the percentage labels.
+
     sort : int
         Sorting routine to use for the data.
         * `"top"`: data is sorted with largest entries on top
@@ -312,6 +339,10 @@ class Sankey:
         other_thresh_max=0,
         other_thresh_sum=0,
         other_name="Other",
+        percent_loc="none",
+        percent_thresh=0,
+        percent_format="2.0f",
+        percent_font=None,
         sort="bottom",  # "top", "bottom", "none"
         sort_dict=None,
         titles=None,
@@ -359,6 +390,10 @@ class Sankey:
         self.other_thresh_val = other_thresh_val
         self.other_thresh_max = other_thresh_max
         self.other_thresh_sum = other_thresh_sum
+        self.percent_loc = percent_loc
+        self.percent_thresh = percent_thresh
+        self.percent_format = percent_format
+        self.percent_font = percent_font
         self.sort = sort
         self.sort_dict = sort_dict or {}
         self.titles = titles
@@ -403,7 +438,8 @@ class Sankey:
 
         self.value_loc = fix_length(self.value_loc, self.num_flow)
         self.label_loc = fix_length(self.label_loc, self.num_stages)
-
+        self.percent_loc = fix_length(self.percent_loc, self.num_stages)
+        
         # sizes
         self.node_sizes = {}
         self.nodes_uniq = {}
@@ -639,7 +675,6 @@ class Sankey:
             label_bool = ii + lr == 0 or ii + lr == self.num_flow or self.label_duplicate
             loc = self.label_loc[ii + lr]
 
-            # inside labels, left
             if loc in ("left", "both"):
                 xx = x_lr[lr] - self.x_label_gap + (lr - 1) * self.x_node_width
                 for label in self.node_sizes[ii + lr]:
@@ -648,7 +683,6 @@ class Sankey:
                         yy = self.node_pos_bot[ii][lr][label] + val / 2
                         self.draw_label(xx, yy, label, "right", val)
 
-            # inside labels, center
             if loc in ("center"):
                 xx = x_lr[lr] + (2 * lr - 1) * self.x_node_width / 2
                 for label in self.node_sizes[ii + lr]:
@@ -657,7 +691,6 @@ class Sankey:
                         yy = self.node_pos_bot[ii][lr][label] + val / 2
                         self.draw_label(xx, yy, label, "center", val)
 
-            # inside labels, top
             if loc in ("top"):
                 xx = x_lr[lr] + (2 * lr - 1) * self.x_node_width / 2
                 for label in self.node_sizes[ii + lr]:
@@ -666,7 +699,6 @@ class Sankey:
                         yy = self.node_pos_bot[ii][lr][label] + val + self.y_label_gap
                         self.draw_label(xx, yy, label, "center", val)
 
-            # inside labels, right
             if loc in ("right", "both"):
                 xx = x_lr[lr] + self.x_label_gap + lr * self.x_node_width
                 for label in self.node_sizes[ii + lr]:
@@ -674,6 +706,35 @@ class Sankey:
                         val = self.node_sizes[ii + lr][label]
                         yy = self.node_pos_bot[ii][lr][label] + val / 2
                         self.draw_label(xx, yy, label, "left", val)
+
+        # percent labels 
+
+        for lr in [0, 1] if ii == 0 else [1]:
+            
+            loc = self.percent_loc[ii + lr]
+
+            for label in self.node_sizes[ii + lr]:
+
+                val = 100 * self.node_sizes[ii + lr][label] / self.weight_sum[ii + lr]
+                valstr = f"{format(val,self.percent_format)}%"
+                if val < 100 * self.percent_thresh:
+                    continue
+
+                if loc in ("left"):
+                    xx = x_lr[lr] - self.x_label_gap + (lr - 1) * self.x_node_width
+                    yy = self.node_pos_bot[ii][lr][label] + self.node_sizes[ii + lr][label] / 2
+                    self.draw_label(xx, yy, valstr, "right", val, font = self.percent_font)
+
+                if loc in ("center"):
+                    xx = x_lr[lr] + (2 * lr - 1) * self.x_node_width / 2
+                    yy = self.node_pos_bot[ii][lr][label] + self.node_sizes[ii + lr][label] / 2
+                    self.draw_label(xx, yy, valstr, "center", val, font = self.percent_font)
+
+                if loc in ("right"):
+                    xx = x_lr[lr] + self.x_label_gap + lr * self.x_node_width
+                    yy = self.node_pos_bot[ii][lr][label] + self.node_sizes[ii + lr][label] / 2
+                    self.draw_label(xx, yy, valstr, "left", val, font = self.percent_font)
+
 
         # Plot flows
 
@@ -815,10 +876,11 @@ class Sankey:
 
     ###########################################
 
-    def draw_label(self, x, y, label, ha, val=None):
+    def draw_label(self, x, y, label, ha, val=None, font=None):
         """Place a single label"""
 
         valstr = ""
+        font = font or self.label_font
         if self.label_values and val is not None:
             valstr = f"\n{format(val,self.value_format)}"
 
@@ -832,25 +894,28 @@ class Sankey:
                 "fontfamily": self.fontfamily,
                 "fontsize": self.fontsize,
                 "color": self.fontcolor,
-                **self.label_font,
+                **font,
             },
         )
 
     ###########################################
 
-    def draw_value(self, x, y, val, ha):
+    def draw_value(self, x, y, val, ha, format_=None, font=None):
         """Place a single value label"""
+        
+        format_ = format_ or self.value_format
+        font = font or self.value_font
         self.ax.text(
             x,
             y,
-            f"{format(val,self.value_format)}",
+            f"{format(val,format_)}",
             {
                 "ha": ha,
                 "va": "center",
                 "fontfamily": self.fontfamily,
                 "fontsize": self.fontsize,
                 "color": self.fontcolor,
-                **self.value_font,
+                **font,
             },
         )
 
