@@ -1,10 +1,15 @@
 # Changelog for ausankey
 
 
-## 2024-99-99 v1.5
+## 2024-12-08 v1.5
 
+* Set xticks and xticklabels in case sankey plot is used with `ax.axis("on")`
+* Add additional labelling feature to annotate nodes with their relative percentages. A variety of customisation options.
+* Add `value_duplicate = False` to avoid redundant labelling.
+* Add `label_thresh` to turn off labels for nodes below a certain size.
+* Add `value_fn`, as alternative to `label_format`, which allows more generalised formatting of each value using a lambda function.
+* Add values to node labels when `label_values = True`.
 * Allow NaN or None when flows terminate.
-* Add values to node labels when `label_values = True`. 
 
 
 ## 2024-05-29 v1.4
