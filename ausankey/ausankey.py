@@ -456,7 +456,7 @@ class Sankey:
 
         # arg syntactic sugar
         def fix_length(str_or_array, nmax):
-            if isinstance(str_or_array, str) or isinstance(str_or_array, float):
+            if isinstance(str_or_array, (float, str)):
                 return np.repeat(str_or_array, nmax)
             if len(str_or_array) == short_num and nmax == short_num - 1:
                 return np.concatenate([[str_or_array[0]], [str_or_array[2]]])
@@ -507,8 +507,8 @@ class Sankey:
                 self.x_node_width + self.x_label_gap + self.x_label_width + ii * (self.sub_width + self.x_node_width)
             )
             if ii == 0:
-                self.xticks[ii] = self.x_label_gap + self.x_node_width/2
-            self.xticks[ii+1] = x_left + self.sub_width + self.x_node_width/2
+                self.xticks[ii] = self.x_label_gap + self.x_node_width / 2
+            self.xticks[ii + 1] = x_left + self.sub_width + self.x_node_width / 2
             self.x_lr[ii] = (x_left, x_left + self.sub_width)
             self.nodesize_l[ii] = {}
             self.nodesize_r[ii] = {}
@@ -740,15 +740,13 @@ class Sankey:
                         yy = self.node_pos_bot[ii][lr][label] + val / 2
                         self.draw_label(xx, yy, label, "left", val)
 
-        # percent labels 
+        # percent labels
 
         for lr in [0, 1] if ii == 0 else [1]:
-            
             loc = self.percent_loc[ii + lr]
             ht = self.percent_loc_ht[ii + lr]
 
             for label in self.node_sizes[ii + lr]:
-
                 absval = self.node_sizes[ii + lr][label]
                 val = 100 * self.node_sizes[ii + lr][label] / self.weight_sum[ii + lr]
                 valstr = f"{format(val,self.percent_format)}%"
@@ -759,16 +757,15 @@ class Sankey:
 
                 if loc in ("left"):
                     xx = x_lr[lr] - self.x_label_gap + (lr - 1) * self.x_node_width
-                    self.draw_percent(xx, yy, valstr, "right", font = self.percent_font)
+                    self.draw_percent(xx, yy, valstr, "right", font=self.percent_font)
 
                 if loc in ("center"):
                     xx = x_lr[lr] + (2 * lr - 1) * self.x_node_width / 2
-                    self.draw_percent(xx, yy, valstr, "center", font = self.percent_font)
+                    self.draw_percent(xx, yy, valstr, "center", font=self.percent_font)
 
                 if loc in ("right"):
                     xx = x_lr[lr] + self.x_label_gap + lr * self.x_node_width
-                    self.draw_percent(xx, yy, valstr, "left", font = self.percent_font)
-
+                    self.draw_percent(xx, yy, valstr, "left", font=self.percent_font)
 
         # Plot flows
 
@@ -960,7 +957,7 @@ class Sankey:
 
     def draw_value(self, x, y, val, ha, format_=None, font=None):
         """Place a single value label"""
-        
+
         format_ = format_ or self.value_format
         font = font or self.value_font
         self.ax.text(
