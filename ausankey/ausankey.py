@@ -169,7 +169,7 @@ class Sankey:
         Whether to include the value of the node size with the node label text.
 
     label_thresh : float
-        Only print labels when their node is greater or equal to this value. 
+        Only print labels when their node is greater or equal to this value.
 
     other_thresh_val : float
         Sets threshold to recategorise nodes that are below a certain value.
@@ -232,11 +232,11 @@ class Sankey:
         percent_loc_ht : numA
         percent_loc_ht : [num1, numM, numN]
         percent_loc_ht : [num1, num2,..., numN]
-        
+
         Vertical position to place percentage value, a normalised position between 0 and 1 relative to the bottom and top of the node. Default = 0.5.
 
     percent_thresh : float
-        Only print percentage labels greater or equal to this value. In normalised units where 1 = 100%. 
+        Only print percentage labels greater or equal to this value. In normalised units where 1 = 100%.
 
     percent_thresh_val : float
         Only print percentage labels if the value of the node is greater or equal to this value.
@@ -305,7 +305,7 @@ class Sankey:
 
     value_fn : lambda function
         Alternative to value_format. Transform the value label using the specified lambda function; the output must be a string. E.g.:
-        
+
             value_fn = lambda x: f"${round(x)}"
 
     value_gap : float
@@ -759,15 +759,15 @@ class Sankey:
 
                 if loc in ("left"):
                     xx = x_lr[lr] - self.x_label_gap + (lr - 1) * self.x_node_width
-                    self.draw_percent(xx, yy, valstr, "right", val, font = self.percent_font)
+                    self.draw_percent(xx, yy, valstr, "right", font = self.percent_font)
 
                 if loc in ("center"):
                     xx = x_lr[lr] + (2 * lr - 1) * self.x_node_width / 2
-                    self.draw_percent(xx, yy, valstr, "center", val, font = self.percent_font)
+                    self.draw_percent(xx, yy, valstr, "center", font = self.percent_font)
 
                 if loc in ("right"):
                     xx = x_lr[lr] + self.x_label_gap + lr * self.x_node_width
-                    self.draw_percent(xx, yy, valstr, "left", val, font = self.percent_font)
+                    self.draw_percent(xx, yy, valstr, "left", font = self.percent_font)
 
 
         # Plot flows
@@ -919,10 +919,8 @@ class Sankey:
         valstr = ""
         font = font or self.label_font
         if self.label_values and val is not None:
-            if self.value_fn is None:
-                valstr = f"\n{format(val,self.value_format)}"
-            else:
-                valstr = "\n"+self.value_fn(val)
+            value_fn = self.value_fn or (lambda val: f"\n{format(val,self.value_format)}")
+            valstr = value_fn(val)
 
         self.ax.text(
             x,
@@ -940,11 +938,8 @@ class Sankey:
 
     ###########################################
 
-    def draw_percent(self, x, y, label, ha, val=None, font=None):
+    def draw_percent(self, x, y, label, ha, font=None):
         """Place a single label"""
-
-        #if val is not None and val < self.label_thresh:
-        #    return
 
         font = font or self.label_font
         self.ax.text(
