@@ -5,7 +5,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "ausankey"
-version = "1.4"
+version = "1.5"
 
 description = "Sankey diagrams simply"
 readme = "README.md"
