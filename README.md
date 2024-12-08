@@ -21,7 +21,7 @@ https://aumag.github.io/ausankey/reference/
 
 ## Minimal example
 
-![example](https://aumag.github.io/ausankey/frame3_pretty.png)
+![example](https://aumag.github.io/ausankey/iface_frame3_pretty.png)
 
 ``` python
 import ausankey as sky
