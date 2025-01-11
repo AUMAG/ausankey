@@ -1,5 +1,12 @@
 # Changelog for ausankey
 
+## 2025-01-11 v1.6
+
+* Remove redundant `_val` suffix in various `...thresh_val` parameters.
+* Change `...thresh_sum` parameters to `...thresh_ofsum` — I kept stumbling over the previous name. Some more parameters of this type added as well.
+* Add some `..._thresh_ofmax` parameters which act on the maximum of the node sums for each stage.
+* For consistency change the current `...thresh_max` parameters to `...ofmax` and change their logic accordingly — their old definitions seemed of marginal better in practice.
+
 
 ## 2024-12-08 v1.5
 

@@ -171,39 +171,45 @@ class Sankey:
     label_thresh : float
         Only print labels when their node is greater or equal to this value.
 
-    other_thresh_val : float
+    label_thresh_ofsum : float
+        Only print labels when their node value is greater or equal than this percentage of the total of this stage.
+
+    label_thresh_ofmax : float
+        Only print labels when their node value is greater or equal than this percentage of the maximum total across all stages.
+
+    other_thresh : float
         Sets threshold to recategorise nodes that are below a certain value.
         Up to three dictionary keys can be set:
 
         * `"val": v` — set node to other if it is less than `v`
-        * `"sum": s` — set node to other if it is less than `s` fraction
+        * `"ofsum": s` — set node to other if it is less than `s` fraction
                        of the summed total of all nodes in the current stage
-        * `"max": m` — set node to other if is is less than `m` fraction
-                       of the maximum node in the current stage
+        * `"ofmax": m` — set node to other if is is less than `m` fraction
+                       of the maximum summed total across all stages
 
         If any of these criteria are met the reclassification will occur.
 
-    other_thresh_sum : float
+    other_thresh_ofsum : float
         Sets threshold to recategorise nodes that are below a certain value.
         Up to three dictionary keys can be set:
 
         * `"val": v` — set node to other if it is less than `v`
-        * `"sum": s` — set node to other if it is less than `s` fraction
+        * `"ofsum": s` — set node to other if it is less than `s` fraction
                        of the summed total of all nodes in the current stage
-        * `"max": m` — set node to other if is is less than `m` fraction
-                       of the maximum node in the current stage
+        * `"ofmax": m` — set node to other if is is less than `m` fraction
+                       of the maximum summed total across all stages
 
         If any of these criteria are met the reclassification will occur.
 
-    other_thresh_max : float
+    other_thresh_ofmax : float
         Sets threshold to recategorise nodes that are below a certain value.
         Up to three dictionary keys can be set:
 
         * `"val": v` — set node to other if it is less than `v`
-        * `"sum": s` — set node to other if it is less than `s` fraction
+        * `"ofsum": s` — set node to other if it is less than `s` fraction
                        of the summed total of all nodes in the current stage
-        * `"max": m` — set node to other if is is less than `m` fraction
-                       of the maximum node in the current stage
+        * `"ofmax": m` — set node to other if is is less than `m` fraction
+                       of the maximum summed total across all stages
 
         If any of these criteria are met the reclassification will occur.
 
@@ -238,7 +244,7 @@ class Sankey:
     percent_thresh : float
         Only print percentage labels greater or equal to this value. In normalised units where 1 = 100%.
 
-    percent_thresh_val : float
+    percent_thresh : float
         Only print percentage labels if the value of the node is greater or equal to this value.
 
     percent_format : str
@@ -315,14 +321,14 @@ class Sankey:
     value_font : dict
         Dictionary of Matplotlib text options to be passed to the value labels.
 
-    value_thresh_val : float
+    value_thresh : float
         Only print labels larger than this absolute value threshold.
 
-    value_thresh_sum : float
+    value_thresh_ofsum : float
         Only print labels larger than this threshold as a fraction of the sum of all node weights in the stage.
 
-    value_thresh_max : float
-        Only print labels larger than this threshold as a fraction of the maximum node weight in the stage.
+    value_thresh_ofmax : float
+        Only print labels larger than this threshold as a fraction of the maximum of the summed weights across all stages.
 
     value_duplicate: bool
         When `True` (default), all values are printed. When `False`, only print a right value if it is not equal to the preceding left value.
@@ -351,19 +357,22 @@ class Sankey:
         label_duplicate=None,
         label_values=None,
         label_thresh=0,
+        label_thresh_ofsum=0,
+        label_thresh_ofmax=0,
         node_lw=1,
         node_width=0.02,
         node_gap=0.05,
         node_alpha=1,
         node_edge=None,
-        other_thresh_val=0,
-        other_thresh_max=0,
-        other_thresh_sum=0,
+        other_thresh=0,
+        other_thresh_ofmax=0,
+        other_thresh_ofsum=0,
         other_name="Other",
         percent_loc="none",
         percent_loc_ht=0.5,
         percent_thresh=0,
         percent_thresh_val=0,
+        percent_thresh_ofmax=0,
         percent_format="2.0f",
         percent_font=None,
         sort="bottom",  # "top", "bottom", "none"
@@ -379,9 +388,9 @@ class Sankey:
         value_gap=None,
         value_font=None,
         value_loc=("both", "right", "right"),
-        value_thresh_val=0,
-        value_thresh_sum=0,
-        value_thresh_max=0,
+        value_thresh=0,
+        value_thresh_ofsum=0,
+        value_thresh_ofmax=0,
         value_duplicate=None,
     ):
         """Assigns all input arguments to the class as variables with appropriate defaults"""
@@ -404,6 +413,8 @@ class Sankey:
         self.label_loc = label_loc
         self.label_font = label_font or {}
         self.label_thresh = label_thresh
+        self.label_thresh_ofsum = label_thresh_ofsum
+        self.label_thresh_ofmax = label_thresh_ofmax
         self.label_duplicate = True if label_duplicate is None else label_duplicate
         self.label_values = False if label_values is None else label_values
         self.node_lw = node_lw
@@ -412,13 +423,14 @@ class Sankey:
         self.node_alpha = node_alpha
         self.node_edge = node_edge or False
         self.other_name = other_name
-        self.other_thresh_val = other_thresh_val
-        self.other_thresh_max = other_thresh_max
-        self.other_thresh_sum = other_thresh_sum
+        self.other_thresh = other_thresh
+        self.other_thresh_ofmax = other_thresh_ofmax
+        self.other_thresh_ofsum = other_thresh_ofsum
         self.percent_loc = percent_loc
         self.percent_loc_ht = percent_loc_ht
         self.percent_thresh = percent_thresh
         self.percent_thresh_val = percent_thresh_val
+        self.percent_thresh_ofmax = percent_thresh_ofmax
         self.percent_format = percent_format
         self.percent_font = percent_font
         self.sort = sort
@@ -434,9 +446,9 @@ class Sankey:
         self.value_gap = label_gap if value_gap is None else value_gap
         self.value_font = value_font or {}
         self.value_loc = value_loc
-        self.value_thresh_val = value_thresh_val
-        self.value_thresh_sum = value_thresh_sum
-        self.value_thresh_max = value_thresh_max
+        self.value_thresh = value_thresh
+        self.value_thresh_ofsum = value_thresh_ofsum
+        self.value_thresh_ofmax = value_thresh_ofmax
         self.value_duplicate = True if value_duplicate is None else value_duplicate
 
     ###########################################
@@ -483,9 +495,9 @@ class Sankey:
             for nn, lbl in enumerate([x for x in self.data[2 * ii] if x is not None]):
                 val = self.node_sizes[ii][lbl]
                 if (
-                    val < self.other_thresh_val
-                    or val < self.other_thresh_sum * self.weight_sum[ii]
-                    or val < self.other_thresh_max * np.max(self.data[2 * ii + 1])
+                    val < self.other_thresh
+                    or val < self.other_thresh_ofsum * self.weight_sum[ii]
+                    or val < self.other_thresh_ofmax * self.plot_height_nom
                 ):
                     self.data.iat[nn, 2 * ii] = self.other_name
         self.weight_labels()
@@ -607,12 +619,12 @@ class Sankey:
 
             self.weight_sum[ii] = pd.Series(self.node_sizes[ii].values()).sum()
 
+        self.plot_height_nom = max(self.weight_sum)
+
     ###########################################
 
     def calc_plot_height(self):
         """Calculate column heights, offsets, and total plot height"""
-
-        self.plot_height_nom = max(self.weight_sum)
 
         vscale_dict = {"top": 1, "center": 0.5, "bottom": 0}
         self.vscale = vscale_dict.get(self.valign, 0)
@@ -707,36 +719,46 @@ class Sankey:
         for lr in [0, 1] if ii == 0 else [1]:
             label_bool = ii + lr == 0 or ii + lr == self.num_flow or self.label_duplicate
             loc = self.label_loc[ii + lr]
+            if not label_bool:
+                continue
 
-            if loc in ("left", "both"):
-                xx = x_lr[lr] - self.x_label_gap + (lr - 1) * self.x_node_width
-                for label in self.node_sizes[ii + lr]:
+            for label in self.node_sizes[ii + lr]:
+
+                val = self.node_sizes[ii + lr][label]
+                if val is not None and (
+                    val < self.label_thresh
+                    or
+                    val < self.label_thresh_ofsum * self.weight_sum[ii + lr]
+                    or
+                    val < self.label_thresh_ofmax * self.plot_height_nom
+                ):
+                    continue
+
+                if loc in ("left", "both"):
+                    xx = x_lr[lr] - self.x_label_gap + (lr - 1) * self.x_node_width
+
                     if label_bool or label not in self.node_sizes[ii]:
-                        val = self.node_sizes[ii + lr][label]
                         yy = self.node_pos_bot[ii][lr][label] + val / 2
                         self.draw_label(xx, yy, label, "right", val)
 
-            if loc in ("center"):
-                xx = x_lr[lr] + (2 * lr - 1) * self.x_node_width / 2
-                for label in self.node_sizes[ii + lr]:
+                if loc in ("center"):
+                    xx = x_lr[lr] + (2 * lr - 1) * self.x_node_width / 2
+
                     if label_bool or label not in self.node_sizes[ii]:
-                        val = self.node_sizes[ii + lr][label]
                         yy = self.node_pos_bot[ii][lr][label] + val / 2
                         self.draw_label(xx, yy, label, "center", val)
 
-            if loc in ("top"):
-                xx = x_lr[lr] + (2 * lr - 1) * self.x_node_width / 2
-                for label in self.node_sizes[ii + lr]:
+                if loc in ("top"):
+                    xx = x_lr[lr] + (2 * lr - 1) * self.x_node_width / 2
+
                     if label_bool or label not in self.node_sizes[ii]:
-                        val = self.node_sizes[ii + lr][label]
                         yy = self.node_pos_bot[ii][lr][label] + val + self.y_label_gap
                         self.draw_label(xx, yy, label, "center", val)
 
-            if loc in ("right", "both"):
-                xx = x_lr[lr] + self.x_label_gap + lr * self.x_node_width
-                for label in self.node_sizes[ii + lr]:
+                if loc in ("right", "both"):
+                    xx = x_lr[lr] + self.x_label_gap + lr * self.x_node_width
+
                     if label_bool or label not in self.node_sizes[ii]:
-                        val = self.node_sizes[ii + lr][label]
                         yy = self.node_pos_bot[ii][lr][label] + val / 2
                         self.draw_label(xx, yy, label, "left", val)
 
@@ -750,7 +772,11 @@ class Sankey:
                 absval = self.node_sizes[ii + lr][label]
                 val = 100 * self.node_sizes[ii + lr][label] / self.weight_sum[ii + lr]
                 valstr = f"{format(val,self.percent_format)}%"
-                if (absval < self.percent_thresh_val) or (val < 100 * self.percent_thresh):
+                if (
+                       (val < 100 * self.percent_thresh) or
+                       (absval < self.percent_thresh_val) or 
+                       (absval < self.percent_thresh_ofmax * self.plot_height_nom)
+                   ):
                     continue
 
                 yy = self.node_pos_bot[ii][lr][label] + ht * self.node_sizes[ii + lr][label]
@@ -805,9 +831,9 @@ class Sankey:
             for lr in sides:
                 val = len_lr[lr]
                 if (
-                    val < self.value_thresh_val
-                    or val < self.value_thresh_sum * self.weight_sum[ii + lr]
-                    or val < self.value_thresh_max * np.max(self.data[2 * ii + 1])
+                    val < self.value_thresh
+                    or val < self.value_thresh_ofsum * self.weight_sum[ii + lr]
+                    or val < self.value_thresh_ofmax * self.plot_height_nom
                 ):
                     continue  # dont plot flow label if less than threshold(s)
                 if self.label_values and self.node_sizes[ii + lr][lbl_lr[lr]] == len_lr[lr]:
@@ -909,9 +935,6 @@ class Sankey:
 
     def draw_label(self, x, y, label, ha, val=None, font=None):
         """Place a single label"""
-
-        if val is not None and val < self.label_thresh:
-            return
 
         valstr = ""
         font = font or self.label_font
