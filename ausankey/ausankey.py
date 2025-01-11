@@ -723,14 +723,11 @@ class Sankey:
                 continue
 
             for label in self.node_sizes[ii + lr]:
-
                 val = self.node_sizes[ii + lr][label]
                 if val is not None and (
                     val < self.label_thresh
-                    or
-                    val < self.label_thresh_ofsum * self.weight_sum[ii + lr]
-                    or
-                    val < self.label_thresh_ofmax * self.plot_height_nom
+                    or val < self.label_thresh_ofsum * self.weight_sum[ii + lr]
+                    or val < self.label_thresh_ofmax * self.plot_height_nom
                 ):
                     continue
 
@@ -773,10 +770,10 @@ class Sankey:
                 val = 100 * self.node_sizes[ii + lr][label] / self.weight_sum[ii + lr]
                 valstr = f"{format(val,self.percent_format)}%"
                 if (
-                       (val < 100 * self.percent_thresh) or
-                       (absval < self.percent_thresh_val) or 
-                       (absval < self.percent_thresh_ofmax * self.plot_height_nom)
-                   ):
+                    (val < 100 * self.percent_thresh)
+                    or (absval < self.percent_thresh_val)
+                    or (absval < self.percent_thresh_ofmax * self.plot_height_nom)
+                ):
                     continue
 
                 yy = self.node_pos_bot[ii][lr][label] + ht * self.node_sizes[ii + lr][label]
