@@ -164,6 +164,17 @@ sky.sankey(
 ```
 ![Image with options](iface_frame3_labels_dup.png)
 
+Sometimes you only need to label once. If the values fluctuate significantly one approach to successfully labelling can be to only label the largest valued node across all stages:
+
+```
+sky.sankey(
+    data,
+    label_largest = True,
+)
+```
+
+The position of the label will still be inferred from the `label_loc` setting.
+
 By default the node label only includes the textual string. 
 To include the numerical value as well, set `label_values` to true:
 

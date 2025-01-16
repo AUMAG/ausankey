@@ -157,6 +157,9 @@ class Sankey:
 
         Finally, a separate string can be provided for each flow.
 
+    label_largest: bool
+        Only the label the largest valued of all nodes for each label.
+
     label_duplicate : bool
         When set False, will only print a middle label if that label didn't
         appear in the previous stage. This minimises chart clutter but might
@@ -355,6 +358,7 @@ class Sankey:
         label_loc=("left", "none", "right"),
         label_font=None,
         label_duplicate=None,
+        label_largest=None,
         label_values=None,
         label_thresh=0,
         label_thresh_ofsum=0,
@@ -416,6 +420,7 @@ class Sankey:
         self.label_thresh_ofsum = label_thresh_ofsum
         self.label_thresh_ofmax = label_thresh_ofmax
         self.label_duplicate = True if label_duplicate is None else label_duplicate
+        self.label_largest = False if label_largest is None else label_largest
         self.label_values = False if label_values is None else label_values
         self.node_lw = node_lw
         self.node_width = node_width
@@ -581,6 +586,7 @@ class Sankey:
         self.weight_sum = np.empty(self.num_stages)
 
         self.node_indiv_heights = {}
+        self.nodes_largest = {}
 
         for ii in range(self.num_stages):
             self.nodes_uniq[ii] = pd.Series(self.data[2 * ii]).dropna().unique()
@@ -616,6 +622,7 @@ class Sankey:
                     self.node_indiv_heights[ii][0][lbl] = weight_cont + weight_only + weight_stop
                     self.node_indiv_heights[ii - 1][1][lbl] = weight_cont + weight_only + weight_strt
                 self.node_sizes[ii][lbl] = weight_cont + weight_only + max(weight_stop, weight_strt)
+                self.nodes_largest[lbl] = self.node_sizes[ii][lbl] if self.node_sizes[ii][lbl] > self.nodes_largest.get(lbl,0) else self.nodes_largest.get(lbl,0)
 
             self.weight_sum[ii] = pd.Series(self.node_sizes[ii].values()).sum()
 
@@ -724,11 +731,18 @@ class Sankey:
 
             for label in self.node_sizes[ii + lr]:
                 val = self.node_sizes[ii + lr][label]
-                if val is not None and (
+                if (val is None) or (val == 0):
+                    continue
+
+                check_not_largest = self.label_largest and (
+                    val < self.nodes_largest[label]
+                )
+                check_less_thresh = (
                     val < self.label_thresh
                     or val < self.label_thresh_ofsum * self.weight_sum[ii + lr]
                     or val < self.label_thresh_ofmax * self.plot_height_nom
-                ):
+                )
+                if check_less_thresh or check_not_largest:
                     continue
 
                 if loc in ("left", "both"):

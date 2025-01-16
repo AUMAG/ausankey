@@ -1,5 +1,9 @@
 # Changelog for ausankey
 
+## 2025-01-16 v1.7
+
+* Add parameter `label_largest`.
+
 ## 2025-01-11 v1.6
 
 * Remove redundant `_val` suffix in various `...thresh_val` parameters.
