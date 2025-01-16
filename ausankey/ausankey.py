@@ -622,7 +622,11 @@ class Sankey:
                     self.node_indiv_heights[ii][0][lbl] = weight_cont + weight_only + weight_stop
                     self.node_indiv_heights[ii - 1][1][lbl] = weight_cont + weight_only + weight_strt
                 self.node_sizes[ii][lbl] = weight_cont + weight_only + max(weight_stop, weight_strt)
-                self.nodes_largest[lbl] = self.node_sizes[ii][lbl] if self.node_sizes[ii][lbl] > self.nodes_largest.get(lbl,0) else self.nodes_largest.get(lbl,0)
+                self.nodes_largest[lbl] = (
+                    self.node_sizes[ii][lbl]
+                    if self.node_sizes[ii][lbl] > self.nodes_largest.get(lbl, 0)
+                    else self.nodes_largest.get(lbl, 0)
+                )
 
             self.weight_sum[ii] = pd.Series(self.node_sizes[ii].values()).sum()
 
@@ -734,9 +738,7 @@ class Sankey:
                 if (val is None) or (val == 0):
                     continue
 
-                check_not_largest = self.label_largest and (
-                    val < self.nodes_largest[label]
-                )
+                check_not_largest = self.label_largest and (val < self.nodes_largest[label])
                 check_less_thresh = (
                     val < self.label_thresh
                     or val < self.label_thresh_ofsum * self.weight_sum[ii + lr]
