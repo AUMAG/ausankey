@@ -191,6 +191,23 @@ sky.sankey(
 Although not shown here, for more complex plots some heuristics
 are used to avoid printing redundant flow values (see next section).
 
+When creating complex plots it is sometimes unavoidable that labels
+overlap other elements of the graph. To increase the contrast in
+these cases, a font outline can be added. The syntax is inherited
+from the `matplotlib.patheffects` library:
+```
+sky.sankey(
+    data,
+    label_loc = [“right”, ”right”, ”left”],
+    label_path_effects = {
+        linewidth = 2,
+        foreground = "black"
+    },
+    fontcolor = "white" ,
+)
+```
+![Image with options](iface_fruits_labels_outline.png)
+
 
 ## Values
 

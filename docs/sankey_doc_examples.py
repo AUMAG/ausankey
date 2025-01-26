@@ -186,6 +186,20 @@ plt.close()
 plt.figure()
 sky.sankey(
     data,
+    label_loc=[“right”,”right”,”left”],
+    label_path_effects = {
+        linewidth = 2,
+        foreground = "black"
+    },
+    fontcolor = "white" ,
+)
+plt.show()
+plt.savefig("iface_fruits_labels_outline.png")
+plt.close()
+
+plt.figure()
+sky.sankey(
+    data,
     value_loc = ["both","both","both"],
     value_duplicate = False,
 )

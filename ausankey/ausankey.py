@@ -8,6 +8,7 @@ Forked from: Anneya Golob & marcomanz & pierre-sassoulas & jorwoods
 
 import matplotlib as mpl
 import matplotlib.pyplot as plt
+import matplotlib.patheffects as path_effects
 import numpy as np
 import pandas as pd
 
@@ -167,6 +168,9 @@ class Sankey:
 
     label_font : dict
         Dictionary of Matplotlib text options to be passed to the labels.
+
+    label_path_effects : dict
+        Dictionary of Matplotlib.patheffects options to be passed to the labels.
 
     label_values : bool
         Whether to include the value of the node size with the node label text.
@@ -333,8 +337,11 @@ class Sankey:
     value_thresh_ofmax : float
         Only print labels larger than this threshold as a fraction of the maximum of the summed weights across all stages.
 
-    value_duplicate: bool
+    value_duplicate : bool
         When `True` (default), all values are printed. When `False`, only print a right value if it is not equal to the preceding left value.
+
+    verbose : int
+        When greater than zero, prints debug information to the terminal.
     """
 
     def __init__(
@@ -357,6 +364,7 @@ class Sankey:
         label_gap=0.02,
         label_loc=("left", "none", "right"),
         label_font=None,
+        label_path_effects=None,
         label_duplicate=None,
         label_largest=None,
         label_values=None,
@@ -396,6 +404,7 @@ class Sankey:
         value_thresh_ofsum=0,
         value_thresh_ofmax=0,
         value_duplicate=None,
+        verbose=0,
     ):
         """Assigns all input arguments to the class as variables with appropriate defaults"""
         self.ax = ax
@@ -416,6 +425,7 @@ class Sankey:
         self.label_gap = label_gap
         self.label_loc = label_loc
         self.label_font = label_font or {}
+        self.label_path_effects = label_path_effects
         self.label_thresh = label_thresh
         self.label_thresh_ofsum = label_thresh_ofsum
         self.label_thresh_ofmax = label_thresh_ofmax
@@ -455,6 +465,7 @@ class Sankey:
         self.value_thresh_ofsum = value_thresh_ofsum
         self.value_thresh_ofmax = value_thresh_ofmax
         self.value_duplicate = True if value_duplicate is None else value_duplicate
+        self.verbose = verbose
 
     ###########################################
 
@@ -497,6 +508,8 @@ class Sankey:
         # weight and reclassify
         self.weight_labels()
         for ii in range(self.num_stages):
+            if self.verbose > 0:
+                print(f"\nStage: {ii}")
             for nn, lbl in enumerate([x for x in self.data[2 * ii] if x is not None]):
                 val = self.node_sizes[ii][lbl]
                 if (
@@ -504,6 +517,8 @@ class Sankey:
                     or val < self.other_thresh_ofsum * self.weight_sum[ii]
                     or val < self.other_thresh_ofmax * self.plot_height_nom
                 ):
+                    if self.verbose > 0:
+                        print("Making OTHER: " + self.data.iat[nn, 2 * ii])
                     self.data.iat[nn, 2 * ii] = self.other_name
         self.weight_labels()
 
@@ -917,6 +932,8 @@ class Sankey:
 
     def draw_flow(self, xx, yd, yu, col):
         """Draw a single flow"""
+        if (yd[0] == yu[0]) or (yd[-1] == yu[-1]):
+            return
         self.ax.fill_between(
             xx,
             yd,
@@ -955,7 +972,7 @@ class Sankey:
             value_fn = self.value_fn or (lambda val: f"\n{format(val,self.value_format)}")
             valstr = value_fn(val)
 
-        self.ax.text(
+        h_text = self.ax.text(
             x,
             y,
             self.label_dict.get(label, label) + valstr,
@@ -968,6 +985,11 @@ class Sankey:
                 **font,
             },
         )
+        if self.label_path_effects is not None:
+            h_text.set_path_effects([
+                path_effects.Stroke(**self.label_path_effects),
+                path_effects.Normal() # fill
+            ])
 
     ###########################################
 

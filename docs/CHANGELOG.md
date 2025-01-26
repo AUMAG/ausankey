@@ -1,5 +1,9 @@
 # Changelog for ausankey
 
+## Unreleased
+
+* Add parameter `label_path_effects`.
+
 ## 2025-01-16 v1.7
 
 * Add parameter `label_largest`.
