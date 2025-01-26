@@ -6,6 +6,7 @@ Produces simple Sankey Diagrams with matplotlib.
 Forked from: Anneya Golob & marcomanz & pierre-sassoulas & jorwoods
 """
 
+import logging
 import matplotlib as mpl
 import matplotlib.pyplot as plt
 import matplotlib.patheffects as path_effects
@@ -14,6 +15,7 @@ import pandas as pd
 
 ###########################################
 
+logger = logging.getLogger("ausankey")
 
 def sankey(data, **kwargs):
     """Make Sankey Diagram
@@ -466,9 +468,14 @@ class Sankey:
         self.value_thresh_ofmax = value_thresh_ofmax
         self.value_duplicate = True if value_duplicate is None else value_duplicate
         self.verbose = verbose
+        
+        logger.setLevel(logging.INFO)
+        if self.verbose > 1:
+            logger.setLevel(logging.DEBUG)
 
     ###########################################
 
+        
     def setup(self, data):
         """Calculates all parameters needed to plot the graph"""
 
@@ -508,8 +515,7 @@ class Sankey:
         # weight and reclassify
         self.weight_labels()
         for ii in range(self.num_stages):
-            if self.verbose > 0:
-                print(f"\nStage: {ii}")
+            logger.debug(f"\nStage: {ii}")
             for nn, lbl in enumerate([x for x in self.data[2 * ii] if x is not None]):
                 val = self.node_sizes[ii][lbl]
                 if (
@@ -517,8 +523,7 @@ class Sankey:
                     or val < self.other_thresh_ofsum * self.weight_sum[ii]
                     or val < self.other_thresh_ofmax * self.plot_height_nom
                 ):
-                    if self.verbose > 0:
-                        print("Making OTHER: " + self.data.iat[nn, 2 * ii])
+                    logger.debug("Making OTHER: " + self.data.iat[nn, 2 * ii])
                     self.data.iat[nn, 2 * ii] = self.other_name
         self.weight_labels()
 
