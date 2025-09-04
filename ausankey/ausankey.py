@@ -177,6 +177,9 @@ class Sankey:
     label_values : bool
         Whether to include the value of the node size with the node label text.
 
+    label_value_sep : str
+        If values are included in the label, this defined the separator.
+
     label_thresh : float
         Only print labels when their node is greater or equal to this value.
 
@@ -370,6 +373,7 @@ class Sankey:
         label_duplicate=None,
         label_largest=None,
         label_values=None,
+        label_value_sep = "\n",
         label_thresh=0,
         label_thresh_ofsum=0,
         label_thresh_ofmax=0,
@@ -434,6 +438,7 @@ class Sankey:
         self.label_duplicate = True if label_duplicate is None else label_duplicate
         self.label_largest = False if label_largest is None else label_largest
         self.label_values = False if label_values is None else label_values
+        self.label_value_sep = label_value_sep
         self.node_lw = node_lw
         self.node_width = node_width
         self.node_gap = node_gap
@@ -974,7 +979,8 @@ class Sankey:
         valstr = ""
         font = font or self.label_font
         if self.label_values and val is not None:
-            value_fn = self.value_fn or (lambda val: f"\n{format(val,self.value_format)}")
+            value_fn = self.value_fn or (lambda val:
+                f"{self.label_value_sep}{format(val,self.value_format)}")
             valstr = value_fn(val)
 
         h_text = self.ax.text(

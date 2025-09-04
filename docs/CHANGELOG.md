@@ -1,11 +1,13 @@
 # Changelog for ausankey
 
-## Unreleased
+## 2025-09-04 v1.8
 
+* Add parameter `label_value_sep`
 * Add parameter `label_path_effects`.
+* Add parameter `sankey_sort`.
 
 ## 2025-01-16 v1.7
-
+ 
 * Add parameter `label_largest`.
 
 ## 2025-01-11 v1.6
