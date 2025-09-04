@@ -520,7 +520,7 @@ class Sankey:
         # weight and reclassify
         self.weight_labels()
         for ii in range(self.num_stages):
-            logger.debug(f"\nStage: {ii}")
+            logger.debug("\nStage: %s", ii)
             for nn, lbl in enumerate([x for x in self.data[2 * ii] if x is not None]):
                 val = self.node_sizes[ii][lbl]
                 if (
@@ -528,7 +528,7 @@ class Sankey:
                     or val < self.other_thresh_ofsum * self.weight_sum[ii]
                     or val < self.other_thresh_ofmax * self.plot_height_nom
                 ):
-                    logger.debug("Making OTHER: " + self.data.iat[nn, 2 * ii])
+                    logger.debug("Making OTHER: %s", self.data.iat[nn, 2 * ii])
                     self.data.iat[nn, 2 * ii] = self.other_name
         self.weight_labels()
 
