@@ -200,8 +200,8 @@ sky.sankey(
     data,
     label_loc = [“right”, ”right”, ”left”],
     label_path_effects = {
-        linewidth = 2,
-        foreground = "black"
+        "linewidth": 2,
+        "foreground": "black",
     },
     fontcolor = "white" ,
 )
