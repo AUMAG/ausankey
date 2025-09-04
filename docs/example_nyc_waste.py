@@ -25,7 +25,7 @@ sky.sankey(data,
   }, 
   value_duplicate = False,
   value_loc = "both",
-  value_thresh_val = 200,
+  value_thresh = 200,
   label_font = {
       "bbox": {
           "color": "white",
