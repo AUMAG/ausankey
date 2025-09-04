@@ -2,7 +2,7 @@
 
 ## 2025-09-04 v1.8
 
-* Add parameter `label_value_sep`
+* Add parameter `label_value_sep`.
 * Add parameter `label_path_effects`.
 * Add parameter `sankey_sort`.
 
