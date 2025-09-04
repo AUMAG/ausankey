@@ -7,15 +7,17 @@ Forked from: Anneya Golob & marcomanz & pierre-sassoulas & jorwoods
 """
 
 import logging
+
 import matplotlib as mpl
-import matplotlib.pyplot as plt
 import matplotlib.patheffects as path_effects
+import matplotlib.pyplot as plt
 import numpy as np
 import pandas as pd
 
 ###########################################
 
 logger = logging.getLogger("ausankey")
+
 
 def sankey(data, **kwargs):
     """Make Sankey Diagram
@@ -373,7 +375,7 @@ class Sankey:
         label_duplicate=None,
         label_largest=None,
         label_values=None,
-        label_value_sep = "\n",
+        label_value_sep="\n",
         label_thresh=0,
         label_thresh_ofsum=0,
         label_thresh_ofmax=0,
@@ -473,14 +475,13 @@ class Sankey:
         self.value_thresh_ofmax = value_thresh_ofmax
         self.value_duplicate = True if value_duplicate is None else value_duplicate
         self.verbose = verbose
-        
+
         logger.setLevel(logging.INFO)
         if self.verbose > 1:
             logger.setLevel(logging.DEBUG)
 
     ###########################################
 
-        
     def setup(self, data):
         """Calculates all parameters needed to plot the graph"""
 
@@ -979,8 +980,7 @@ class Sankey:
         valstr = ""
         font = font or self.label_font
         if self.label_values and val is not None:
-            value_fn = self.value_fn or (lambda val:
-                f"{self.label_value_sep}{format(val,self.value_format)}")
+            value_fn = self.value_fn or (lambda val: f"{self.label_value_sep}{format(val,self.value_format)}")
             valstr = value_fn(val)
 
         h_text = self.ax.text(
@@ -997,10 +997,12 @@ class Sankey:
             },
         )
         if self.label_path_effects is not None:
-            h_text.set_path_effects([
-                path_effects.Stroke(**self.label_path_effects),
-                path_effects.Normal() # fill
-            ])
+            h_text.set_path_effects(
+                [
+                    path_effects.Stroke(**self.label_path_effects),
+                    path_effects.Normal(),  # fill
+                ]
+            )
 
     ###########################################
 
